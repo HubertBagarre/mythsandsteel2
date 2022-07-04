@@ -58,6 +58,11 @@ public class HexRenderer : MonoBehaviour
     {
         if(Application.isPlaying) DrawMesh();
     }
+    
+    public void SetMaterial(Material mat)
+    {
+        m_meshRenderer.material = mat;
+    }
 
     public void DrawMesh()
     {
