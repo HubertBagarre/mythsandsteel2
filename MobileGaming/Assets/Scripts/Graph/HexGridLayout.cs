@@ -20,17 +20,8 @@ public class HexGridLayout : MonoBehaviour
    {
       squareRt3 = Mathf.Sqrt(3);
    }
-
-   private void OnEnable()
-   {
-      LayoutGrid();
-   }
-
-   private void OnValidate()
-   {
-      if(Application.isPlaying) LayoutGrid();
-   }
-
+   
+   [Button]
    private void LayoutGrid()
    {
       for (var y = 0; y < gridSize.y; y++)
