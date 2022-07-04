@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfe73229900617547adbb2491bbb3526, type: 3}
+  m_Name: TrimarcisiaScriptable
+  m_EditorClassIdentifier: 
+  unitName: Trimarcisia
+  faction: Celtic
+  className: Light Cavalry
+  baseMaxHp: 7
+  basePhysicDef: 1
+  baseMagicDef: 1
+  baseAtkPerTurn: 2
+  baseDamage: 3
+  baseRange: 1
+  baseMove: 4
+  abilityScriptable: {fileID: 0}
+  damageModifier: {fileID: 0}
+  idle: {fileID: 0}
+  movement: {fileID: 0}
+  attack: {fileID: 0}
+  ability: {fileID: 0}
+  takeDamage: {fileID: 0}
+  death: {fileID: 0}
