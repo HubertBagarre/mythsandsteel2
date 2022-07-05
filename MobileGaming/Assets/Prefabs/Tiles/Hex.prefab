@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2528794637835303010}
   - component: {fileID: 2528794637835303011}
   - component: {fileID: 6625971187027076601}
+  - component: {fileID: 5897849069696538125}
   m_Layer: 0
   m_Name: Hex
   m_TagString: Untagged
@@ -61,6 +62,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeb4f01d83ed40345a2c67b83affabb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  q: 0
+  r: 0
+  s: 0
+  movementCost: 1
+  currentUnit: {fileID: 0}
+  tile: {fileID: 0}
+--- !u!114 &5897849069696538125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2528794637835303008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 1
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 0
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &2528794637939914094
 GameObject:
   m_ObjectHideFlags: 0

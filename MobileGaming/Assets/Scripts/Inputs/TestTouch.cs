@@ -9,7 +9,7 @@ public class TestTouch : MonoBehaviour
     [SerializeField] private LayerMask hexLayer;
     private Camera cam;
 
-    [SerializeField] private Hex currentHex;
+    [SerializeField]private Hex currentHex;
 
     private void Awake()
     {

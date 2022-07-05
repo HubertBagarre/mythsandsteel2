@@ -7,13 +7,17 @@ public class PlayerInputManager : MonoBehaviour
 {
     private TouchControls touchControls;
 
+    [SerializeField] private Animator cursorAnimator;
+    [SerializeField] private Transform cursorTransform;
+
     public delegate void StartTouchEvent(Vector2 position, float time);
     public event StartTouchEvent OnStartTouch;
     public delegate void EndTouchEvent(Vector2 position, float time);
     public event EndTouchEvent OnEndTouch;
 
     public static PlayerInputManager singleton;
-    
+    private static readonly int Trigger = Animator.StringToHash("Trigger");
+
     private void Awake()
     {
         if (singleton != null)
@@ -44,8 +48,11 @@ public class PlayerInputManager : MonoBehaviour
 
     private void StartTouch(InputAction.CallbackContext context)
     {
-        Debug.Log($"Touch Stared {touchControls.Touch.TouchPosition.ReadValue<Vector2>()}");
-        OnStartTouch?.Invoke(touchControls.Touch.TouchPosition.ReadValue<Vector2>(), (float) context.startTime);
+        var position = touchControls.Touch.TouchPosition.ReadValue<Vector2>();
+        cursorAnimator.ResetTrigger(Trigger);
+        cursorAnimator.SetTrigger(Trigger);
+        cursorTransform.position = position;
+        OnStartTouch?.Invoke(position, (float) context.startTime);
     }
     
     private void EndTouch(InputAction.CallbackContext context)

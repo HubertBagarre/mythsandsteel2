@@ -9,10 +9,12 @@ public class Hex : MonoBehaviour
     public int q;
     public int r;
     public int s;
+    public Hex[] neighbours = new Hex[6];
 
     [Header("Gaming")]
     public sbyte movementCost = 1;
     public Unit currentUnit;
+    public ScriptableTile tile;
     
     
     public static float DistanceBetween(Hex a, Hex b)
