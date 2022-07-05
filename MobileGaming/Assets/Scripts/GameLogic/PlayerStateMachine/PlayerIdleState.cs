@@ -15,7 +15,12 @@ namespace PlayerStates
 
         public override void Enter()
         {
-            sm.ChangeState(sm.abilitySelectionState);
+            sm.debugText.text = this.ToString();
+        }
+
+        public override void UpdateLogic()
+        {
+            
         }
     }
 }

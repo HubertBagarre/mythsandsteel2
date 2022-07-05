@@ -1,23 +1,24 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
-public class Hex : MonoBehaviour
+public class Hex : NetworkBehaviour
 {
     [Header("Gaming")]
-    public sbyte movementCost = 1;
+    [SyncVar] public sbyte movementCost = 1;
     public Unit currentUnit;
     public ScriptableTile tile;
     
     [Header("Offset Coordinates (even-r)")]
-    public sbyte col;
-    public sbyte row;
+    [SyncVar] public sbyte col;
+    [SyncVar] public sbyte row;
     
     [Header("Cube Coordinates")]
-    public sbyte q;
-    public sbyte r;
-    public sbyte s;
+    [SyncVar] public sbyte q;
+    [SyncVar] public sbyte r;
+    [SyncVar] public sbyte s;
     public Hex[] neighbours = new Hex[6];
 
     [Header("Tile Application")] [SerializeField]
@@ -44,7 +45,9 @@ public class Hex : MonoBehaviour
             movementCost = sbyte.MaxValue;
             return;
         }
-        Instantiate(tile.model, modelParent).transform.localPosition = Vector3.zero;
+
+        var model = Instantiate(tile.model, modelParent);
+        model.transform.localPosition = Vector3.zero;
         movementCost = tile.movementCost;
     }
     

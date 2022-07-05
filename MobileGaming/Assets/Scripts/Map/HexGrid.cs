@@ -6,7 +6,13 @@ using UnityEngine;
 
 public class HexGrid : MonoBehaviour
 {
+    [Header("Game Interaction")]
+    [ReadOnly] public Hex selectedHex;
+    [ReadOnly] public Hex previousSelectedHex;
+    
+    
     public Dictionary<Vector3Int,Hex> hexes = new ();
+    [Header("Generation Settings")]
     public Vector2Int mapSize = new (8,10);
     public GameObject hexPrefab;
 

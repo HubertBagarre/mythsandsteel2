@@ -3,13 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TestTouch : MonoBehaviour
+public class HexSelector : MonoBehaviour
 {
     private PlayerInputManager inputManager;
     [SerializeField] private LayerMask hexLayer;
     private Camera cam;
 
-    [SerializeField]private Hex currentHex;
+    [Header("Managers")]
+    [SerializeField] private HexGrid hexGrid;
+    
+    [Header("Debug Info")]
+    [SerializeField] private Hex currentHex;
 
     private void Awake()
     {
