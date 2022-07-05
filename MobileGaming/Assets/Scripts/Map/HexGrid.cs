@@ -24,6 +24,7 @@ public class HexGrid : MonoBehaviour
     private void Start()
     {
         camAnchor = Camera.main.transform.parent;
+        InstantiateHexes();
     }
 
     [Button]
