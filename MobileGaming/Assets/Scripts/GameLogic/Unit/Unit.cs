@@ -6,11 +6,14 @@ using NaughtyAttributes;
 
 public class Unit : NetworkBehaviour
 {
+    [Header("Identification")]
     public string unitName;
+    [SyncVar] public sbyte playerId;
+    public Hex currentHex;
+
+    [Header("Base Stats")]
     public string faction;
     public string className;
-    [SyncVar] public sbyte playerId;
-
     [ReadOnly] public sbyte baseMaxHp;
     [ReadOnly] public sbyte basePhysicDef;
     [ReadOnly] public sbyte baseMagicDef;
@@ -19,17 +22,21 @@ public class Unit : NetworkBehaviour
     [ReadOnly] public sbyte baseRange;
     [ReadOnly] public sbyte baseMove;
 
-    [SyncVar] public sbyte MaxHp;
-    [SyncVar] public sbyte PhysicDef;
-    [SyncVar] public sbyte MagicDef;
-    [SyncVar] public sbyte AtkPerTurn;
-    [SyncVar] public sbyte Damage;
-    [SyncVar] public sbyte Range;
-    [SyncVar] public sbyte Move;
+    [Header("Current Stats")]
+    [SyncVar] public sbyte maxHp;
+    [SyncVar] public sbyte physicDef;
+    [SyncVar] public sbyte magicDef;
+    [SyncVar] public sbyte atkPerTurn;
+    [SyncVar] public sbyte damage;
+    [SyncVar] public sbyte range;
+    [SyncVar] public sbyte move;
 
+    [Header("Components")]
     public NetworkAnimator Animator;
+    public Outline outlineScript;
+    
+    [Header("Scriptables")]
     public ScriptableUnit unitScriptable;
     public ScriptableAbility abilityScriptable;
     public ScriptableAbility damageModifier;
-    public Outline outlineScript;
 }

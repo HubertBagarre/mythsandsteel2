@@ -50,5 +50,17 @@ public class Hex : NetworkBehaviour
         model.transform.localPosition = Vector3.zero;
         movementCost = tile.movementCost;
     }
+
+    public void OnUnitEnter(Unit unit)
+    {
+        currentUnit = unit;
+        currentUnit.currentHex = this;
+        
+    }
+
+    public void OnUnitExit(Unit unit)
+    {
+        currentUnit = null;
+    }
     
 }

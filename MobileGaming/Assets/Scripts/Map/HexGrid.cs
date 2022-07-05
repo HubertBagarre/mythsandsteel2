@@ -6,10 +6,7 @@ using UnityEngine;
 
 public class HexGrid : MonoBehaviour
 {
-    [Header("Game Interaction")]
-    [ReadOnly] public Hex selectedHex;
-    [ReadOnly] public Hex previousSelectedHex;
-    
+    public GameObject unitPrefab;
     
     public Dictionary<Vector3Int,Hex> hexes = new ();
     [Header("Generation Settings")]
@@ -122,5 +119,11 @@ public class HexGrid : MonoBehaviour
     public float GetDistanceBetweenHexes(Hex a, Hex b)
     {
         return Hex.DistanceBetween(a, b);
+    }
+
+    public void InstantiateUnit()
+    {
+        var unit = Instantiate(unitPrefab, new Vector3(0, 0.5f, 0), Quaternion.identity).GetComponent<Unit>();
+        hexes[Vector3Int.zero].OnUnitEnter(unit);
     }
 }

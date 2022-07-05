@@ -16,11 +16,26 @@ namespace PlayerStates
         public override void Enter()
         {
             sm.debugText.text = this.ToString();
+            
         }
 
         public override void UpdateLogic()
         {
-            
+            if(sm.clickedUnit) OnUnitSelected();
+            if(sm.clickedHex) OnHexSelected();
+        }
+
+        private void OnUnitSelected()
+        {
+            sm.clickedUnit = false;
+            Debug.Log($"Selected {sm.selectedUnit}");
+            sm.ChangeState(sm.movementSelectionState);
+        }
+
+        private void OnHexSelected()
+        {
+            sm.clickedHex = false;
+            Debug.Log($"Selected {sm.selectedHex}");
         }
     }
 }
