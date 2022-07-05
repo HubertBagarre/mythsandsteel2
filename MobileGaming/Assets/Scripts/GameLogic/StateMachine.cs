@@ -44,14 +44,14 @@ public class StateMachine : MonoBehaviour
     }
 
     /*
-    Une state machine est composée de deux choses:
-    - Un script "SM" en monobehaviour, héritant de StateMachine.
-    Ce script contiendra aussi les fonctions communes à différentes states, la quasi-totalité des variables liés à l'entité ayant le script, 
-    et les réferences à d'autres scripts si besoin.
-    - Un script pour chaque état de la state machine, devant hériter de BaseState (qui n'est pas en MonoBehaviour !).
-    Chaque script d'état contient le comportement propre à celui-ci, et c'est aussi sur ces scripts que se feront la transition entre les états.
+    Une state machine est composÃ©e de deux choses:
+    - Un script "SM" en monobehaviour, hÃ©ritant de StateMachine.
+    Ce script contiendra aussi les fonctions communes Ã  diffÃ©rentes states, la quasi-totalitÃ© des variables liÃ©s Ã  l'entitÃ© ayant le script, 
+    et les rÃ©ferences Ã  d'autres scripts si besoin.
+    - Un script pour chaque Ã©tat de la state machine, devant hÃ©riter de BaseState (qui n'est pas en MonoBehaviour !).
+    Chaque script d'Ã©tat contient le comportement propre Ã  celui-ci, et c'est aussi sur ces scripts que se feront la transition entre les Ã©tats.
 
-    Pour faire correspondre une state à une state machine il faut mettre le code suivant dans cette state:
+    Pour faire correspondre une state Ã  une state machine il faut mettre le code suivant dans cette state:
     
     NomDuScript sm;
     public NomDuScriptDeState(NomDuScriptDeSM stateMachine) : base(stateMachine)
@@ -76,33 +76,33 @@ public class StateMachine : MonoBehaviour
 
      void Awake()
     {
-        //on set les états
+        //on set les Ã©tats
         idleState = new Player_Idle(this);
         walkState = new Player_Walk(this);
     }
 
-    Enfin, il faut set l'état par défaut que la StateMachine aura lors de son initialisation :
+    Enfin, il faut set l'Ã©tat par dÃ©faut que la StateMachine aura lors de son initialisation :
 
         protected override BaseState GetInitialState()
     {
-        //State jouée de base lors de l'apparition de l'objet
+        //State jouÃ©e de base lors de l'apparition de l'objet
         return nomDeLaVariableStateVoulue;
     }
 
     ex :
     protected override BaseState GetInitialState()
     {
-        //State jouée de base lors de l'apparition de l'objet
+        //State jouÃ©e de base lors de l'apparition de l'objet
         return idleState;
     }
 
-    Ici, le script va jouer le code présent dans la state "Idle". Pour passer d'un état à un autre, il faut insérer le code suivant
-    dans l'état (dans la void UpdateLogic):
+    Ici, le script va jouer le code prÃ©sent dans la state "Idle". Pour passer d'un Ã©tat Ã  un autre, il faut insÃ©rer le code suivant
+    dans l'Ã©tat (dans la void UpdateLogic):
 
     stateMachine.ChangeState(((NomDuScriptDeSM) stateMachine).nomDeLaVariableStateVoulue);
 
-    ex : Si je mets dans le script d'"Idle" le code suivant, la StateMachine va passer de l'état "Idle" à l'état "Walk" si la variable "movement"
-    pas nulle (= le perso se déplace).
+    ex : Si je mets dans le script d'"Idle" le code suivant, la StateMachine va passer de l'Ã©tat "Idle" Ã  l'Ã©tat "Walk" si la variable "movement"
+    pas nulle (= le perso se dÃ©place).
     if(sm.movement != Vector2.zero)
     {
     stateMachine.ChangeState(((PlayerSM) stateMachine).walkState);

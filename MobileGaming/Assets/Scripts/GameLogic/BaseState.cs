@@ -13,15 +13,15 @@ public class BaseState
     }
 
 
-    //Virtual : Pose les méthodes, peuvent être changées plus tard sur d'autres scripts
+    //Virtual : Pose les mÃ©thodes, peuvent Ãªtre changÃ©es plus tard sur d'autres scripts
 
-    //Se joue lors du début de la state, avant la première updatelogic/physic
+    //Se joue lors du dÃ©but de la state, avant la premiÃ¨re updatelogic/physic
     public virtual void Enter() { }
     //Pour l'update
     public virtual void UpdateLogic() { }
     //Pour la fixed update
     public virtual void UpdatePhysics() { }
-    //Se joue avant de passer à une autre state
+    //Se joue avant de passer Ã  une autre state
     public virtual void Exit() { }
 
 

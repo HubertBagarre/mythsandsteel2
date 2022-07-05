@@ -15,17 +15,17 @@ public class PlayerInputManager : MonoBehaviour
     public delegate void EndTouchEvent(Vector2 position, float time);
     public event EndTouchEvent OnEndTouch;
 
-    public static PlayerInputManager singleton;
+    public static PlayerInputManager instance;
     private static readonly int Trigger = Animator.StringToHash("Trigger");
 
     private void Awake()
     {
-        if (singleton != null)
+        if (instance != null)
         {
             Destroy(this);
             return;
         }
-        singleton = this;
+        instance = this;
         
         touchControls = new TouchControls();
     }

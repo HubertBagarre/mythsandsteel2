@@ -13,7 +13,7 @@ public class TestTouch : MonoBehaviour
 
     private void Awake()
     {
-        inputManager = PlayerInputManager.singleton;
+        inputManager = PlayerInputManager.instance;
         cam = Camera.main;
     }
 

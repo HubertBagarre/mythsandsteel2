@@ -12,3 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6483f7d86fbf0bc4e828004f19e2c2de, type: 3}
   m_Name: WalkableTile
   m_EditorClassIdentifier: 
+  model: {fileID: 919132149155446097, guid: 0127fb335d05977409a2a5f5286ea561, type: 3}
+  movementCost: 1
