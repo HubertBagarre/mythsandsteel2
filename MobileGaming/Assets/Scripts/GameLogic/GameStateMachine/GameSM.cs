@@ -8,7 +8,7 @@ public class GameSM : StateMachine
     public StartingGameState startingState;
     public UnitPlacementState placementState;
     public PlayerTurnState playerTurnState;
-    public PlayerResolveState playerResolveState;s
+    public PlayerResolveState playerResolveState;
     public PlayerPreparationState playerPreparationState;
     public EndingGameState endingState;
     public BetweenTurnState betweenTurnState;
