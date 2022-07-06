@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using NaughtyAttributes;
@@ -75,5 +76,39 @@ public class PlayerSM : StateMachine
         {
             inputManager.OnStartTouch -= TryToSelectUnitOrTile;
         }
+    }
+    
+    public List<Hex> finalAccessibleHex = new();
+    
+    private IEnumerator AccessibleRecursive(Hex startingHex,int movement)
+    {
+        if (movement > 0)
+        {
+            var accessibleHex = new List<Hex>();
+            foreach (var hex in startingHex.neighbours)
+            {
+                if (hex != null)
+                {
+                    if (hex.movementCost != sbyte.MaxValue && !finalAccessibleHex.Contains(hex))
+                    {
+                        accessibleHex.Add(hex);
+                    }
+                }
+            }
+
+            yield return new WaitForSeconds(1f);
+            
+            foreach (var hex in accessibleHex)
+            {
+                finalAccessibleHex.Add(hex);
+                hex.ChangeHexColor(Hex.HexColors.Selectable);
+                StartCoroutine(AccessibleRecursive(hex, movement - 1));
+            }
+        }
+    }
+    
+    public void SetAccessibleHexes(Hex startingHex,int movementLeft)
+    {
+        StartCoroutine(AccessibleRecursive(startingHex, movementLeft));
     }
 }

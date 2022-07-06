@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEngine;
 
@@ -19,9 +20,14 @@ namespace PlayerStates
 
         public override void Enter()
         {
-            accessibleHex.Clear();
-            SetSelectableTiles(sm.selectedUnit.currentHex,sm.hexGrid.unitMovement);
-            ColorAccessibleTiles();
+            foreach (var hex in sm.hexGrid.hexes.Values)
+            {
+                hex.currentCostToMove = -1;
+            }
+            sm.finalAccessibleHex.Clear();
+            sm.SetAccessibleHexes(sm.selectedUnit.currentHex,sm.hexGrid.unitMovement);
+            sm.finalAccessibleHex.Remove(sm.selectedUnit.currentHex);
+            //ColorAccessibleTiles();
         }
 
         private void ColorAccessibleTiles()
@@ -32,14 +38,21 @@ namespace PlayerStates
                 hex.ChangeHexColor(state);
             }
         }
-
-        private void SetSelectableTiles(Hex startingHex,sbyte movementLeft)
+        
+        private void SetAccessibleHexes(Hex startingHex,int movementLeft)
         {
-            foreach (var hex in startingHex.GetAccessibleNeighbours(movementLeft))
+            int movementLeftToUse = movementLeft;
+            for (var dir = 0; dir < 6; dir++)
             {
-                movementLeft -= hex.movementCost;
-                SetSelectableTiles(hex,movementLeft);
-                accessibleHex.Add(hex);
+                var hex = startingHex.neighbours[dir];
+                if (hex != null)
+                {
+                    if (movementLeftToUse >= hex.movementCost && !accessibleHex.Contains(hex))
+                    {
+                        accessibleHex.Add(hex);
+                        SetAccessibleHexes(hex,movementLeftToUse-hex.movementCost);
+                    }
+                }
             }
         }
         

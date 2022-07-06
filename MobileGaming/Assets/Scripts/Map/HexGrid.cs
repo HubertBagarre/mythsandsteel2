@@ -46,6 +46,7 @@ public class HexGrid : MonoBehaviour
                 var hex = hexGameObject.GetComponent<Hex>();
                 hex.col = x;
                 hex.row = y;
+                hex.currentCostToMove = -1;
                 Hex.OddrToCube(hex);
                 hex.ApplyTile(ObjectIDList.instance.tiles[1]);
                 hexes.Add(new Vector3Int(hex.q,hex.r,hex.s),hex);
@@ -128,8 +129,8 @@ public class HexGrid : MonoBehaviour
 
     public void InstantiateUnit()
     {
-        var unit = Instantiate(unitPrefab, new Vector3(0, 2, 0), Quaternion.identity).GetComponent<Unit>();
-        hexes[Vector3Int.zero].OnUnitEnter(unit);
+        var unit = Instantiate(unitPrefab, new Vector3(10, 2, -1.73f * 4), Quaternion.identity).GetComponent<Unit>();
+        hexes[new Vector3Int(3,4,-7)].OnUnitEnter(unit);
         unit.baseMove = unitMovement;
         unit.move = unitMovement;
     }

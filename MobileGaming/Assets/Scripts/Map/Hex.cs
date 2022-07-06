@@ -12,7 +12,7 @@ public class Hex : NetworkBehaviour
     public Unit currentUnit;
     public ScriptableTile tile;
     
-    [Header("Offset Coordinates (even-r)")]
+    [Header("Offset Coordinates (odd-r)")]
     [SyncVar] public sbyte col;
     [SyncVar] public sbyte row;
     
@@ -29,6 +29,8 @@ public class Hex : NetworkBehaviour
     [SerializeField] private Material selectableMat;
     [SerializeField] private Material unselectableMat;
     [SerializeField] private Material selectedMat;
+
+    [Header("PathFinding")] public int currentCostToMove = -1;
     
     
     public static float DistanceBetween(Hex a, Hex b)
