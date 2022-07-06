@@ -25,6 +25,7 @@ namespace PlayerStates
                 hex.currentCostToMove = -1;
             }
             sm.finalAccessibleHex.Clear();
+            sm.costMoreHex.Clear();
             sm.SetAccessibleHexes(sm.selectedUnit.currentHex,sm.hexGrid.unitMovement);
             sm.finalAccessibleHex.Remove(sm.selectedUnit.currentHex);
             //ColorAccessibleTiles();

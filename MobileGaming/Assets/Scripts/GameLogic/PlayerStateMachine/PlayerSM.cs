@@ -5,6 +5,7 @@ using NaughtyAttributes;
 using UnityEngine;
 using PlayerStates;
 using TMPro;
+using System.Linq;
 
 public class PlayerSM : StateMachine
 {
@@ -79,19 +80,22 @@ public class PlayerSM : StateMachine
     }
     
     public List<Hex> finalAccessibleHex = new();
+    public List<Hex> costMoreHex = new();
     
     private IEnumerator AccessibleRecursive(Hex startingHex,int movement)
     {
         if (movement > 0)
         {
             var accessibleHex = new List<Hex>();
+            
             foreach (var hex in startingHex.neighbours)
             {
                 if (hex != null)
                 {
-                    if (hex.movementCost != sbyte.MaxValue && !finalAccessibleHex.Contains(hex))
+                    if (hex.movementCost != sbyte.MaxValue && !finalAccessibleHex.Contains(hex) && !accessibleHex.Contains(hex))
                     {
-                        accessibleHex.Add(hex);
+                        if (hex.movementCost == 1 || costMoreHex.Contains(hex)) accessibleHex.Add(hex);
+                        else if (movement > 1) costMoreHex.Add(hex);
                     }
                 }
             }
@@ -102,6 +106,7 @@ public class PlayerSM : StateMachine
             {
                 finalAccessibleHex.Add(hex);
                 hex.ChangeHexColor(Hex.HexColors.Selectable);
+                finalAccessibleHex = finalAccessibleHex.Distinct().ToList();
                 StartCoroutine(AccessibleRecursive(hex, movement - 1));
             }
         }
