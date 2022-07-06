@@ -18,16 +18,19 @@ public class Unit : NetworkBehaviour
     [ReadOnly] public sbyte basePhysicDef;
     [ReadOnly] public sbyte baseMagicDef;
     [ReadOnly] public sbyte baseAtkPerTurn;
-    [ReadOnly] public sbyte baseDamage;
+    [ReadOnly] public sbyte basePhysicDamage;
+    [ReadOnly] public sbyte baseMagicDamage;
     [ReadOnly] public sbyte baseRange;
     [ReadOnly] public sbyte baseMove;
 
     [Header("Current Stats")]
     [SyncVar] public sbyte maxHp;
+    [SyncVar] public sbyte actualHp;
     [SyncVar] public sbyte physicDef;
     [SyncVar] public sbyte magicDef;
     [SyncVar] public sbyte atkPerTurn;
-    [SyncVar] public sbyte damage;
+    [SyncVar] public sbyte physicDamage;
+    [SyncVar] public sbyte magicDamage;
     [SyncVar] public sbyte range;
     [SyncVar] public sbyte move;
 
@@ -39,4 +42,16 @@ public class Unit : NetworkBehaviour
     public ScriptableUnit unitScriptable;
     public ScriptableAbility abilityScriptable;
     public ScriptableAbility damageModifier;
+
+    public void TakeDamage(sbyte damageTaken)
+    {
+        actualHp -= damageTaken;
+
+        if (actualHp <= 0) Death();
+    }
+
+    public void Death()
+    {
+
+    }
 }
