@@ -57,7 +57,7 @@ public class PlayerInputManager : MonoBehaviour
     
     private void EndTouch(InputAction.CallbackContext context)
     {
-        Debug.Log($"Touch Ended {touchControls.Touch.TouchPosition.ReadValue<Vector2>()}");
+        //Debug.Log($"Touch Ended {touchControls.Touch.TouchPosition.ReadValue<Vector2>()}");
         OnEndTouch?.Invoke(touchControls.Touch.TouchPosition.ReadValue<Vector2>(), (float) context.time);
     }
 }

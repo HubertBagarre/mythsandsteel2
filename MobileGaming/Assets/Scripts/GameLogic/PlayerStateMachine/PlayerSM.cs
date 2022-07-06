@@ -11,7 +11,7 @@ public class PlayerSM : StateMachine
     [HideInInspector] public PlayerMovementSelection movementSelectionState;
     [HideInInspector] public PlayerAbilitySelection abilitySelectionState;
 
-    [Header("Managers")] [SerializeField] private HexGrid hexGrid;
+    [Header("Managers")] [SerializeField] public HexGrid hexGrid;
 
     [Header("Selection")]
     [ReadOnly]public Unit selectedUnit;
@@ -58,12 +58,13 @@ public class PlayerSM : StateMachine
         if (!Physics.Raycast(ray, out var hit,layersToHit)) return;
         
         var objectHit = hit.transform;
+        Debug.Log(objectHit.name);
         selectedUnit = objectHit.GetComponent<Unit>();
         selectedHex = objectHit.GetComponent<Hex>();
         clickedUnit = selectedUnit;
         clickedHex = selectedHex;
     }
-
+    
     public void CanInput(bool value)
     {
         if (value)

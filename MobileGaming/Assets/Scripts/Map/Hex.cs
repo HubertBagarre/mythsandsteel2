@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Mirror;
 using UnityEngine;
 
@@ -23,17 +24,41 @@ public class Hex : NetworkBehaviour
 
     [Header("Tile Application")] [SerializeField]
     private Transform modelParent;
+    private Renderer modelRenderer;
+    private Material normalMat;
+    [SerializeField] private Material selectableMat;
+    [SerializeField] private Material unselectableMat;
+    [SerializeField] private Material selectedMat;
+    
     
     public static float DistanceBetween(Hex a, Hex b)
     {
         return (Mathf.Abs(a.q - b.q) + Mathf.Abs(a.r - b.r) + Mathf.Abs(a.s - b.s))/2f;
     }
 
-    public void CoordToCube()
+    public static IEnumerable<sbyte> GetCostToNeighbours(Hex a)
     {
-        q = Convert.ToSByte(col - (row + (row & 1)) / 2);
-        r = row;
-        s = Convert.ToSByte(-q - r);
+        var returnArray = new[]
+            {sbyte.MaxValue, sbyte.MaxValue, sbyte.MaxValue, sbyte.MaxValue, sbyte.MaxValue, sbyte.MaxValue};
+        for (var i = 0; i < 6; i++)
+        {
+            if (a.neighbours[i] != null) returnArray[i] = a.neighbours[i].movementCost;
+        }
+
+        return returnArray;
+    }
+
+    public IEnumerable<Hex> GetAccessibleNeighbours(sbyte movement)
+    {
+        return neighbours.Where(hex => hex != null).Where(hex => hex.movementCost <= movement).ToList();
+    }
+
+
+    public static void OddrToCube(Hex hex)
+    {
+        hex.q = Convert.ToSByte(hex.col - (hex.row - (hex.row & 1)) / 2);
+        hex.r = hex.row;
+        hex.s = Convert.ToSByte(-hex.q - hex.r);
     }
 
     public void ApplyTile(ScriptableTile newTile)
@@ -47,8 +72,23 @@ public class Hex : NetworkBehaviour
         }
 
         var model = Instantiate(tile.model, modelParent);
+        modelRenderer = model.GetComponent<Renderer>();
+        normalMat = modelRenderer.material;
         model.transform.localPosition = Vector3.zero;
         movementCost = tile.movementCost;
+    }
+
+    public enum HexColors {Normal, Unselectable, Selectable, Selected}
+    public void ChangeHexColor(HexColors color)
+    {
+        modelRenderer.material = color switch
+        {
+            HexColors.Normal => normalMat,
+            HexColors.Unselectable => unselectableMat,
+            HexColors.Selectable => selectableMat,
+            HexColors.Selected => selectedMat,
+            _ => throw new ArgumentOutOfRangeException(nameof(color), color, null)
+        };
     }
 
     public void OnUnitEnter(Unit unit)
