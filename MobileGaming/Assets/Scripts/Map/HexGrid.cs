@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using NaughtyAttributes;
 using UnityEngine;
 
@@ -11,11 +12,20 @@ public class HexGrid : MonoBehaviour
     public sbyte unitMovement;
     
     public Dictionary<Vector3Int,Hex> hexes = new ();
+    
     [Header("Generation Settings")]
     public Vector2Int mapSize = new (8,10);
     public GameObject hexPrefab;
-
     private Transform camAnchor;
+
+    [Header("PathFinding")]
+    public bool isFindingHex = false;
+    public List<Hex> hexesToReturn = new();
+    public List<Hex> costMoreHex = new();
+    public bool isMovingUnit = false;
+    public bool isFindingPath = false;
+
+
     private static Vector3Int[] directionOffsets = new[]
     {
         new Vector3Int(1, 0, -1),
@@ -81,7 +91,6 @@ public class HexGrid : MonoBehaviour
                     hex.neighbours[i] = hexes[testPos];
                 }
             }
-            Debug.Log($"For hex {hex.gameObject.name}, found ");
         }
     }
 
@@ -98,8 +107,7 @@ public class HexGrid : MonoBehaviour
             if (hex.col > maxCol) maxCol = hex.col;
             if (hex.col < minCol) minCol = hex.col;
         }
-
-        Debug.Log($"Highest row is {maxRow} and Lowest row is {minRow} \n Highest column is {maxCol} and Lowest column is {minCol}");
+        
         var yPos = (maxRow + minRow) / 2f;
         var xPos = (maxCol + minCol) / 2f;
 
@@ -126,6 +134,112 @@ public class HexGrid : MonoBehaviour
     {
         return Hex.DistanceBetween(a, b);
     }
+
+    public void SetAccessibleHexes(Hex startingHex, int movement)
+    {
+        hexesToReturn.Clear();
+        hexesToReturn.Add(startingHex);
+        foreach (var hex in hexes.Values)
+        {
+            hex.currentCostToMove = -1;
+        }
+        StartCoroutine(AccessibleRecursive(startingHex,movement));
+    }
+    
+    private IEnumerator AccessibleRecursive(Hex startingHex,int movement,int costToMove = 1)
+    {
+        isFindingHex = false;
+        
+        if (movement > 0)
+        {
+            isFindingHex = true;
+            var accessibleHex = new List<Hex>();
+            
+            foreach (var hex in startingHex.neighbours)
+            {
+                if (hex != null)
+                {
+                    if (hex.movementCost != sbyte.MaxValue && !hexesToReturn.Contains(hex) && !accessibleHex.Contains(hex))
+                    {
+                        if (hex.movementCost == 1 || costMoreHex.Contains(hex)) accessibleHex.Add(hex);
+                        else if (movement > 1) costMoreHex.Add(hex);
+                    }
+                }
+            }
+
+            yield return null;
+            
+            foreach (var hex in accessibleHex)
+            {
+                if (hex.currentCostToMove == -1) hex.currentCostToMove = costToMove;
+                hexesToReturn.Add(hex);
+                hexesToReturn = hexesToReturn.Distinct().ToList();
+                StartCoroutine(AccessibleRecursive(hex, movement - 1,costToMove + 1));
+            }
+        }
+    }
+    
+    public void MoveUnit(Unit unit, Hex[] path)
+    {
+        StartCoroutine(MoveUnitRoutine(unit, path));
+    }
+    
+    private IEnumerator MoveUnitRoutine(Unit unit, Hex[] path)
+    {
+        isMovingUnit = true;
+        foreach (var hex in path)
+        {
+            unit.currentHex.OnUnitExit(unit);
+            
+            unit.transform.position = hex.transform.position + Vector3.up * 2f;
+            
+            hex.OnUnitEnter(unit);
+            
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        isMovingUnit = false;
+    }
+    
+    public List<Hex> path = new List<Hex>();
+    
+    public void SetPath(Hex endPoint,Hex[] accessibleHexes)
+    {
+        path.Clear();
+        path.Add(endPoint);
+        StartCoroutine(RecursivePath(endPoint, accessibleHexes));
+    }
+
+    private IEnumerator RecursivePath(Hex endpoint,Hex[] accessibleHexes)
+    {
+        isFindingPath = true;
+        var cost = sbyte.MaxValue;
+        Hex returnHex = null;
+        foreach (var hex in endpoint.neighbours)
+        {
+            if (accessibleHexes.Contains(hex))
+            {
+                if (hex.currentCostToMove == -1)
+                {
+                    isFindingPath = false;
+                    yield break;
+                }
+                
+                if (hex.currentCostToMove < cost)
+                {
+                    cost = Convert.ToSByte(hex.currentCostToMove);
+                    returnHex = hex;
+                }
+            }
+        }
+
+        yield return null;
+        
+        path.Add(returnHex);
+        StartCoroutine(RecursivePath(returnHex, accessibleHexes));
+
+    }
+    
 
     public void InstantiateUnit()
     {

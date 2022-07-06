@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,6 +10,13 @@ namespace PlayerStates
     public class PlayerMovementSelection : BaseState
     {
         private PlayerSM sm;
+        
+        private HexGrid hexGrid;
+        private Hex startingHex;
+        private Unit unitToMove;
+
+        private bool accessibleHexesDisplayed;
+        private bool waitingForPath;
         
         private List<Hex> accessibleHex = new ();
 
@@ -20,46 +27,48 @@ namespace PlayerStates
 
         public override void Enter()
         {
-            foreach (var hex in sm.hexGrid.hexes.Values)
-            {
-                hex.currentCostToMove = -1;
-            }
-            sm.finalAccessibleHex.Clear();
-            sm.costMoreHex.Clear();
-            sm.SetAccessibleHexes(sm.selectedUnit.currentHex,sm.hexGrid.unitMovement);
-            sm.finalAccessibleHex.Remove(sm.selectedUnit.currentHex);
-            //ColorAccessibleTiles();
+            accessibleHexesDisplayed = false;
+            waitingForPath = false;
+            
+            unitToMove = sm.selectedUnit;
+            startingHex = unitToMove.currentHex;
+            
+            hexGrid = sm.hexGrid;
+            hexGrid.SetAccessibleHexes(startingHex,unitToMove.move);
         }
 
         private void ColorAccessibleTiles()
         {
-            foreach (var hex in sm.hexGrid.hexes.Values)
+            foreach (var hex in hexGrid.hexes.Values)
             {
                 var state = accessibleHex.Contains(hex) ? Hex.HexColors.Selectable : Hex.HexColors.Unselectable;
                 hex.ChangeHexColor(state);
             }
         }
         
-        private void SetAccessibleHexes(Hex startingHex,int movementLeft)
-        {
-            int movementLeftToUse = movementLeft;
-            for (var dir = 0; dir < 6; dir++)
-            {
-                var hex = startingHex.neighbours[dir];
-                if (hex != null)
-                {
-                    if (movementLeftToUse >= hex.movementCost && !accessibleHex.Contains(hex))
-                    {
-                        accessibleHex.Add(hex);
-                        SetAccessibleHexes(hex,movementLeftToUse-hex.movementCost);
-                    }
-                }
-            }
-        }
-        
         public override void UpdateLogic()
         {
-            if(sm.clickedUnit) OnUnitSelected();
+            if (waitingForPath && !hexGrid.isFindingPath)
+            {
+                OnPathFound();
+                return;
+            }
+            
+            if (accessibleHexesDisplayed && !waitingForPath)
+            {
+                if(sm.clickedUnit) OnUnitSelected();
+                if(sm.clickedHex) OnHexSelected();
+                return;
+            }
+            
+            if(!hexGrid.isFindingHex) OnHexGridAccessibleHexesRead();
+        }
+
+        private void OnHexGridAccessibleHexesRead()
+        {
+            accessibleHexesDisplayed = true;
+            accessibleHex = new List<Hex>(hexGrid.hexesToReturn);
+            ColorAccessibleTiles();
         }
 
         private void OnUnitSelected()
@@ -68,9 +77,32 @@ namespace PlayerStates
             sm.ChangeState(sm.idleState);
         }
 
+        private void OnHexSelected()
+        {
+            sm.clickedHex = false;
+            if (accessibleHex.Contains(sm.selectedHex) && sm.selectedHex != startingHex)
+            {
+                hexGrid.SetPath(sm.selectedHex,accessibleHex.ToArray());
+                waitingForPath = true;
+            }
+            else
+            {
+                sm.ChangeState(sm.idleState);
+            }
+        }
+
+        private void OnPathFound()
+        {
+            waitingForPath = false;
+            var path = hexGrid.path.ToArray().Reverse().ToArray();
+            hexGrid.MoveUnit(unitToMove,path);
+            sm.ChangeState(sm.idleState);
+        }
+        
+
         public override void Exit()
         {
-            foreach (var hex in sm.hexGrid.hexes.Values)
+            foreach (var hex in hexGrid.hexes.Values)
             {
                 hex.ChangeHexColor(Hex.HexColors.Normal);
             }

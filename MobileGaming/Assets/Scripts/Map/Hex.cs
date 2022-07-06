@@ -30,9 +30,10 @@ public class Hex : NetworkBehaviour
     [SerializeField] private Material unselectableMat;
     [SerializeField] private Material selectedMat;
 
-    [Header("PathFinding")] public int currentCostToMove = -1;
-    
-    
+    [Header("PathFinding")]
+    public int currentCostToMove = -1;
+
+
     public static float DistanceBetween(Hex a, Hex b)
     {
         return (Mathf.Abs(a.q - b.q) + Mathf.Abs(a.r - b.r) + Mathf.Abs(a.s - b.s))/2f;
@@ -97,7 +98,7 @@ public class Hex : NetworkBehaviour
     {
         currentUnit = unit;
         currentUnit.currentHex = this;
-        
+        currentUnit.move -= movementCost;
     }
 
     public void OnUnitExit(Unit unit)
