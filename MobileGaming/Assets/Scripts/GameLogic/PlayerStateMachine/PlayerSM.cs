@@ -104,7 +104,7 @@ public class PlayerSM : StateMachine
             
             foreach (var hex in accessibleHex)
             {
-                hex.currentCostToMove = costToMove;
+                if (hex.currentCostToMove == -1) hex.currentCostToMove = costToMove;
                 finalAccessibleHex.Add(hex);
                 hex.ChangeHexColor(Hex.HexColors.Selectable);
                 finalAccessibleHex = finalAccessibleHex.Distinct().ToList();
