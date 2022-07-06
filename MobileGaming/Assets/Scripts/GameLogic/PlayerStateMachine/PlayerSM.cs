@@ -82,7 +82,7 @@ public class PlayerSM : StateMachine
     public List<Hex> finalAccessibleHex = new();
     public List<Hex> costMoreHex = new();
     
-    private IEnumerator AccessibleRecursive(Hex startingHex,int movement)
+    private IEnumerator AccessibleRecursive(Hex startingHex,int movement,int costToMove = 1)
     {
         if (movement > 0)
         {
@@ -104,10 +104,11 @@ public class PlayerSM : StateMachine
             
             foreach (var hex in accessibleHex)
             {
+                hex.currentCostToMove = costToMove;
                 finalAccessibleHex.Add(hex);
                 hex.ChangeHexColor(Hex.HexColors.Selectable);
                 finalAccessibleHex = finalAccessibleHex.Distinct().ToList();
-                StartCoroutine(AccessibleRecursive(hex, movement - 1));
+                StartCoroutine(AccessibleRecursive(hex, movement - 1,costToMove + 1));
             }
         }
     }
