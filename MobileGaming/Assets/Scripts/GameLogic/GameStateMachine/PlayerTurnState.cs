@@ -17,5 +17,16 @@ namespace GameStates
         {
             sm.AllowPlayerSend(sm.currentPlayer);
         }
+
+        public override void UpdateLogic()
+        {
+            if(sm.playerTurnOver) EndTurn();
+        }
+
+        private void EndTurn()
+        {
+            sm.playerTurnOver = false;
+            sm.ChangeState(sm.postPlayerTurn);
+        }
     }
 }

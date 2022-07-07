@@ -14,7 +14,7 @@ public class BetweenTurnState : BaseState
     public override void Enter()
     {
         ChangePlayer();
-        sm.ChangeState(sm.playerPreparationState);
+        sm.ChangeState(sm.prePlayerTurn);
     }
 
     private void ChangePlayer()

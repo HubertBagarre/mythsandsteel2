@@ -133,16 +133,19 @@ public class PlayerSM : StateMachine
 
     #endregion
     
-    public void TryToEnterNextPhase()
+    [Command]
+    public void TryToEndTurn()
     {
-        Debug.Log("Next Phase");
+        GameSM.instance.playerTurnOver = true;
     }
 
+    [Command]
     public void TryToAttack()
     {
         Debug.Log("Attack");
     }
 
+    [Command]
     public void TryToUseAbility()
     {
         Debug.Log("Ability");
@@ -151,10 +154,11 @@ public class PlayerSM : StateMachine
     
     public void CanInput(bool prevValue,bool newValue)
     {
+        if(!isLocalPlayer) return;
         if (newValue)
         {
             inputManager.OnStartTouch += TryToSelectUnitOrTile;
-            nextPhaseButton.onClick.AddListener(TryToEnterNextPhase);
+            nextPhaseButton.onClick.AddListener(TryToEndTurn);
             attackButton.onClick.AddListener(TryToAttack);
             abilityButton.onClick.AddListener(TryToUseAbility);
             
@@ -163,7 +167,7 @@ public class PlayerSM : StateMachine
         else
         {
             inputManager.OnStartTouch -= TryToSelectUnitOrTile;
-            nextPhaseButton.onClick.RemoveListener(TryToEnterNextPhase);
+            nextPhaseButton.onClick.RemoveListener(TryToEndTurn);
             attackButton.onClick.RemoveListener(TryToAttack);
             abilityButton.onClick.RemoveListener(TryToUseAbility);
             

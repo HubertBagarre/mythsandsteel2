@@ -66,6 +66,7 @@ public class NewNetworkRoomManager : NetworkRoomManager
         Debug.Log($"Players left : {roomSlots.Count}");
         if (roomSlots.Count > 0) return;
         Debug.Log("No More Players In Game, returning to lobby");
+        if(GameSM.instance != null) GameSM.instance.ReturnToLobby();
         ServerChangeScene(RoomScene);
     }
 
@@ -75,7 +76,7 @@ public class NewNetworkRoomManager : NetworkRoomManager
     /// <param name="sceneName">Name of the new scene.</param>
     public override void OnRoomServerSceneChanged(string sceneName) {
     {
-        if (sceneName == RoomScene)
+        if (sceneName == RoomScene && GameSM.instance == null)
             NetworkSpawner.SpawnGameStateMachine();
         if (sceneName == GameplayScene)
             NetworkSpawner.SpawnGrid();

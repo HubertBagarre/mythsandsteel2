@@ -15,7 +15,7 @@ namespace GameStates
 
         public override void Enter()
         {
-            sm.ChangeState(sm.playerPreparationState);
+            sm.ChangeState(sm.prePlayerTurn);
         }
     }
 }
