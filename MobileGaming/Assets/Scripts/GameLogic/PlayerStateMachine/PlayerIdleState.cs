@@ -15,7 +15,7 @@ namespace PlayerStates
 
         public override void Enter()
         {
-            sm.debugText.text = this.ToString();
+            sm.debugText.text = $"Player {sm.playerId}, {this}";
             
         }
 
@@ -28,7 +28,7 @@ namespace PlayerStates
         private void OnUnitSelected()
         {
             sm.clickedUnit = false;
-            sm.ChangeState(sm.movementSelectionState);
+            if(sm.selectedUnit.playerId == sm.playerId) sm.ChangeState(sm.movementSelectionState);
         }
 
         private void OnHexSelected()

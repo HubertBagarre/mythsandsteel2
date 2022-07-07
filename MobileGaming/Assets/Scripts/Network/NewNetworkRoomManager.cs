@@ -52,7 +52,10 @@ public class NewNetworkRoomManager : NetworkRoomManager
     /// This is called on the server when a new client connects to the server.
     /// </summary>
     /// <param name="conn">The new connection.</param>
-    public override void OnRoomServerConnect(NetworkConnectionToClient conn) { }
+    public override void OnRoomServerConnect(NetworkConnectionToClient conn)
+    {
+        
+    }
 
     /// <summary>
     /// This is called on the server when a client disconnects.
@@ -72,8 +75,10 @@ public class NewNetworkRoomManager : NetworkRoomManager
     /// <param name="sceneName">Name of the new scene.</param>
     public override void OnRoomServerSceneChanged(string sceneName) {
     {
+        if (sceneName == RoomScene)
+            NetworkSpawner.SpawnGameStateMachine();
         if (sceneName == GameplayScene)
-            NetworkSpawner.InitialSpawn();
+            NetworkSpawner.SpawnGrid();
     } }
 
     /// <summary>
@@ -120,7 +125,12 @@ public class NewNetworkRoomManager : NetworkRoomManager
     /// <returns>False to not allow this player to replace the room player.</returns>
     public override bool OnRoomServerSceneLoadedForPlayer(NetworkConnectionToClient conn, GameObject roomPlayer, GameObject gamePlayer)
     {
-        return base.OnRoomServerSceneLoadedForPlayer(conn, roomPlayer, gamePlayer);
+        var gameSm = GameSM.instance;
+        var playerSm = gamePlayer.GetComponent<PlayerSM>();
+        playerSm.playerId = roomPlayer.GetComponent<NetworkRoomPlayer>().index;
+        gameSm.players[playerSm.playerId] = playerSm;
+        playerSm.ResetInstances();
+        return true;
     }
 
     /// <summary>

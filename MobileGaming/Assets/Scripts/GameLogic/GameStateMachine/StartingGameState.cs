@@ -12,10 +12,10 @@ namespace GameStates
         {
             sm = stateMachine;
         }
-
-        public override void Enter()
+        
+        private void StartGame()
         {
-            sm.ChangePlayer(Random.Range(0, 2));
+            sm.SelectRandomPlayer();
             
             sm.ChangeState(sm.placementState);
         }

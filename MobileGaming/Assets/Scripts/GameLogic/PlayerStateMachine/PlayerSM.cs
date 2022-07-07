@@ -12,16 +12,18 @@ public class PlayerSM : StateMachine
     public PlayerMovementSelection movementSelectionState;
     public PlayerAbilitySelection abilitySelectionState;
     public PlayerInactiveState inactiveState;
-    
 
+    [Header("Network")]
+    [SyncVar] public int playerId;
+    [SyncVar(hook = nameof(CanInput))] public bool canSendInfo;
+    
     [Header("Managers")]
     public HexGrid hexGrid;
     public GameSM gameManager;
-    public NetworkIdentity identity;
-    
+
     [Header("Selection")]
-    [ReadOnly]public Unit selectedUnit;
-    [ReadOnly]public Hex selectedHex;
+    [ReadOnly] public Unit selectedUnit;
+    [ReadOnly] public Hex selectedHex;
     
     [Header("Inputs")]
     private PlayerInputManager inputManager;
@@ -55,7 +57,6 @@ public class PlayerSM : StateMachine
         if (!isLocalPlayer)
         {
             transform.GetChild(0).gameObject.SetActive(false);
-            CanInput(false);
             return inactiveState;
         }
         
@@ -64,21 +65,19 @@ public class PlayerSM : StateMachine
         clickedUnit = false;
         clickedHex = false;
         
-        CanInput(true);
         return idleState;
     }
 
     public void ResetInstances()
     {
         hexGrid = HexGrid.instance;
-        gameManager = GameSM.instance;
-        identity = GetComponent<NetworkIdentity>();
+        if(isServer) gameManager = GameSM.instance;
     }
 
     public override void ChangeState(BaseState newState)
     {
         base.ChangeState(newState);
-        debugText.text = currentState.ToString();
+        debugText.text = $"Player {playerId}, {currentState}";
     }
 
     private void TryToSelectUnitOrTile(Vector2 screenPosition,float time)
@@ -94,10 +93,12 @@ public class PlayerSM : StateMachine
         clickedHex = selectedHex;
     }
     
+    #region UnitMovement
+
     [Command]
     public void TryToMoveUnit(Unit unitToMove,Hex[] path)
     {
-        Debug.Log($"Player is trying to move {unitToMove}, in position {unitToMove.hexGridIndex} ");
+        if(!canSendInfo || unitToMove.playerId != playerId) return;
         ServerMoveUnit(unitToMove,path);
         RpcMoveUnit(unitToMove,path);
     }
@@ -130,6 +131,8 @@ public class PlayerSM : StateMachine
         isMovingUnit = false;
     }
 
+    #endregion
+    
     public void TryToEnterNextPhase()
     {
         Debug.Log("Next Phase");
@@ -145,14 +148,17 @@ public class PlayerSM : StateMachine
         Debug.Log("Ability");
     }
     
-    public void CanInput(bool value)
+    
+    public void CanInput(bool prevValue,bool newValue)
     {
-        if (value)
+        if (newValue)
         {
             inputManager.OnStartTouch += TryToSelectUnitOrTile;
             nextPhaseButton.onClick.AddListener(TryToEnterNextPhase);
             attackButton.onClick.AddListener(TryToAttack);
             abilityButton.onClick.AddListener(TryToUseAbility);
+            
+            Debug.Log("You Can Send");
         }
         else
         {
@@ -160,6 +166,8 @@ public class PlayerSM : StateMachine
             nextPhaseButton.onClick.RemoveListener(TryToEnterNextPhase);
             attackButton.onClick.RemoveListener(TryToAttack);
             abilityButton.onClick.RemoveListener(TryToUseAbility);
+            
+            Debug.Log("You Can't Send");
         }
     }
 }

@@ -15,7 +15,7 @@ namespace GameStates
         
         public override void Enter()
         {
-            
+            sm.AllowPlayerSend(sm.currentPlayer);
         }
     }
 }

@@ -12,5 +12,11 @@ namespace GameStates
         {
             sm = stateMachine;
         }
+
+        public override void Enter()
+        {
+            sm.players[0] = null;
+            sm.players[1] = null;
+        }
     }
 }

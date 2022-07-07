@@ -7,11 +7,17 @@ using Object = UnityEngine.Object;
 
 public class NetworkSpawner
 {
-    public static void InitialSpawn()
+    public static void SpawnGrid()
     {
         if (!NetworkServer.active) return;
-
+        
         NetworkServer.Spawn(Object.Instantiate(((NewNetworkRoomManager)NetworkManager.singleton).hexGridPrefab, Vector3.zero, Quaternion.identity));
+    }
+
+    public static void SpawnGameStateMachine()
+    {
+        if (!NetworkServer.active) return;
+        
         NetworkServer.Spawn(Object.Instantiate(((NewNetworkRoomManager)NetworkManager.singleton).gameStateMachinePrefab, Vector3.zero, Quaternion.identity));
     }
     
