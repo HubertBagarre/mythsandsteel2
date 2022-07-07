@@ -1,3 +1,4 @@
+using System.Collections;
 using Mirror;
 using NaughtyAttributes;
 using UnityEngine;
@@ -36,6 +37,8 @@ public class PlayerSM : StateMachine
     
     [Header("Debug")]
     public TextMeshProUGUI debugText;
+
+    private bool isMovingUnit;
 
     private void Awake()
     {
@@ -91,11 +94,40 @@ public class PlayerSM : StateMachine
         clickedHex = selectedHex;
     }
     
-    
+    [Command]
     public void TryToMoveUnit(Unit unitToMove,Hex[] path)
     {
         Debug.Log($"Player is trying to move {unitToMove}, in position {unitToMove.hexGridIndex} ");
-        hexGrid.MoveUnit(unitToMove.hexGridIndex,path);
+        ServerMoveUnit(unitToMove,path);
+        RpcMoveUnit(unitToMove,path);
+    }
+
+    private void ServerMoveUnit(Unit unitToMove, Hex[] path)
+    {
+        StartCoroutine(MoveUnitRoutine(unitToMove, path));
+    }
+    
+    [ClientRpc]
+    private void RpcMoveUnit(Unit unitToMove, Hex[] path)
+    {
+        StartCoroutine(MoveUnitRoutine(unitToMove, path));
+    }
+    
+    private IEnumerator MoveUnitRoutine(Unit unit, Hex[] path)
+    {
+        isMovingUnit = true;
+        foreach (var hex in path)
+        {
+            unit.currentHex.OnUnitExit(unit);
+            
+            unit.transform.position = hex.transform.position + Vector3.up * 2f;
+            
+            hex.OnUnitEnter(unit);
+            
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        isMovingUnit = false;
     }
 
     public void TryToEnterNextPhase()

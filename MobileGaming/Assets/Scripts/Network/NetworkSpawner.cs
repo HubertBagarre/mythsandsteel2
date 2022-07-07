@@ -24,7 +24,7 @@ public class NetworkSpawner
             for (sbyte y = 0; y < mapSize.y; y++)
             {
                 var xPos = y % 2 == 0 ? 2 * x : 2 * x + 1;
-                var hexGameObject = Object.Instantiate(((NewNetworkRoomManager)NetworkManager.singleton).hexPrefab, new Vector3(xPos, 0, -1.73f * y), Quaternion.identity,HexGrid.instance.transform);
+                var hexGameObject = Object.Instantiate(((NewNetworkRoomManager)NetworkManager.singleton).hexPrefab, new Vector3(xPos, 0, -1.73f * y), Quaternion.identity);
                 hexGameObject.name = $"Hex {x},{y}";
                 var hex = hexGameObject.GetComponent<Hex>();
                 hex.col = x;
@@ -46,7 +46,7 @@ public class NetworkSpawner
             for (int y = 0; y < 11; y+=10)
             {
                 var unitObject = Object.Instantiate(((NewNetworkRoomManager) NetworkManager.singleton).unitPrefab,
-                    Vector3.zero, Quaternion.identity, HexGrid.instance.transform);
+                    Vector3.zero, Quaternion.identity);
                 unitObject.name = $"Unit {x},{y}";
                 var unit = unitObject.GetComponent<Unit>();
                 unit.hexRow = Convert.ToSByte(x);

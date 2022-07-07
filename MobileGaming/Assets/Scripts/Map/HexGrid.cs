@@ -149,7 +149,7 @@ public class HexGrid : NetworkBehaviour
     {
         return Hex.DistanceBetween(a, b);
     }
-
+    
     public void SetAccessibleHexes(Hex startingHex, int movement,int playerBlock)
     {
         hexesToReturn.Clear();
@@ -200,30 +200,14 @@ public class HexGrid : NetworkBehaviour
             }
         }
     }
-    
-    
-    public void MoveUnit(int unitIndex, Hex[] path)
-    {
-        var unit = units[unitIndex];
-        StartCoroutine(MoveUnitRoutine(unit, path));
-    }
-    
-    private IEnumerator MoveUnitRoutine(Unit unit, Hex[] path)
-    {
-        isMovingUnit = true;
-        foreach (var hex in path)
-        {
-            unit.currentHex.OnUnitExit(unit);
-            
-            unit.transform.position = hex.transform.position + Vector3.up * 2f;
-            
-            hex.OnUnitEnter(unit);
-            
-            yield return new WaitForSeconds(0.5f);
-        }
 
-        isMovingUnit = false;
+
+    public void OnMoveRequestReceived()
+    {
+        Debug.Log($"Received request to move Unit");    
     }
+    
+    
     
     public List<Hex> path = new List<Hex>();
     
