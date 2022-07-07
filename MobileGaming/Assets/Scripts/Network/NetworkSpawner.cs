@@ -41,9 +41,9 @@ public class NetworkSpawner
     {
         if (!NetworkServer.active) return;
 
-        for (int x = 0; x < 1; x++)
+        for (int x = 0; x < 10; x+=2)
         {
-            for (int y = 0; y < 1; y++)
+            for (int y = 0; y < 11; y+=10)
             {
                 var unitObject = Object.Instantiate(((NewNetworkRoomManager) NetworkManager.singleton).unitPrefab,
                     Vector3.zero, Quaternion.identity, HexGrid.instance.transform);
