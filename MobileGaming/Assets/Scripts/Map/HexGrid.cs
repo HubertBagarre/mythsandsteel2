@@ -83,6 +83,7 @@ public class HexGrid : NetworkBehaviour
             
             var targetHex = hexes[vector];
             unit.currentHex = targetHex;
+            targetHex.currentUnit = unit;
             unit.transform.position = targetHex.transform.position + Vector3.up * 2;
         }
     }
@@ -149,7 +150,7 @@ public class HexGrid : NetworkBehaviour
         return Hex.DistanceBetween(a, b);
     }
 
-    public void SetAccessibleHexes(Hex startingHex, int movement)
+    public void SetAccessibleHexes(Hex startingHex, int movement,int playerBlock)
     {
         hexesToReturn.Clear();
         hexesToReturn.Add(startingHex);
@@ -157,10 +158,10 @@ public class HexGrid : NetworkBehaviour
         {
             hex.currentCostToMove = -1;
         }
-        StartCoroutine(AccessibleRecursive(startingHex,movement));
+        StartCoroutine(AccessibleRecursive(startingHex,movement,playerBlock));
     }
     
-    private IEnumerator AccessibleRecursive(Hex startingHex,int movement,int costToMove = 1)
+    private IEnumerator AccessibleRecursive(Hex startingHex,int movement,int playerBlock,int costToMove = 1)
     {
         isFindingHex = false;
         
@@ -175,8 +176,15 @@ public class HexGrid : NetworkBehaviour
                 {
                     if (hex.movementCost != sbyte.MaxValue && !hexesToReturn.Contains(hex) && !accessibleHex.Contains(hex))
                     {
-                        if (hex.movementCost == 1 || costMoreHex.Contains(hex)) accessibleHex.Add(hex);
-                        else if (movement > 1) costMoreHex.Add(hex);
+                        var noEnemyUnit = true;
+                        if (hex.currentUnit != null) noEnemyUnit = (hex.currentUnit.playerId == playerBlock);
+                        
+                        if (noEnemyUnit)
+                        {
+                            if (hex.movementCost == 1 || costMoreHex.Contains(hex)) accessibleHex.Add(hex);
+                            else if (movement > 1) costMoreHex.Add(hex);
+                        }
+                        
                     }
                 }
             }
@@ -188,7 +196,7 @@ public class HexGrid : NetworkBehaviour
                 if (hex.currentCostToMove == -1) hex.currentCostToMove = costToMove;
                 hexesToReturn.Add(hex);
                 hexesToReturn = hexesToReturn.Distinct().ToList();
-                StartCoroutine(AccessibleRecursive(hex, movement - 1,costToMove + 1));
+                StartCoroutine(AccessibleRecursive(hex, movement - 1,playerBlock,costToMove + 1));
             }
         }
     }

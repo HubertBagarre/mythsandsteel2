@@ -34,7 +34,8 @@ namespace PlayerStates
             startingHex = unitToMove.currentHex;
             
             hexGrid = sm.hexGrid;
-            hexGrid.SetAccessibleHexes(startingHex,unitToMove.move);
+            
+            hexGrid.SetAccessibleHexes(startingHex,unitToMove.move,unitToMove.playerId);
         }
 
         private void ColorAccessibleTiles()
@@ -80,7 +81,9 @@ namespace PlayerStates
         private void OnHexSelected()
         {
             sm.clickedHex = false;
-            if (accessibleHex.Contains(sm.selectedHex) && sm.selectedHex != startingHex)
+            var selectedHex = sm.selectedHex;
+            
+            if (accessibleHex.Contains(sm.selectedHex) && selectedHex != startingHex && selectedHex.currentUnit == null)
             {
                 hexGrid.SetPath(sm.selectedHex,accessibleHex.ToArray());
                 waitingForPath = true;

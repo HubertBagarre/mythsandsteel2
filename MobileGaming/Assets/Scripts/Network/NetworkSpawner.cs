@@ -51,6 +51,7 @@ public class NetworkSpawner
                 var unit = unitObject.GetComponent<Unit>();
                 unit.hexRow = Convert.ToSByte(x);
                 unit.hexCol = Convert.ToSByte(y);
+                unit.playerId = y > 0 ? Convert.ToSByte(0) : Convert.ToSByte(1);
                 unit.baseMove = 3;
                 unit.move = 3;
                 NetworkServer.Spawn(unitObject);
