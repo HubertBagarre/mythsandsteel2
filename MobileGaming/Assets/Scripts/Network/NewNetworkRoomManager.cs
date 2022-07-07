@@ -18,6 +18,14 @@ using Mirror;
 /// </summary>
 public class NewNetworkRoomManager : NetworkRoomManager
 {
+    [Header("Spawnables")]
+    
+    public GameObject unitPrefab;
+    public GameObject hexGridPrefab;
+    public GameObject hexPrefab;
+    public GameObject gameStateMachinePrefab;
+    
+    
     #region Server Callbacks
 
     /// <summary>
@@ -62,7 +70,11 @@ public class NewNetworkRoomManager : NetworkRoomManager
     /// This is called on the server when a networked scene finishes loading.
     /// </summary>
     /// <param name="sceneName">Name of the new scene.</param>
-    public override void OnRoomServerSceneChanged(string sceneName) { }
+    public override void OnRoomServerSceneChanged(string sceneName) {
+    {
+        if (sceneName == GameplayScene)
+            NetworkSpawner.InitialSpawn();
+    } }
 
     /// <summary>
     /// This allows customization of the creation of the room-player object on the server.

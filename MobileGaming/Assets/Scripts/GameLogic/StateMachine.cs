@@ -1,6 +1,7 @@
+using Mirror;
 using UnityEngine;
 
-public class StateMachine : MonoBehaviour
+public class StateMachine : NetworkBehaviour
 {
     protected BaseState currentState;
 

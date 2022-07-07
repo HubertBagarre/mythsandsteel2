@@ -28,14 +28,12 @@ namespace PlayerStates
         private void OnUnitSelected()
         {
             sm.clickedUnit = false;
-            Debug.Log($"Selected {sm.selectedUnit}");
             sm.ChangeState(sm.movementSelectionState);
         }
 
         private void OnHexSelected()
         {
             sm.clickedHex = false;
-            Debug.Log($"Selected {sm.selectedHex}");
         }
     }
 }

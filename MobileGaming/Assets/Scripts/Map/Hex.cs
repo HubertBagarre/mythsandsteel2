@@ -7,9 +7,12 @@ using UnityEngine;
 
 public class Hex : NetworkBehaviour
 {
+    private HexGrid hexGrid;
+    
     [Header("Gaming")]
     [SyncVar] public sbyte movementCost = 1;
     public Unit currentUnit;
+    [SyncVar] public int currentTileID;
     public ScriptableTile tile;
     
     [Header("Offset Coordinates (odd-r)")]
@@ -34,6 +37,36 @@ public class Hex : NetworkBehaviour
     public int currentCostToMove = -1;
 
 
+    #region Generation
+
+    private void Start()
+    {
+        hexGrid = HexGrid.instance;
+        ApplyTile(currentTileID);
+        JoinHexGrid(this);
+        StartCoroutine(LateStart());
+    }
+
+    private IEnumerator LateStart()
+    {
+        yield return null;
+        hexGrid.UpdateNeighbours(this);
+    }
+    
+    public static void OddrToCube(Hex hex)
+    {
+        hex.q = Convert.ToSByte(hex.col - (hex.row - (hex.row & 1)) / 2);
+        hex.r = hex.row;
+        hex.s = Convert.ToSByte(-hex.q - hex.r);
+    }
+
+    public static void JoinHexGrid(Hex hex)
+    {
+        if(HexGrid.instance != null) HexGrid.instance.hexes.Add(new Vector3Int(hex.q,hex.r,hex.s),hex);
+    }
+    
+    #endregion
+    
     public static float DistanceBetween(Hex a, Hex b)
     {
         return (Mathf.Abs(a.q - b.q) + Mathf.Abs(a.r - b.r) + Mathf.Abs(a.s - b.s))/2f;
@@ -56,18 +89,13 @@ public class Hex : NetworkBehaviour
         return neighbours.Where(hex => hex != null).Where(hex => hex.movementCost <= movement).ToList();
     }
 
-
-    public static void OddrToCube(Hex hex)
+    
+    public void ApplyTile(int tileID)
     {
-        hex.q = Convert.ToSByte(hex.col - (hex.row - (hex.row & 1)) / 2);
-        hex.r = hex.row;
-        hex.s = Convert.ToSByte(-hex.q - hex.r);
-    }
-
-    public void ApplyTile(ScriptableTile newTile)
-    {
+        currentTileID = tileID;
+        var newTile = ObjectIDList.instance.tiles[currentTileID];
         tile = newTile;
-        if(modelParent.childCount >= 1) Destroy(modelParent.GetChild(0));
+        if(modelParent.childCount >= 1) Destroy(modelParent.GetChild(0).gameObject);
         if(tile.model == null)
         {
             movementCost = sbyte.MaxValue;
@@ -93,11 +121,13 @@ public class Hex : NetworkBehaviour
             _ => throw new ArgumentOutOfRangeException(nameof(color), color, null)
         };
     }
-
+    
     public void OnUnitEnter(Unit unit)
     {
         currentUnit = unit;
         currentUnit.currentHex = this;
+        currentUnit.hexCol = col;
+        currentUnit.hexRow = row;
         currentUnit.move -= movementCost;
     }
 

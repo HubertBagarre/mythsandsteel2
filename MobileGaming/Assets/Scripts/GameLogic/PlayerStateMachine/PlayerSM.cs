@@ -1,25 +1,34 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using Mirror;
 using NaughtyAttributes;
 using UnityEngine;
 using PlayerStates;
 using TMPro;
+using UnityEngine.UI;
 
 public class PlayerSM : StateMachine
 {
-    [HideInInspector] public PlayerIdleState idleState;
-    [HideInInspector] public PlayerMovementSelection movementSelectionState;
-    [HideInInspector] public PlayerAbilitySelection abilitySelectionState;
+    public PlayerIdleState idleState;
+    public PlayerMovementSelection movementSelectionState;
+    public PlayerAbilitySelection abilitySelectionState;
+    public PlayerInactiveState inactiveState;
+    
 
-    [Header("Managers")] [SerializeField] public HexGrid hexGrid;
-
+    [Header("Managers")]
+    public HexGrid hexGrid;
+    public GameSM gameManager;
+    public NetworkIdentity identity;
+    
     [Header("Selection")]
     [ReadOnly]public Unit selectedUnit;
     [ReadOnly]public Hex selectedHex;
     
     [Header("Inputs")]
     private PlayerInputManager inputManager;
+
+    [SerializeField] private Button nextPhaseButton;
+    [SerializeField] private Button attackButton;
+    [SerializeField] private Button abilityButton;
+    
     [SerializeField] private LayerMask layersToHit;
     [ReadOnly] public bool clickedUnit;
     [ReadOnly] public bool clickedHex;
@@ -40,10 +49,27 @@ public class PlayerSM : StateMachine
 
     protected override BaseState GetInitialState()
     {
+        if (!isLocalPlayer)
+        {
+            transform.GetChild(0).gameObject.SetActive(false);
+            CanInput(false);
+            return inactiveState;
+        }
+        
+        ResetInstances();
+        
         clickedUnit = false;
         clickedHex = false;
+        
         CanInput(true);
         return idleState;
+    }
+
+    public void ResetInstances()
+    {
+        hexGrid = HexGrid.instance;
+        gameManager = GameSM.instance;
+        identity = GetComponent<NetworkIdentity>();
     }
 
     public override void ChangeState(BaseState newState)
@@ -65,15 +91,43 @@ public class PlayerSM : StateMachine
         clickedHex = selectedHex;
     }
     
+    
+    public void TryToMoveUnit(Unit unitToMove,Hex[] path)
+    {
+        Debug.Log($"Player is trying to move {unitToMove}, in position {unitToMove.hexGridIndex} ");
+        hexGrid.MoveUnit(unitToMove.hexGridIndex,path);
+    }
+
+    public void TryToEnterNextPhase()
+    {
+        Debug.Log("Next Phase");
+    }
+
+    public void TryToAttack()
+    {
+        Debug.Log("Attack");
+    }
+
+    public void TryToUseAbility()
+    {
+        Debug.Log("Ability");
+    }
+    
     public void CanInput(bool value)
     {
         if (value)
         {
             inputManager.OnStartTouch += TryToSelectUnitOrTile;
+            nextPhaseButton.onClick.AddListener(TryToEnterNextPhase);
+            attackButton.onClick.AddListener(TryToAttack);
+            abilityButton.onClick.AddListener(TryToUseAbility);
         }
         else
         {
             inputManager.OnStartTouch -= TryToSelectUnitOrTile;
+            nextPhaseButton.onClick.RemoveListener(TryToEnterNextPhase);
+            attackButton.onClick.RemoveListener(TryToAttack);
+            abilityButton.onClick.RemoveListener(TryToUseAbility);
         }
     }
 }

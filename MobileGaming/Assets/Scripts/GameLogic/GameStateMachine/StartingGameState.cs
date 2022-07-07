@@ -12,6 +12,13 @@ namespace GameStates
         {
             sm = stateMachine;
         }
+
+        public override void Enter()
+        {
+            sm.ChangePlayer(Random.Range(0, 2));
+            
+            sm.ChangeState(sm.placementState);
+        }
     }
 }
 

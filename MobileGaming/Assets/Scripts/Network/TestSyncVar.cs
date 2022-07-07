@@ -15,9 +15,9 @@ public class TestSyncVar : NetworkBehaviour
         if(!isLocalPlayer) return;
         Debug.Log($"Changed value, was {prevV}, now is {newV}");
     }
-
+    
     private void Update()
     {
-        if (Input.GetKeyDown(keycode)) value++;
+        //if (Input.GetKeyDown(keycode)) value++;
     }
 }

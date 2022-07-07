@@ -12,5 +12,10 @@ namespace GameStates
         {
             sm = stateMachine;
         }
+        
+        public override void Enter()
+        {
+            
+        }
     }
 }

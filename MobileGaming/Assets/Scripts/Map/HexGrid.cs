@@ -2,15 +2,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Mirror;
 using NaughtyAttributes;
 using UnityEngine;
 
-public class HexGrid : MonoBehaviour
+public class HexGrid : NetworkBehaviour
 {
-    [Header("Testing")]
-    public GameObject unitPrefab;
+    [Header("Testing")] public GameObject unitPrefab;
     public sbyte unitMovement;
-    
+
+    [Header("Data Container")]
+    public List<Unit> units = new();
     public Dictionary<Vector3Int,Hex> hexes = new ();
     
     [Header("Generation Settings")]
@@ -24,8 +26,7 @@ public class HexGrid : MonoBehaviour
     public List<Hex> costMoreHex = new();
     public bool isMovingUnit = false;
     public bool isFindingPath = false;
-
-
+    
     private static Vector3Int[] directionOffsets = new[]
     {
         new Vector3Int(1, 0, -1),
@@ -36,39 +37,56 @@ public class HexGrid : MonoBehaviour
         new Vector3Int(0, 1, -1)
     };
 
+    public static HexGrid instance;
+
+    private void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(this);
+            return;
+        }
+
+        instance = this;
+    }
+
     private void Start()
     {
         camAnchor = Camera.main.transform.parent;
-        InstantiateHexes();
-    }
-
-    [Button]
-    public void InstantiateHexes()
-    {
         DestroyPreviousGrid();
-        for (sbyte x = 0; x < mapSize.x; x++)
-        {
-            for (sbyte y = 0; y < mapSize.y; y++)
-            {
-                var xPos = y % 2 == 0 ? 2 * x : 2 * x + 1;
-                var hexGameObject = Instantiate(hexPrefab, new Vector3(xPos, 0, -1.73f * y), Quaternion.identity,transform);
-                hexGameObject.name = $"Hex {x},{y}";
-                var hex = hexGameObject.GetComponent<Hex>();
-                hex.col = x;
-                hex.row = y;
-                hex.currentCostToMove = -1;
-                Hex.OddrToCube(hex);
-                hex.ApplyTile(ObjectIDList.instance.tiles[1]);
-                hexes.Add(new Vector3Int(hex.q,hex.r,hex.s),hex);
-            }
-        }
+        NetworkSpawner.SpawnGrid(mapSize);
+        NetworkSpawner.SpawnUnits();
         
-        UpdateNeighbours();
-        CenterCamera();
-        
-        InstantiateUnit();
+        StartCoroutine(LateStart());
     }
 
+    private IEnumerator LateStart()
+    {
+        yield return null;
+        CenterCamera();
+        AssignUnitsToTiles();
+    }
+
+    private void AssignUnitsToTiles()
+    {
+        for (var i = 0; i < units.Count; i++)
+        {
+            var unit = units[i];
+
+            unit.hexGridIndex = Convert.ToSByte(i);
+            
+            var q = Convert.ToSByte(unit.hexCol - (unit.hexRow - (unit.hexRow & 1)) / 2);
+            var r = unit.hexRow;
+            var s = Convert.ToSByte(-q - r);
+            var vector = new Vector3Int(q, r, s);
+            if (!hexes.ContainsKey(vector)) continue;
+            
+            var targetHex = hexes[vector];
+            unit.currentHex = targetHex;
+            unit.transform.position = targetHex.transform.position + Vector3.up * 2;
+        }
+    }
+    
     private void DestroyPreviousGrid()
     {
         hexes.Clear();
@@ -78,22 +96,18 @@ public class HexGrid : MonoBehaviour
         }
     }
 
-    private void UpdateNeighbours()
+    public void UpdateNeighbours(Hex hex)
     {
-        foreach (var hex in hexes.Values)
+        for (var i = 0; i < 6; i++)
         {
-            for (var i = 0; i < 6; i++)
+            var offset = directionOffsets[i];
+            var testPos = new Vector3Int(hex.q, hex.r, hex.s) + offset;
+            if (hexes.ContainsKey(testPos))
             {
-                var offset = directionOffsets[i];
-                var testPos = new Vector3Int(hex.q,hex.r,hex.s) + offset;
-                if (hexes.ContainsKey(testPos))
-                {
-                    hex.neighbours[i] = hexes[testPos];
-                }
+                hex.neighbours[i] = hexes[testPos];
             }
         }
     }
-
     private void CenterCamera()
     {
         sbyte maxRow = 0;
@@ -179,8 +193,10 @@ public class HexGrid : MonoBehaviour
         }
     }
     
-    public void MoveUnit(Unit unit, Hex[] path)
+    
+    public void MoveUnit(int unitIndex, Hex[] path)
     {
+        var unit = units[unitIndex];
         StartCoroutine(MoveUnitRoutine(unit, path));
     }
     

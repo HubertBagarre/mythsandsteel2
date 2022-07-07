@@ -10,4 +10,15 @@ public class BetweenTurnState : BaseState
     {
         sm = stateMachine;
     }
+    
+    public override void Enter()
+    {
+        ChangePlayer();
+        sm.ChangeState(sm.playerPreparationState);
+    }
+
+    private void ChangePlayer()
+    {
+        sm.ChangePlayer(sm.currentPlayer == 1 ? 0 : 1);
+    }
 }

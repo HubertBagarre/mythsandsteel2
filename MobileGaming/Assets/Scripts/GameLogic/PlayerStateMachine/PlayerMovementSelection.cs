@@ -90,12 +90,12 @@ namespace PlayerStates
                 sm.ChangeState(sm.idleState);
             }
         }
-
+        
         private void OnPathFound()
         {
             waitingForPath = false;
             var path = hexGrid.path.ToArray().Reverse().ToArray();
-            hexGrid.MoveUnit(unitToMove,path);
+            sm.TryToMoveUnit(unitToMove,path);
             sm.ChangeState(sm.idleState);
         }
         

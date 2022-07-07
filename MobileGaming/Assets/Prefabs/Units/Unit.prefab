@@ -92,6 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3394377649539923441}
+  - component: {fileID: 5601284240720097670}
   - component: {fileID: 3394377649539923442}
   - component: {fileID: 3394377649539923443}
   - component: {fileID: 8842474755492759944}
@@ -119,6 +120,40 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5601284240720097670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3394377649539923444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  clientAuthority: 1
+  sendInterval: 0.05
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 0
+  bufferTimeMultiplier: 1
+  bufferSizeLimit: 64
+  catchupThreshold: 4
+  catchupMultiplier: 0.1
+  onlySyncOnChange: 1
+  bufferResetMultiplier: 5
+  positionSensitivity: 0.01
+  rotationSensitivity: 0.01
+  scaleSensitivity: 0.01
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
 --- !u!114 &3394377649539923442
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,6 +187,8 @@ MonoBehaviour:
   syncInterval: 0.1
   unitName: 
   playerId: 0
+  hexCol: 0
+  hexRow: 0
   currentHex: {fileID: 0}
   faction: 
   className: 
@@ -159,18 +196,21 @@ MonoBehaviour:
   basePhysicDef: 0
   baseMagicDef: 0
   baseAtkPerTurn: 0
-  baseDamage: 0
+  basePhysicDamage: 0
+  baseMagicDamage: 0
   baseRange: 0
   baseMove: 0
   maxHp: 0
+  actualHp: 0
   physicDef: 0
   magicDef: 0
   atkPerTurn: 0
-  damage: 0
+  physicDamage: 0
+  magicDamage: 0
   range: 0
   move: 0
   Animator: {fileID: 0}
-  outlineScript: {fileID: 0}
+  outlineScript: {fileID: 7322122498380247939}
   unitScriptable: {fileID: 0}
   abilityScriptable: {fileID: 0}
   damageModifier: {fileID: 0}
@@ -228,6 +268,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3394377649723518272}
+  - component: {fileID: 7322122498380247939}
   m_Layer: 0
   m_Name: Main
   m_TagString: Untagged
@@ -251,3 +292,21 @@ Transform:
   m_Father: {fileID: 3394377649539923441}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7322122498380247939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3394377649723518273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 0
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
