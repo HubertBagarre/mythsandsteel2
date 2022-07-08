@@ -1729,8 +1729,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  playerId: 0
+  canSendInfo: 0
   hexGrid: {fileID: 0}
-  gameManager: {fileID: 0}
+  actionsLeftText: {fileID: 3285862482596198323}
   selectedUnit: {fileID: 0}
   selectedHex: {fileID: 0}
   nextPhaseButton: {fileID: 2857102830461403761}
@@ -1742,6 +1744,9 @@ MonoBehaviour:
   clickedUnit: 0
   clickedHex: 0
   debugText: {fileID: 4446024842820702547}
+  maxActions: 3
+  actionsLeft: 0
+  isMovingUnit: 0
 --- !u!1 &8870125148663203230
 GameObject:
   m_ObjectHideFlags: 0

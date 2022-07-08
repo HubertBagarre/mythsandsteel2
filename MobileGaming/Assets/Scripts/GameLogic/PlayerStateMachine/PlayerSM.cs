@@ -13,34 +13,39 @@ public class PlayerSM : StateMachine
     public PlayerAbilitySelection abilitySelectionState;
     public PlayerInactiveState inactiveState;
 
-    [Header("Network")]
-    [SyncVar] public int playerId;
-    [SyncVar(hook = nameof(CanInput))] public bool canSendInfo;
-    
+    [Header("Network")] [SyncVar] public int playerId;
+    [SyncVar(hook = nameof(OnCanInputValueChanged))] public bool canSendInfo;
+
     [Header("Managers")]
     public HexGrid hexGrid;
-    public GameSM gameManager;
 
-    [Header("Selection")]
-    [ReadOnly] public Unit selectedUnit;
-    [ReadOnly] public Hex selectedHex;
+    [Header("User Interface")] 
+    [SerializeField] private TextMeshProUGUI actionsLeftText;
     
-    [Header("Inputs")]
-    private PlayerInputManager inputManager;
+    [Header("Selection")] [ReadOnly] public Unit selectedUnit;
+    [ReadOnly] public Hex selectedHex;
+
+    [Header("Inputs")] private PlayerInputManager inputManager;
 
     [SerializeField] private Button nextPhaseButton;
     [SerializeField] private Button attackButton;
     [SerializeField] private Button abilityButton;
-    
+
     [SerializeField] private LayerMask layersToHit;
     [ReadOnly] public bool clickedUnit;
     [ReadOnly] public bool clickedHex;
     private Camera cam;
-    
-    [Header("Debug")]
-    public TextMeshProUGUI debugText;
 
-    private bool isMovingUnit;
+    [Header("Debug")] public TextMeshProUGUI debugText;
+    
+    [Header("Actions")]
+    [SyncVar] public int maxActions;
+    [SyncVar(hook = nameof(OnActionsLeftValueChanged))] public int actionsLeft;
+    
+
+
+    [Header("Movement")]
+    public bool isMovingUnit;
 
     private void Awake()
     {
@@ -71,7 +76,6 @@ public class PlayerSM : StateMachine
     public void ResetInstances()
     {
         hexGrid = HexGrid.instance;
-        if(isServer) gameManager = GameSM.instance;
     }
 
     public override void ChangeState(BaseState newState)
@@ -99,22 +103,24 @@ public class PlayerSM : StateMachine
     public void TryToMoveUnit(Unit unitToMove,Hex[] path)
     {
         if(!canSendInfo || unitToMove.playerId != playerId) return;
+        if(!unitToMove.hasBeenActivated) actionsLeft--;
+        unitToMove.hasBeenActivated = true;
         ServerMoveUnit(unitToMove,path);
         RpcMoveUnit(unitToMove,path);
     }
 
     private void ServerMoveUnit(Unit unitToMove, Hex[] path)
     {
-        StartCoroutine(MoveUnitRoutine(unitToMove, path));
+        StartCoroutine(MoveUnitRoutine(unitToMove, path,true));
     }
     
     [ClientRpc]
     private void RpcMoveUnit(Unit unitToMove, Hex[] path)
     {
-        StartCoroutine(MoveUnitRoutine(unitToMove, path));
+        StartCoroutine(MoveUnitRoutine(unitToMove, path,false));
     }
     
-    private IEnumerator MoveUnitRoutine(Unit unit, Hex[] path)
+    private IEnumerator MoveUnitRoutine(Unit unit, Hex[] path,bool decreaseUnitMovement)
     {
         isMovingUnit = true;
         foreach (var hex in path)
@@ -124,6 +130,8 @@ public class PlayerSM : StateMachine
             unit.transform.position = hex.transform.position + Vector3.up * 2f;
             
             hex.OnUnitEnter(unit);
+            
+            if(decreaseUnitMovement) hex.DecreaseUnitMovement(unit);
             
             yield return new WaitForSeconds(0.5f);
         }
@@ -150,9 +158,13 @@ public class PlayerSM : StateMachine
     {
         Debug.Log("Ability");
     }
+
+    private void OnActionsLeftValueChanged(int prevValue, int newValue)
+    {
+        actionsLeftText.text = newValue.ToString();
+    }
     
-    
-    public void CanInput(bool prevValue,bool newValue)
+    private void OnCanInputValueChanged(bool prevValue,bool newValue)
     {
         if(!isLocalPlayer) return;
         if (newValue)

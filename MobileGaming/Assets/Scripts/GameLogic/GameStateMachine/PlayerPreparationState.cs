@@ -15,6 +15,8 @@ namespace GameStates
         
         public override void Enter()
         {
+            sm.ResetPlayerActions(sm.players[sm.currentPlayer]);
+            
             sm.ChangeState(sm.playerTurnState);
         }
     }

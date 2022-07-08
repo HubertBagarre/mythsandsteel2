@@ -130,6 +130,10 @@ public class Hex : NetworkBehaviour
         currentUnit.currentHex = this;
         currentUnit.hexCol = col;
         currentUnit.hexRow = row;
+    }
+    
+    public void DecreaseUnitMovement(Unit unit)
+    {
         currentUnit.move -= movementCost;
     }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using GameStates;
 using Mirror;
@@ -98,7 +99,18 @@ public class GameSM : StateMachine
         debugText2.text = $"Current player : {currentPlayer}";
     }
 
-    [ClientRpc]
+    public void ResetPlayerActions(PlayerSM playerSm)
+    {
+        playerSm.actionsLeft = playerSm.maxActions;
+
+        var hexGrid = HexGrid.instance;
+        foreach (var unit in hexGrid.units.Where(unit => unit.playerId == currentPlayer))
+        {
+            unit.hasBeenActivated = false;
+            unit.move = unit.baseMove;
+        }
+    }
+    
     private void RpcUpdatePlayerUI()
     {
         debugText2.text = $"Current player : {currentPlayer}";

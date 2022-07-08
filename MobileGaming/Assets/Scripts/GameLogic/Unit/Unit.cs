@@ -39,9 +39,10 @@ public class Unit : NetworkBehaviour
     [SyncVar] public sbyte magicDamage;
     [SyncVar] public sbyte range;
     [SyncVar] public sbyte move;
+    [SyncVar] public bool hasBeenActivated;
 
     [Header("Components")]
-    public NetworkAnimator Animator;
+    public NetworkAnimator animator;
     public Outline outlineScript;
     
     [Header("Scriptables")]
