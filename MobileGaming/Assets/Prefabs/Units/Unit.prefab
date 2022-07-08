@@ -187,6 +187,7 @@ MonoBehaviour:
   syncInterval: 0.1
   unitName: 
   playerId: 0
+  hexGridIndex: 0
   hexCol: 0
   hexRow: 0
   currentHex: {fileID: 0}
@@ -209,7 +210,8 @@ MonoBehaviour:
   magicDamage: 0
   range: 0
   move: 0
-  Animator: {fileID: 0}
+  hasBeenActivated: 0
+  animator: {fileID: 0}
   outlineScript: {fileID: 7322122498380247939}
   unitScriptable: {fileID: 0}
   abilityScriptable: {fileID: 0}
@@ -306,7 +308,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineMode: 0
   outlineColor: {r: 1, g: 1, b: 1, a: 1}
-  outlineWidth: 0
+  outlineWidth: 10
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []

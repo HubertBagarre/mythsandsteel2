@@ -55,6 +55,14 @@ public class GameSM : StateMachine
         
     }
 
+    public void ResetInstance()
+    {
+        Destroy(HexGrid.instance.gameObject);
+        HexGrid.instance = null;
+        
+        
+    }
+
     protected override BaseState GetInitialState()
     {
         currentPlayer = -1;
@@ -79,12 +87,8 @@ public class GameSM : StateMachine
     public void SelectRandomPlayer()
     {
         ChangePlayer(Random.Range(0, 2));
-        
-        Debug.Log($"Player is {currentPlayer}");
-        
-        RpcUpdatePlayerUI();
     }
-
+    
     #endregion
 
     public void AllowPlayerSend(int player)
@@ -113,10 +117,5 @@ public class GameSM : StateMachine
             unit.hasBeenActivated = false;
             unit.move = unit.baseMove;
         }
-    }
-    
-    private void RpcUpdatePlayerUI()
-    {
-        debugText2.text = $"Current player : {currentPlayer}";
     }
 }

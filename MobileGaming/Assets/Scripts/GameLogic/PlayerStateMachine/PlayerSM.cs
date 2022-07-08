@@ -22,6 +22,9 @@ public class PlayerSM : StateMachine
     [Header("User Interface")] 
     [SerializeField] private TextMeshProUGUI actionsLeftText;
     
+    [SerializeField] private Color allyOutlineColor;
+    [SerializeField] private Color enemyOutlineColor;
+    
     [Header("Selection")] [ReadOnly] public Unit selectedUnit;
     [ReadOnly] public Hex selectedHex;
 
@@ -70,6 +73,8 @@ public class PlayerSM : StateMachine
         
         clickedUnit = false;
         clickedHex = false;
+
+        RefreshUnitOutlines();
         
         return idleState;
     }
@@ -96,6 +101,23 @@ public class PlayerSM : StateMachine
         selectedHex = objectHit.GetComponent<Hex>();
         clickedUnit = selectedUnit;
         clickedHex = selectedHex;
+    }
+
+    public void RefreshUnitOutlines()
+    {
+        StartCoroutine(OutlineUnits());
+    }
+    
+    private IEnumerator OutlineUnits()
+    {
+        if(!isLocalPlayer) yield break;
+
+        yield return new WaitUntil(() => hexGrid.isDoneLoadingMap);
+        
+        foreach (var unit in hexGrid.units)
+        {
+            unit.outlineScript.OutlineColor = unit.playerId == playerId ? allyOutlineColor : enemyOutlineColor;
+        }
     }
     
     #region UnitMovement

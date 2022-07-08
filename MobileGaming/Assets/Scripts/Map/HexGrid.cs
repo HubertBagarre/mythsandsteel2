@@ -8,8 +8,8 @@ using UnityEngine;
 
 public class HexGrid : NetworkBehaviour
 {
-    [Header("Testing")] public GameObject unitPrefab;
-    public sbyte unitMovement;
+    [Header("Network")]
+    [SyncVar] public bool isDoneLoadingMap;
 
     [Header("Data Container")]
     public List<Unit> units = new();
@@ -53,6 +53,7 @@ public class HexGrid : NetworkBehaviour
     private void Start()
     {
         camAnchor = Camera.main.transform.parent;
+        isDoneLoadingMap = false;
         DestroyPreviousGrid();
         NetworkSpawner.SpawnGrid(mapSize);
         NetworkSpawner.SpawnUnits();
@@ -65,6 +66,7 @@ public class HexGrid : NetworkBehaviour
         yield return null;
         CenterCamera();
         AssignUnitsToTiles();
+        isDoneLoadingMap = true;
     }
 
     private void AssignUnitsToTiles()
@@ -91,6 +93,7 @@ public class HexGrid : NetworkBehaviour
     private void DestroyPreviousGrid()
     {
         hexes.Clear();
+        units.Clear();
         for (var i = transform.childCount - 1; i >= 0; i--)
         {
             Destroy(transform.GetChild(i).gameObject);
@@ -246,14 +249,5 @@ public class HexGrid : NetworkBehaviour
         path.Add(returnHex);
         StartCoroutine(RecursivePath(returnHex, accessibleHexes));
 
-    }
-    
-
-    public void InstantiateUnit()
-    {
-        var unit = Instantiate(unitPrefab, new Vector3(10, 2, -1.73f * 4), Quaternion.identity).GetComponent<Unit>();
-        hexes[new Vector3Int(3,4,-7)].OnUnitEnter(unit);
-        unit.baseMove = unitMovement;
-        unit.move = unitMovement;
     }
 }

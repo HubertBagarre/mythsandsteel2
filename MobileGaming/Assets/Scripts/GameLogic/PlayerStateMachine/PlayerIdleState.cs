@@ -17,6 +17,7 @@ namespace PlayerStates
         {
             sm.debugText.text = $"Player {sm.playerId}, {this}";
             
+            sm.RefreshUnitOutlines();
         }
 
         public override void UpdateLogic()

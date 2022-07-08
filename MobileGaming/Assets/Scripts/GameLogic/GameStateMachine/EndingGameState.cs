@@ -18,5 +18,10 @@ namespace GameStates
             sm.players[0] = null;
             sm.players[1] = null;
         }
+
+        public override void Exit()
+        {
+            sm.ResetInstance();
+        }
     }
 }

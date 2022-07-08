@@ -1733,6 +1733,8 @@ MonoBehaviour:
   canSendInfo: 0
   hexGrid: {fileID: 0}
   actionsLeftText: {fileID: 3285862482596198323}
+  allyOutlineColor: {r: 0.067178726, g: 1, b: 0, a: 1}
+  enemyOutlineColor: {r: 1, g: 0, b: 0, a: 1}
   selectedUnit: {fileID: 0}
   selectedHex: {fileID: 0}
   nextPhaseButton: {fileID: 2857102830461403761}
