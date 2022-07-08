@@ -3787,7 +3787,7 @@ MonoBehaviour:
   - {fileID: 2528794637835303008, guid: 836f21ee943f15246b5ed830d862ceb3, type: 3}
   - {fileID: 4498166596259381530, guid: a2b97815fac77c24c9812c4dd7e17239, type: 3}
   showRoomGUI: 1
-  minPlayers: 1
+  minPlayers: 2
   roomPlayerPrefab: {fileID: 68502856925070404, guid: e787c8c397be2ef42a4aae6449492390, type: 3}
   RoomScene: Assets/Scenes/Shipped Scenes/RoomScene.unity
   GameplayScene: Assets/Scenes/Shipped Scenes/GameScene.unity

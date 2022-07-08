@@ -97,6 +97,10 @@ public class GameSM : StateMachine
     {
         currentPlayer = player;
         debugText2.text = $"Current player : {currentPlayer}";
+        foreach (var playe in players)
+        {
+            playe.DisplayIfItsYourTurn(player);
+        }
     }
 
     public void ResetPlayerActions(PlayerSM playerSm)

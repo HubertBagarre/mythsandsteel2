@@ -52,6 +52,7 @@ public class PlayerSM : StateMachine
         idleState = new PlayerIdleState(this);
         movementSelectionState = new PlayerMovementSelection(this);
         abilitySelectionState = new PlayerAbilitySelection(this);
+        inactiveState = new PlayerInactiveState(this);
         
         inputManager = PlayerInputManager.instance;
         cam = Camera.main;
@@ -159,6 +160,17 @@ public class PlayerSM : StateMachine
         Debug.Log("Ability");
     }
 
+    [ClientRpc]
+    public void DisplayIfItsYourTurn(int playerTurn)
+    {
+        // TODO - Replace with disable button and play animation
+        
+        var textToDisplay = (playerId == playerTurn) ? actionsLeft.ToString() : "E";
+        actionsLeftText.text = $"{textToDisplay}";
+    }
+
+    #region hooks
+
     private void OnActionsLeftValueChanged(int prevValue, int newValue)
     {
         actionsLeftText.text = newValue.ToString();
@@ -186,4 +198,8 @@ public class PlayerSM : StateMachine
             Debug.Log("You Can't Send");
         }
     }
+
+    #endregion
+    
+    
 }
