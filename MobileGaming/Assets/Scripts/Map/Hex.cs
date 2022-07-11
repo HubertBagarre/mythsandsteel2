@@ -11,8 +11,8 @@ public class Hex : NetworkBehaviour
     
     [Header("Gaming")]
     [SyncVar] public sbyte movementCost = 1;
-    public Unit currentUnit;
-    private Unit previousUnit;
+    [SyncVar] public Unit currentUnit;
+    [SyncVar] private Unit previousUnit;
     [SyncVar] public int currentTileID;
     public ScriptableTile tile;
     

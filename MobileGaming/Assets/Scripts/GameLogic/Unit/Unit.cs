@@ -15,7 +15,7 @@ public class Unit : NetworkBehaviour
     [Header("Position")]
     [SyncVar] public sbyte hexCol;
     [SyncVar] public sbyte hexRow;
-    public Hex currentHex;
+    [SyncVar] public Hex currentHex;
 
     [Header("Base Stats")]
     [SyncVar,ReadOnly] public string faction;
@@ -53,6 +53,20 @@ public class Unit : NetworkBehaviour
 
     public void ChangeTransformPosition(Vector3 newPos)
     {
+        Debug.Log("Changing pos");
+        ServerChangePosition(newPos);
+        RpcChangePosition(newPos);
+    }
+    
+    private void ServerChangePosition(Vector3 newPos)
+    {
+        transform.position = newPos;
+    }
+    
+    [ClientRpc]
+    private void RpcChangePosition(Vector3 newPos)
+    {
+        transform.position = newPos;
         
     }
     
