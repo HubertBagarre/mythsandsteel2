@@ -105,7 +105,7 @@ public class PlayerSM : StateMachine
 
     public void RefreshUnitOutlines()
     {
-        StartCoroutine(OutlineUnits());
+        //StartCoroutine(OutlineUnits());
     }
     
     private IEnumerator OutlineUnits()

@@ -16,17 +16,31 @@ namespace GameStates
 
         public override void Enter()
         {
+            hexGrid = HexGrid.instance;
             
+            sm.AutoUnitPlacementReady();
         }
 
         public override void UpdateLogic()
         {
-            if(sm.player0UnitsPlaced && sm.player1UnitsPlaced) OnUnitsPlaced();
+            if (sm.unitsPlaced) OnUnitsPlaced();
+            if(sm.player0UnitsPlaced && sm.player1UnitsPlaced) OnPlayerUnitsPlaced();
         }
-
+        
         private void OnUnitsPlaced()
         {
-            
+            sm.unitsPlaced = false;
+            hexGrid.ServerAssignUnitsToTiles();
+            sm.ChangeState(sm.prePlayerTurn);
         }
+
+        private void OnPlayerUnitsPlaced()
+        {
+            sm.player0UnitsPlaced = false;
+            sm.player1UnitsPlaced = false;
+            sm.PlaceUnits();
+        }
+
+        
     }
 }

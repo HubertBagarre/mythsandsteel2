@@ -50,16 +50,12 @@ public class Unit : NetworkBehaviour
     public ScriptableAbility abilityScriptable;
     public ScriptableAbility damageModifier;
 
-    private void Start()
-    {
-        JoinHexGrid(this);
-    }
 
-    private static void JoinHexGrid(Unit unit)
+    public void ChangeTransformPosition(Vector3 newPos)
     {
-        HexGrid.instance.units.Add(unit);
+        
     }
-
+    
     public void TakeDamage(sbyte damageTaken)
     {
         actualHp -= damageTaken;

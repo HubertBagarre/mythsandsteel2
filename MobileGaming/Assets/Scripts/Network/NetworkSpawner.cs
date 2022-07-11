@@ -38,6 +38,7 @@ public class NetworkSpawner
                 hex.currentCostToMove = -1;
                 hex.currentTileID = 1;
                 Hex.OddrToCube(hex);
+                Hex.JoinHexGrid(hex);
                 NetworkServer.Spawn(hexGameObject);
             }
         }
@@ -49,10 +50,25 @@ public class NetworkSpawner
             Vector3.zero, Quaternion.identity);
         unitObject.name = $"Unit {position.x},{position.y}";
         var spawnedUnit = unitObject.GetComponent<Unit>();
-        unit.hexRow = Convert.ToSByte(position.x);
-        unit.hexCol = Convert.ToSByte(position.y);
-        unit.playerId = player;
-        spawnedUnit = unit;
+        spawnedUnit.hexRow = Convert.ToSByte(position.x);
+        spawnedUnit.hexCol = Convert.ToSByte(position.y);
+        spawnedUnit.playerId = player;
+        spawnedUnit.baseMove = 3;
+        HexGrid.instance.units.Add(spawnedUnit);
+        NetworkServer.Spawn(unitObject);
+    }
+    
+    public static void SpawnUnit(Vector2 position, sbyte player)
+    {
+        var unitObject = Object.Instantiate(((NewNetworkRoomManager) NetworkManager.singleton).unitPrefab,
+            Vector3.zero, Quaternion.identity);
+        unitObject.name = $"Unit {position.x},{position.y}";
+        var spawnedUnit = unitObject.GetComponent<Unit>();
+        spawnedUnit.hexRow = Convert.ToSByte(position.x);
+        spawnedUnit.hexCol = Convert.ToSByte(position.y);
+        spawnedUnit.playerId = player;
+        spawnedUnit.baseMove = 3;
+        HexGrid.instance.units.Add(spawnedUnit);
         NetworkServer.Spawn(unitObject);
     }
 

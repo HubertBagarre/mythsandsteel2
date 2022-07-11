@@ -36,23 +36,6 @@ public class Hex : NetworkBehaviour
 
     [Header("PathFinding")]
     public int currentCostToMove = -1;
-
-
-    #region Generation
-
-    private void Start()
-    {
-        hexGrid = HexGrid.instance;
-        ApplyTile(currentTileID);
-        JoinHexGrid(this);
-        StartCoroutine(LateStart());
-    }
-
-    private IEnumerator LateStart()
-    {
-        yield return null;
-        hexGrid.UpdateNeighbours(this);
-    }
     
     public static void OddrToCube(Hex hex)
     {
@@ -65,8 +48,6 @@ public class Hex : NetworkBehaviour
     {
         if(HexGrid.instance != null) HexGrid.instance.hexes.Add(new Vector3Int(hex.q,hex.r,hex.s),hex);
     }
-    
-    #endregion
     
     public static float DistanceBetween(Hex a, Hex b)
     {
@@ -91,7 +72,13 @@ public class Hex : NetworkBehaviour
     }
 
     
-    public void ApplyTile(int tileID)
+    public void ApplyTileServer(int tileID)
+    {
+        ApplyTile(tileID);
+        RpcApplyChanges(tileID);
+    }
+
+    private void ApplyTile(int tileID)
     {
         currentTileID = tileID;
         var newTile = ObjectIDList.instance.tiles[currentTileID];
@@ -108,6 +95,12 @@ public class Hex : NetworkBehaviour
         normalMat = modelRenderer.material;
         model.transform.localPosition = Vector3.zero;
         movementCost = tile.movementCost;
+    }
+
+    [ClientRpc]
+    private void RpcApplyChanges(int tileID)
+    {
+        ApplyTile(tileID);
     }
 
     public enum HexColors {Normal, Unselectable, Selectable, Selected}

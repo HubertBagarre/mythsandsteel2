@@ -64,11 +64,15 @@ public class HexGrid : NetworkBehaviour
         NetworkSpawner.SpawnGrid(mapSize);
     }
 
-    public void SpawnUnits()
+    public void UpdateHexNeighbours()
     {
-        AssignUnitsToTiles();
+        foreach (var hex in hexes.Values)
+        {
+            UpdateNeighbours(hex);
+        }
     }
     
+    /*
     private void Start()
     {
         
@@ -84,9 +88,11 @@ public class HexGrid : NetworkBehaviour
         
         isDoneLoadingMap = true;
     }
+    */
 
-    private void AssignUnitsToTiles()
+    public void ServerAssignUnitsToTiles()
     {
+        Debug.Log($"Assigning units to hexes");
         for (var i = 0; i < units.Count; i++)
         {
             var unit = units[i];
@@ -102,10 +108,11 @@ public class HexGrid : NetworkBehaviour
             var targetHex = hexes[vector];
             unit.currentHex = targetHex;
             targetHex.currentUnit = unit;
-            unit.transform.position = targetHex.transform.position + Vector3.up * 2;
+            var position = targetHex.transform.position + Vector3.up * 2;
+            unit.ChangeTransformPosition(position);
         }
     }
-    
+
     private void DestroyPreviousGrid()
     {
         hexes.Clear();

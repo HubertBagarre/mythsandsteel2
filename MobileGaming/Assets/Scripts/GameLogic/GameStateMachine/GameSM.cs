@@ -19,6 +19,8 @@ public class GameSM : StateMachine
     public EndingGameState endingState; // Winner Display, End of Game
     public BetweenTurnState betweenTurnState; // Between Turn effects
 
+    //private HexGrid hexGrid;
+
     [Header("Debug")]
     public TextMeshProUGUI debugText;
     public TextMeshProUGUI debugText2;
@@ -29,7 +31,7 @@ public class GameSM : StateMachine
     
     [Header("Trash Flags")]
     public bool isMapGenerated;
-    public bool areUnitsPlaced;
+    public bool unitsPlaced;
     public bool player0UnitsPlaced;
     public bool player1UnitsPlaced;
     
@@ -76,8 +78,10 @@ public class GameSM : StateMachine
 
     private void InitVariables()
     {
+        //hexGrid = HexGrid.instance;
+
         isMapGenerated = false;
-        areUnitsPlaced = false;
+        unitsPlaced = false;
         playerTurnOver = false;
 
         player0UnitsPlaced = false;
@@ -110,32 +114,93 @@ public class GameSM : StateMachine
     {
         ChangePlayer(Random.Range(0, 2));
     }
+
+    public void StartGenerationRoutine()
+    {
+        StartCoroutine(MapGenerationRoutine());
+    }
+
+    private IEnumerator MapGenerationRoutine()
+    {
+        var hexGrid = HexGrid.instance;
+        
+        SelectRandomPlayer();
+
+        yield return null;
+        
+        hexGrid.GenerateMap();
+
+        yield return null;
+
+        
+        
+        yield return null;
+        
+        foreach (var hex in hexGrid.hexes.Values)
+        {
+            hex.ApplyTileServer(hex.currentTileID);
+        }
+        
+        isMapGenerated = true;
+    }
     
     #endregion
     
     #region UnitPlacement
 
-    public void PlaceUnits(Unit[] units, Vector2Int[] positions,int player)
+    public void AutoUnitPlacementReady()
     {
-        var lenght = units.Length >= positions.Length ? positions.Length : units.Length;
-        for (int i = 0; i < lenght; i++)
+        StartCoroutine(AutoReadyRoutine());
+    }
+
+    private IEnumerator AutoReadyRoutine()
+    {
+        yield return null;
+        player0UnitsPlaced = true;
+        player1UnitsPlaced = true;
+    }
+    
+    private static void PlacePlayerUnits(Unit[] units, Vector2Int[] positions,int player)
+    {
+        for (int i = 0; i < positions.Length; i++)
         {
-            NetworkSpawner.SpawnUnit(units[i],positions[i],Convert.ToSByte(player));
+            NetworkSpawner.SpawnUnit(positions[i],Convert.ToSByte(player));
         }
     }
 
-    private IEnumerator EnterUnitPlacementRoutine()
+    public void PlaceUnits()
     {
-        // Spawn Units
-        for (int i = 0; i < 4; i++)
+        StartCoroutine(UnitPlacementRoutine());
+    }
+
+    private IEnumerator UnitPlacementRoutine()
+    {
+        var positions1 = new List<Vector2Int>()
         {
-            
-        }
+            new Vector2Int(0,0),
+            new Vector2Int(2,0),
+            new Vector2Int(4,0),
+            new Vector2Int(6,0),
+            new Vector2Int(8,0),
+        };
         
-        
+        var positions0 = new List<Vector2Int>()
+        {
+            new Vector2Int(0,10),
+            new Vector2Int(2,10),
+            new Vector2Int(4,10),
+            new Vector2Int(6,10),
+            new Vector2Int(8,10),
+        };
+
         yield return null;
         
-        ChangeState(prePlayerTurn);
+        PlacePlayerUnits(null,positions1.ToArray(),1);
+        PlacePlayerUnits(null,positions0.ToArray(),0);
+
+        yield return new WaitForSeconds(1f);
+
+        unitsPlaced = true;
     }
 
     #endregion
