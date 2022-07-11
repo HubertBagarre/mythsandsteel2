@@ -26,7 +26,13 @@ public class GameSM : StateMachine
     [Header("Game Info")]
     public int currentPlayer;
     public PlayerSM[] players = new PlayerSM[2];
-
+    
+    [Header("Trash Flags")]
+    public bool isMapGenerated;
+    public bool areUnitsPlaced;
+    public bool player0UnitsPlaced;
+    public bool player1UnitsPlaced;
+    
     [Header("Triggers")]
     public bool playerTurnOver;
     
@@ -55,19 +61,29 @@ public class GameSM : StateMachine
         
     }
 
-    public void ResetInstance()
+    public void ResetHexGrid()
     {
         Destroy(HexGrid.instance.gameObject);
         HexGrid.instance = null;
-        
-        
     }
 
     protected override BaseState GetInitialState()
     {
-        currentPlayer = -1;
+        InitVariables();
 
         return lobbyState;
+    }
+
+    private void InitVariables()
+    {
+        isMapGenerated = false;
+        areUnitsPlaced = false;
+        playerTurnOver = false;
+
+        player0UnitsPlaced = false;
+        player1UnitsPlaced = false;
+
+        currentPlayer = -1;
     }
     
     public override void ChangeState(BaseState newState)
@@ -80,6 +96,12 @@ public class GameSM : StateMachine
     {
         ChangeState(lobbyState);
     }
+    
+    public void AllowPlayerSend(int player)
+    {
+        players[0].canSendInfo = player == 0;
+        players[1].canSendInfo = player == 1;
+    }
 
     #region StartingGame
 
@@ -90,12 +112,33 @@ public class GameSM : StateMachine
     }
     
     #endregion
+    
+    #region UnitPlacement
 
-    public void AllowPlayerSend(int player)
+    public void PlaceUnits(Unit[] units, Vector2Int[] positions,int player)
     {
-        players[0].canSendInfo = player == 0;
-        players[1].canSendInfo = player == 1;
+        var lenght = units.Length >= positions.Length ? positions.Length : units.Length;
+        for (int i = 0; i < lenght; i++)
+        {
+            NetworkSpawner.SpawnUnit(units[i],positions[i],Convert.ToSByte(player));
+        }
     }
+
+    private IEnumerator EnterUnitPlacementRoutine()
+    {
+        // Spawn Units
+        for (int i = 0; i < 4; i++)
+        {
+            
+        }
+        
+        
+        yield return null;
+        
+        ChangeState(prePlayerTurn);
+    }
+
+    #endregion
     
     public void ChangePlayer(int player)
     {

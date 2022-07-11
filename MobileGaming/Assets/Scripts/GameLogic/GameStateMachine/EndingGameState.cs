@@ -21,7 +21,7 @@ namespace GameStates
 
         public override void Exit()
         {
-            sm.ResetInstance();
+            sm.ResetHexGrid();
         }
     }
 }

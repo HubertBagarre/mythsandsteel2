@@ -17,8 +17,9 @@ public class HexGrid : NetworkBehaviour
     
     [Header("Generation Settings")]
     public Vector2Int mapSize = new (8,10);
-    public GameObject hexPrefab;
     private Transform camAnchor;
+    
+    
 
     [Header("PathFinding")]
     public bool isFindingHex = false;
@@ -50,12 +51,27 @@ public class HexGrid : NetworkBehaviour
         instance = this;
     }
 
-    private void Start()
+    private void OnDestroy()
+    {
+        instance = null;
+    }
+
+    public void GenerateMap()
     {
         camAnchor = Camera.main.transform.parent;
         isDoneLoadingMap = false;
         DestroyPreviousGrid();
         NetworkSpawner.SpawnGrid(mapSize);
+    }
+
+    public void SpawnUnits()
+    {
+        AssignUnitsToTiles();
+    }
+    
+    private void Start()
+    {
+        
         NetworkSpawner.SpawnUnits();
         
         StartCoroutine(LateStart());
@@ -65,7 +81,7 @@ public class HexGrid : NetworkBehaviour
     {
         yield return null;
         CenterCamera();
-        AssignUnitsToTiles();
+        
         isDoneLoadingMap = true;
     }
 

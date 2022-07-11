@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneId: 0
-  serverOnly: 0
+  serverOnly: 1
   visible: 0
   m_AssetId: 370ed154edb4c174a9c92bda94c878da
   hasSpawned: 0
@@ -64,8 +64,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  unitPrefab: {fileID: 3394377649539923444, guid: f2be1bb83864fe64d8a69a9a8e3a5579, type: 3}
-  unitMovement: 3
+  isDoneLoadingMap: 0
   units: []
   mapSize: {x: 11, y: 9}
   hexPrefab: {fileID: 2528794637835303008, guid: 836f21ee943f15246b5ed830d862ceb3, type: 3}

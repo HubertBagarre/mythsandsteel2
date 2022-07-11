@@ -7,6 +7,7 @@ namespace GameStates
     public class UnitPlacementState : BaseState
     {
         private GameSM sm;
+        private HexGrid hexGrid;
 
         public UnitPlacementState(GameSM stateMachine) : base(stateMachine)
         {
@@ -15,7 +16,17 @@ namespace GameStates
 
         public override void Enter()
         {
-            sm.ChangeState(sm.prePlayerTurn);
+            
+        }
+
+        public override void UpdateLogic()
+        {
+            if(sm.player0UnitsPlaced && sm.player1UnitsPlaced) OnUnitsPlaced();
+        }
+
+        private void OnUnitsPlaced()
+        {
+            
         }
     }
 }

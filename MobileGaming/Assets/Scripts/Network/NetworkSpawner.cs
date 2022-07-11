@@ -43,6 +43,19 @@ public class NetworkSpawner
         }
     }
 
+    public static void SpawnUnit(Unit unit,Vector2 position, sbyte player)
+    {
+        var unitObject = Object.Instantiate(((NewNetworkRoomManager) NetworkManager.singleton).unitPrefab,
+            Vector3.zero, Quaternion.identity);
+        unitObject.name = $"Unit {position.x},{position.y}";
+        var spawnedUnit = unitObject.GetComponent<Unit>();
+        unit.hexRow = Convert.ToSByte(position.x);
+        unit.hexCol = Convert.ToSByte(position.y);
+        unit.playerId = player;
+        spawnedUnit = unit;
+        NetworkServer.Spawn(unitObject);
+    }
+
     public static void SpawnUnits()
     {
         if (!NetworkServer.active) return;
