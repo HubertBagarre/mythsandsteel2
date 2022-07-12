@@ -12,25 +12,30 @@ public class PlayerSM : StateMachine
     public PlayerMovementSelection movementSelectionState;
     public PlayerAbilitySelection abilitySelectionState;
     public PlayerInactiveState inactiveState;
+    public PlayerInAnimationState animationState;
 
     [Header("Network")] [SyncVar] public int playerId;
     [SyncVar(hook = nameof(OnCanInputValueChanged))] public bool canSendInfo;
-
-    [Header("Managers")]
-    public HexGrid hexGrid;
-
-    [Header("Game Information")]
-    [SerializeField] private readonly SyncList<Unit> allUnits = new ();
-    [SerializeField] private readonly SyncList<Hex>  allHexes = new ();
     
+    [Header("Game Information")]
+    public readonly SyncHashSet<Unit> allUnits = new ();
+    public readonly SyncHashSet<Hex> allHexes = new ();
+
+    [Header("Unit Movement")]
+    [SyncVar] public bool isAskingForUnitMovement;
+    [SyncVar] public bool accessibleHexesReceived;
+    public readonly SyncHashSet<Hex> accessibleHexes = new();
+
+
     [Header("User Interface")] 
     [SerializeField] private TextMeshProUGUI actionsLeftText;
     
     [SerializeField] private Color allyOutlineColor;
     [SerializeField] private Color enemyOutlineColor;
     
-    [Header("Selection")] [ReadOnly] public Unit selectedUnit;
-    [ReadOnly] public Hex selectedHex;
+    [Header("Selection")]
+    [SyncVar,ReadOnly] public Unit selectedUnit;
+    [SyncVar,ReadOnly] public Hex selectedHex;
 
     [Header("Inputs")] private PlayerInputManager inputManager;
 
@@ -39,8 +44,8 @@ public class PlayerSM : StateMachine
     [SerializeField] private Button abilityButton;
 
     [SerializeField] private LayerMask layersToHit;
-    [ReadOnly] public bool clickedUnit;
-    [ReadOnly] public bool clickedHex;
+    [SyncVar,ReadOnly] public bool clickedUnit;
+    [SyncVar,ReadOnly] public bool clickedHex;
     private Camera cam;
 
     [Header("Debug")] public TextMeshProUGUI debugText;
@@ -49,17 +54,13 @@ public class PlayerSM : StateMachine
     [SyncVar] public int maxActions;
     [SyncVar(hook = nameof(OnActionsLeftValueChanged))] public int actionsLeft;
     
-
-
-    [Header("Movement")]
-    public bool isMovingUnit;
-
     private void Awake()
     {
         idleState = new PlayerIdleState(this);
         movementSelectionState = new PlayerMovementSelection(this);
         abilitySelectionState = new PlayerAbilitySelection(this);
         inactiveState = new PlayerInactiveState(this);
+        animationState = new PlayerInAnimationState(this);
         
         inputManager = PlayerInputManager.instance;
     }
@@ -85,6 +86,7 @@ public class PlayerSM : StateMachine
     public override void ChangeState(BaseState newState)
     {
         base.ChangeState(newState);
+        Debug.Log($"Entering {currentState}");
         debugText.text = $"Player {playerId}, {currentState}";
     }
 
@@ -95,17 +97,33 @@ public class PlayerSM : StateMachine
         if (!Physics.Raycast(ray, out var hit,layersToHit)) return;
         
         var objectHit = hit.transform;
-        selectedHex = objectHit.GetComponent<Hex>();
-        if (selectedHex.currentUnit != null)
-        {
-            selectedUnit = selectedHex.currentUnit;
-            clickedUnit = true;
-            return;
-        }
+        
+        Debug.Log(objectHit);
+        
+        SendHitInfo(objectHit);
+    }
+    
+    [Command]
+    private void SendHitInfo(Transform t)
+    {
+        selectedHex = t.GetComponent<Hex>();
         clickedHex = selectedHex;
-        selectedUnit = objectHit.GetComponent<Unit>();
+        if (clickedHex)
+        {
+            if (selectedHex.currentUnit != null)
+            {
+                selectedUnit = selectedHex.currentUnit;
+                clickedHex = false;
+                clickedUnit = true;
+                return;
+            }
+        }
+        
+        selectedUnit = t.GetComponent<Unit>();
         clickedUnit = selectedUnit;
     }
+
+    
     
     public void SetUnitsAndHexesArrays(Unit[] units, Hex[] hexes)
     {
@@ -158,6 +176,32 @@ public class PlayerSM : StateMachine
     #endregion
     
     #region Unit Movement
+    
+    [Command]
+    public void GetPathForUnit()
+    {
+        isAskingForUnitMovement = true;
+    }
+
+    public void ColorAccessibleHexes()
+    {
+        accessibleHexesReceived = true;
+        RpcColorAccessibleHexes();
+    }
+    
+    [ClientRpc]
+    private void RpcColorAccessibleHexes()
+    {
+        if(!isLocalPlayer) return;
+        foreach (var hex in allHexes)
+        {
+            var state = accessibleHexes.Contains(hex) ? Hex.HexColors.Selectable : Hex.HexColors.Unselectable;
+            hex.ChangeHexColor(state);
+        }
+    }
+    
+    
+    
 
     [Command]
     public void TryToMoveUnit(Unit unitToMove,Hex[] path)
@@ -182,7 +226,6 @@ public class PlayerSM : StateMachine
     
     private IEnumerator MoveUnitRoutine(Unit unit, Hex[] path,bool decreaseUnitMovement)
     {
-        isMovingUnit = true;
         foreach (var hex in path)
         {
             unit.currentHex.OnUnitExit(unit);
@@ -195,8 +238,6 @@ public class PlayerSM : StateMachine
             
             yield return new WaitForSeconds(0.5f);
         }
-
-        isMovingUnit = false;
     }
 
     #endregion
@@ -205,6 +246,18 @@ public class PlayerSM : StateMachine
     public void TryToEndTurn()
     {
         GameSM.instance.playerTurnOver = true;
+    }
+
+    public void EndTurn()
+    {
+        ChangeState(idleState);
+        RpcEndTurn();
+    }
+
+    [ClientRpc]
+    private void RpcEndTurn()
+    {
+        ChangeState(idleState);
     }
 
     [Command]

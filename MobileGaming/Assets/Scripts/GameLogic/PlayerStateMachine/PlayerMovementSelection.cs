@@ -10,6 +10,10 @@ namespace PlayerStates
     public class PlayerMovementSelection : BaseState
     {
         private PlayerSM sm;
+
+        private Unit selectedUnit;
+        
+        
         
         private HexGrid hexGrid;
         private Hex startingHex;
@@ -18,7 +22,7 @@ namespace PlayerStates
         private bool accessibleHexesDisplayed;
         private bool waitingForPath;
         
-        private List<Hex> accessibleHex = new ();
+        private HashSet<Hex> accessibleHex = new ();
 
         public PlayerMovementSelection(PlayerSM stateMachine) : base(stateMachine)
         {
@@ -27,51 +31,35 @@ namespace PlayerStates
 
         public override void Enter()
         {
+            selectedUnit = sm.selectedUnit;
+
+            sm.accessibleHexesReceived = false;
+            
+            sm.GetPathForUnit();
+            
+            return;
+            
+            
             accessibleHexesDisplayed = false;
             waitingForPath = false;
             
             unitToMove = sm.selectedUnit;
             startingHex = unitToMove.currentHex;
             
-            hexGrid = sm.hexGrid;
-            
             hexGrid.SetAccessibleHexes(startingHex,unitToMove.move,unitToMove.playerId);
-        }
-        
-        private void ColorAccessibleTiles()
-        {
-            foreach (var hex in hexGrid.hexes.Values)
-            {
-                var state = accessibleHex.Contains(hex) ? Hex.HexColors.Selectable : Hex.HexColors.Unselectable;
-                hex.ChangeHexColor(state);
-            }
         }
         
         public override void UpdateLogic()
         {
-            if (waitingForPath && !hexGrid.isFindingPath)
-            {
-                OnPathFound();
-                return;
-            }
-            
-            if (accessibleHexesDisplayed && !waitingForPath)
-            {
-                if(sm.clickedUnit) OnUnitSelected();
-                if(sm.clickedHex) OnHexSelected();
-                return;
-            }
-            
-            if(!hexGrid.isFindingHex) OnHexGridAccessibleHexesRead();
+            if(sm.clickedUnit && sm.accessibleHexesReceived) OnUnitSelected();
         }
-
-        private void OnHexGridAccessibleHexesRead()
+        
+        private void OnAccessibleHexesReceived()
         {
-            accessibleHexesDisplayed = true;
-            accessibleHex = new List<Hex>(hexGrid.hexesToReturn);
-            ColorAccessibleTiles();
+            sm.accessibleHexesReceived = false;
+            Debug.Log($"Accessible Hexes Count : {sm.accessibleHexes.Count}");
         }
-
+        
         private void OnUnitSelected()
         {
             sm.clickedUnit = false;
@@ -105,7 +93,7 @@ namespace PlayerStates
 
         public override void Exit()
         {
-            foreach (var hex in hexGrid.hexes.Values)
+            foreach (var hex in sm.allHexes)
             {
                 hex.ChangeHexColor(Hex.HexColors.Normal);
             }

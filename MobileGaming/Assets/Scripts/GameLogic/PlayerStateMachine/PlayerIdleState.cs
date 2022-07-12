@@ -29,9 +29,18 @@ namespace PlayerStates
         private void OnUnitSelected()
         {
             sm.clickedUnit = false;
-            Debug.Log($"Clicked Unit {sm.selectedUnit}");
-            return;
-            if(sm.selectedUnit.playerId == sm.playerId && !sm.isMovingUnit && (sm.actionsLeft > 0 || sm.selectedUnit.hasBeenActivated)) sm.ChangeState(sm.movementSelectionState);
+            
+            //TODO - Update selection info box
+            
+            var selectedUnit = sm.selectedUnit;
+
+            if (selectedUnit.playerId == sm.playerId)
+            {
+                if (sm.canSendInfo)
+                {
+                    if(sm.actionsLeft > 0 || selectedUnit.hasBeenActivated) sm.ChangeState(sm.movementSelectionState);
+                }
+            }
         }
 
         private void OnHexSelected()

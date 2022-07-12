@@ -231,4 +231,31 @@ public class GameSM : StateMachine
             unit.move = unit.baseMove;
         }
     }
+    
+    #region PathFinding
+
+    public void SetAccessibleHexesNew(Hex startingHex, int maxMovement, PlayerSM player)
+    {
+        Debug.Log("Setting Accessible Hexes");
+        
+        player.accessibleHexesReceived = false;
+        player.accessibleHexes.Clear();
+        
+        StartCoroutine(SetAccessibleHexesRecursiveNew(startingHex, maxMovement, player));
+
+        IEnumerator SetAccessibleHexesRecursiveNew(Hex startingHex, int maxMovement, PlayerSM currentPlayer)
+        {
+            player.accessibleHexes.Add(startingHex);
+            
+            yield return null;
+            
+            //TODO - Magic
+            
+            yield return null;
+            
+            currentPlayer.ColorAccessibleHexes();
+        }
+    }
+    
+    #endregion
 }

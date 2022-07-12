@@ -144,7 +144,6 @@ public class HexGrid : NetworkBehaviour
         player.SetUnitsAndHexesArrays(units.ToArray(),hexes.Values.ToArray());
     }
     
-
     public Hex[] GetNeighbours(Hex hex)
     {
         var returnArray = new Hex[6];
@@ -223,8 +222,6 @@ public class HexGrid : NetworkBehaviour
         Debug.Log($"Received request to move Unit");    
     }
     
-    
-    
     public List<Hex> path = new List<Hex>();
     
     public void SetPath(Hex endPoint,Hex[] accessibleHexes)
@@ -263,4 +260,6 @@ public class HexGrid : NetworkBehaviour
         StartCoroutine(RecursivePath(returnHex, accessibleHexes));
 
     }
+    
+    
 }

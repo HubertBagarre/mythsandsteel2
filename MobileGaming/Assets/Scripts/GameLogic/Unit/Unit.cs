@@ -15,7 +15,7 @@ public class Unit : NetworkBehaviour
     [Header("Position")]
     [SyncVar] public sbyte hexCol;
     [SyncVar] public sbyte hexRow;
-    [SyncVar] public Hex currentHex;
+    [SyncVar(hook = nameof(OnHexChange))] public Hex currentHex;
 
     [Header("Base Stats")]
     [SyncVar,ReadOnly] public string faction;
@@ -79,5 +79,11 @@ public class Unit : NetworkBehaviour
     public void Death()
     {
 
+    }
+
+    public void OnHexChange(Hex previousHex, Hex newHex)
+    {
+        if(previousHex != null) previousHex.OnUnitExit(this);
+        newHex.OnUnitEnter(this);
     }
 }
