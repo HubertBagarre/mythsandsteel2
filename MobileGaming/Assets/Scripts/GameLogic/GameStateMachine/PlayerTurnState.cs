@@ -23,17 +23,16 @@ namespace GameStates
         public override void UpdateLogic()
         {
             if(sm.playerTurnOver) EndTurn();
-            if (currentPlayer.isAskingForUnitMovement) OnUnitMovementAsk();
+            if (currentPlayer.isAskingForAccessibleHexesForUnitMovement) OnUnitMovementAsk();
 
         }
 
         private void OnUnitMovementAsk()
         {
-            Debug.Log($"Player {currentPlayer} is asking for unit movements");
-            
-            currentPlayer.isAskingForUnitMovement = false;
+            currentPlayer.isAskingForAccessibleHexesForUnitMovement = false;
             var selectedUnit = currentPlayer.selectedUnit;
-            sm.SetAccessibleHexesNew(selectedUnit.currentHex,selectedUnit.move,currentPlayer);
+            Debug.Log($"Player {currentPlayer} is asking for accessibles hexes of {selectedUnit}, on hex {selectedUnit.currentHex}, with a movement of {selectedUnit.move}");
+            sm.ServerSideSetAccessibleHexesNew(selectedUnit.currentHex,selectedUnit.move,currentPlayer);
         }
 
         private void EndTurn()

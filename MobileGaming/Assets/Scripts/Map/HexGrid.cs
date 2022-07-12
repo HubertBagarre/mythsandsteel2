@@ -94,17 +94,35 @@ public class HexGrid : NetworkBehaviour
         }
     }
 
-    public void UpdateNeighbours(Hex hex)
+    public void SetNeighbours()
     {
-        for (var i = 0; i < 6; i++)
+        var emptyNeighbours = new Hex[] {null, null, null, null, null, null};
+        foreach (var hex in hexes.Values)
         {
-            var offset = directionOffsets[i];
-            var testPos = new Vector3Int(hex.q, hex.r, hex.s) + offset;
-            if (hexes.ContainsKey(testPos))
+           hex.neighbours.AddRange(emptyNeighbours);
+        }
+        UpdateNeighbours();
+    }
+    
+    public void UpdateNeighbours()
+    {
+        foreach (var hex in hexes.Values)
+        {
+            for (var i = 0; i < 6; i++)
             {
-                hex.neighbours[i] = hexes[testPos];
+                var offset = directionOffsets[i];
+                var testPos = new Vector3Int(hex.q, hex.r, hex.s) + offset;
+                if (hexes.ContainsKey(testPos))
+                {
+                    hex.neighbours[i] = hexes[testPos];
+                }
+                else
+                {
+                    hex.neighbours[i] = null;
+                }
             }
         }
+        
     }
 
     public void CenterCamera()
@@ -216,11 +234,7 @@ public class HexGrid : NetworkBehaviour
         }
     }
 
-
-    public void OnMoveRequestReceived()
-    {
-        Debug.Log($"Received request to move Unit");    
-    }
+    
     
     public List<Hex> path = new List<Hex>();
     

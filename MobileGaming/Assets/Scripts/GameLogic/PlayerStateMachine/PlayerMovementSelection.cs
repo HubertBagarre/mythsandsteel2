@@ -12,7 +12,10 @@ namespace PlayerStates
         private PlayerSM sm;
 
         private Unit selectedUnit;
+        private bool waitingForAccessibleHexes;
         
+        
+        private bool waitingForPath;
         
         
         private HexGrid hexGrid;
@@ -20,7 +23,7 @@ namespace PlayerStates
         private Unit unitToMove;
 
         private bool accessibleHexesDisplayed;
-        private bool waitingForPath;
+        
         
         private HashSet<Hex> accessibleHex = new ();
 
@@ -32,32 +35,45 @@ namespace PlayerStates
         public override void Enter()
         {
             selectedUnit = sm.selectedUnit;
+            waitingForAccessibleHexes = true;
 
             sm.accessibleHexesReceived = false;
             
-            sm.GetPathForUnit();
+            foreach (var hex in sm.allHexes)
+            {
+                hex.ChangeHexColor(Hex.HexColors.Unselectable);
+            }
+
+            ClientSideSetAccessibleHexesNew(selectedUnit.currentHex, selectedUnit.move, sm);
             
-            return;
-            
-            
-            accessibleHexesDisplayed = false;
-            waitingForPath = false;
-            
-            unitToMove = sm.selectedUnit;
-            startingHex = unitToMove.currentHex;
-            
-            hexGrid.SetAccessibleHexes(startingHex,unitToMove.move,unitToMove.playerId);
+            sm.GetAccessibleHexesForUnitMovement();
+        }
+        
+        private void ClientSideSetAccessibleHexesNew(Hex startHex, int maxMovement, PlayerSM player)
+        {
+            var bfsResult = GraphSearch.BFSGetRange(startHex, maxMovement, player.playerId);
+            var returnHexes = bfsResult.GetHexesInRange();
+        
+            foreach (var hex in returnHexes)
+            {
+                hex.ChangeHexColor(Hex.HexColors.Selectable);
+            }
         }
         
         public override void UpdateLogic()
         {
-            if(sm.clickedUnit && sm.accessibleHexesReceived) OnUnitSelected();
+            if(sm.accessibleHexesReceived && waitingForAccessibleHexes) OnAccessibleHexesReceived();
+            if(waitingForAccessibleHexes) return;
+            if(sm.clickedUnit) OnUnitSelected();
+            if(sm.clickedHex) OnHexSelected();
         }
         
         private void OnAccessibleHexesReceived()
         {
             sm.accessibleHexesReceived = false;
-            Debug.Log($"Accessible Hexes Count : {sm.accessibleHexes.Count}");
+            Debug.Log($"Received Accessible Hexes Count : {sm.accessibleHexes.Count}");
+            sm.OnAccessibleHexesReceived();
+            waitingForAccessibleHexes = false;
         }
         
         private void OnUnitSelected()
@@ -69,6 +85,9 @@ namespace PlayerStates
         private void OnHexSelected()
         {
             sm.clickedHex = false;
+            sm.ChangeState(sm.idleState);
+            return;
+            
             var selectedHex = sm.selectedHex;
             
             if (accessibleHex.Contains(sm.selectedHex) && selectedHex != startingHex && selectedHex.currentUnit == null)

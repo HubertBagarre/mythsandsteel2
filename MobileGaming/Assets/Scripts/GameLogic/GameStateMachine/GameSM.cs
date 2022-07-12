@@ -19,8 +19,6 @@ public class GameSM : StateMachine
     public EndingGameState endingState; // Winner Display, End of Game
     public BetweenTurnState betweenTurnState; // Between Turn effects
 
-    //private HexGrid hexGrid;
-
     [Header("Debug")]
     public TextMeshProUGUI debugText;
     public TextMeshProUGUI debugText2;
@@ -78,8 +76,6 @@ public class GameSM : StateMachine
 
     private void InitVariables()
     {
-        //hexGrid = HexGrid.instance;
-
         isMapGenerated = false;
         unitsPlaced = false;
         playerTurnOver = false;
@@ -131,6 +127,8 @@ public class GameSM : StateMachine
         hexGrid.GenerateMap();
 
         yield return null;
+        
+        hexGrid.SetNeighbours();
 
         hexGrid.CenterCamera();
         
@@ -232,29 +230,16 @@ public class GameSM : StateMachine
         }
     }
     
-    #region PathFinding
+    #region Accessible Tiles For Unit Movement  
 
-    public void SetAccessibleHexesNew(Hex startingHex, int maxMovement, PlayerSM player)
+    public void ServerSideSetAccessibleHexesNew(Hex startingHex, int maxMovement, PlayerSM player)
     {
         Debug.Log("Setting Accessible Hexes");
         
-        player.accessibleHexesReceived = false;
-        player.accessibleHexes.Clear();
+        var bfsResult = GraphSearch.BFSGetRange(startingHex, maxMovement, player.playerId);
+        var returnHexes = bfsResult.GetHexesInRange();
         
-        StartCoroutine(SetAccessibleHexesRecursiveNew(startingHex, maxMovement, player));
-
-        IEnumerator SetAccessibleHexesRecursiveNew(Hex startingHex, int maxMovement, PlayerSM currentPlayer)
-        {
-            player.accessibleHexes.Add(startingHex);
-            
-            yield return null;
-            
-            //TODO - Magic
-            
-            yield return null;
-            
-            currentPlayer.ColorAccessibleHexes();
-        }
+        player.SetAccessibleHexes(returnHexes);
     }
     
     #endregion

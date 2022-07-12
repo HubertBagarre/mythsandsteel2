@@ -24,7 +24,9 @@ public class Hex : NetworkBehaviour
     [SyncVar] public sbyte q;
     [SyncVar] public sbyte r;
     [SyncVar] public sbyte s;
-    public Hex[] neighbours = new Hex[6];
+    public Vector3Int GetCubeCoordinates => new Vector3Int(q, r, s);
+
+    public readonly SyncList<Hex> neighbours = new ();
 
     [Header("Tile Application")] [SerializeField]
     private Transform modelParent;
