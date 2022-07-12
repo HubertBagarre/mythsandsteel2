@@ -239,8 +239,31 @@ public class GameSM : StateMachine
         var bfsResult = GraphSearch.BFSGetRange(startingHex, maxMovement, player.playerId);
         var returnHexes = bfsResult.GetHexesInRange();
         
-        player.SetAccessibleHexes(returnHexes);
+        player.SetAccessibleHexes(returnHexes,bfsResult);
     }
     
     #endregion
+    
+    #region Unit Movement
+    
+    public void ServerSideSetUnitMovementPath(Unit movingUnit,Hex destinationHex,PlayerSM player)
+    {
+        Debug.Log("Setting Accessible Hexes");
+
+        var bfsResult = GraphSearch.BFSGetRange(movingUnit.currentHex, movingUnit.move, player.playerId);
+        var path = bfsResult.GetPathTo(destinationHex);
+        
+        //player.SetPathForUnitMovement(returnHexes);
+        ServerSideUnitMovement(movingUnit,path.ToArray(),player);
+    }
+
+    private void ServerSideUnitMovement(Unit movingUnit,Hex[] path,PlayerSM player)
+    {
+        player.ServerMoveUnitF(movingUnit,path);
+        player.RpcMoveUnitF(movingUnit,path);
+    }
+    
+    #endregion
+    
+    
 }

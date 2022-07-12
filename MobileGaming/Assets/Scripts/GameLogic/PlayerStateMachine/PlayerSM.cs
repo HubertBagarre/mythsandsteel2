@@ -12,7 +12,7 @@ public class PlayerSM : StateMachine
     public PlayerMovementSelection movementSelectionState;
     public PlayerAbilitySelection abilitySelectionState;
     public PlayerInactiveState inactiveState;
-    public PlayerInAnimationState animationState;
+    public PlayerUnitMovingState unitMovingState;
 
     [Header("Network")] [SyncVar] public int playerId;
     [SyncVar(hook = nameof(OnCanInputValueChanged))] public bool canSendInfo;
@@ -27,6 +27,9 @@ public class PlayerSM : StateMachine
 
     [Header("Unit Movement")]
     public readonly SyncHashSet<Hex> accessibleHexes = new();
+    [SyncVar] public Unit unitMovementUnit;
+    [SyncVar] public Hex unitMovementHex;
+    public readonly SyncList<Hex> unitMovementPath = new();
     
     [Header("User Interface")] 
     [SerializeField] private TextMeshProUGUI actionsLeftText;
@@ -51,6 +54,9 @@ public class PlayerSM : StateMachine
     [SyncVar] public bool clickedHex;
     [SyncVar] public bool isAskingForAccessibleHexesForUnitMovement;
     [SyncVar] public bool accessibleHexesReceived;
+    [SyncVar] public bool isAskingForUnitMovement;
+    [SyncVar] public bool unitMovementReceived;
+    [SyncVar] public bool unitMovementAnimationDone;
     
     
     private Camera cam;
@@ -67,7 +73,7 @@ public class PlayerSM : StateMachine
         movementSelectionState = new PlayerMovementSelection(this);
         abilitySelectionState = new PlayerAbilitySelection(this);
         inactiveState = new PlayerInactiveState(this);
-        animationState = new PlayerInAnimationState(this);
+        unitMovingState = new PlayerUnitMovingState(this);
         
         inputManager = PlayerInputManager.instance;
     }
@@ -83,13 +89,23 @@ public class PlayerSM : StateMachine
         
         cam = Camera.main;
         
-        clickedUnit = false;
-        clickedHex = false;
+        ResetTriggerVariables();
 
         RefreshUnitOutlines();
         
         state = idleState.ToString();
         return idleState;
+    }
+
+    private void ResetTriggerVariables()
+    {
+        clickedUnit = false;
+        clickedHex = false;
+        isAskingForAccessibleHexesForUnitMovement = false;
+        accessibleHexesReceived = false;
+        isAskingForUnitMovement = false;
+        unitMovementReceived = false;
+        unitMovementAnimationDone = false;
     }
     
     public override void ChangeState(BaseState newState)
@@ -116,6 +132,21 @@ public class PlayerSM : StateMachine
         SendHitInfo(objectHit);
     }
     
+    public void SetUnitsAndHexesArrays(IEnumerable<Unit> units, IEnumerable<Hex> hexes)
+    {
+        allUnits.Clear();
+        allHexes.Clear();
+        foreach (var unit in units)
+        {
+            allUnits.Add(unit);
+        }
+        foreach (var hex in hexes)
+        {
+            allHexes.Add(hex);
+        }
+        //Debug.Log($"Set Lists, they have {allUnits.Count} and {allHexes.Count} elements");
+    }
+    
     [Command]
     private void SendHitInfo(Transform t)
     {
@@ -135,29 +166,10 @@ public class PlayerSM : StateMachine
             }
         }
     }
-
-    
-    
-    public void SetUnitsAndHexesArrays(Unit[] units, Hex[] hexes)
-    {
-        allUnits.Clear();
-        allHexes.Clear();
-        foreach (var unit in units)
-        {
-            allUnits.Add(unit);
-        }
-        foreach (var hex in hexes)
-        {
-            allHexes.Add(hex);
-        }
-        Debug.Log($"Set Lists, they have {allUnits.Count} and {allHexes.Count} elements");
-    }
     
     public void RefreshUnitOutlines()
     {
         if(!isLocalPlayer) return;
-        
-        Debug.Log($"Refreshing Outline of {allUnits.Count} units");
         
         foreach (var unit in allUnits)
         {
@@ -165,9 +177,6 @@ public class PlayerSM : StateMachine
         }
     }
     
-    
-    
-
     #region Camera Management
     private void MoveCamera(Vector3 anchorPos,Vector3 camPos)
     {
@@ -182,13 +191,12 @@ public class PlayerSM : StateMachine
     public void RpcMoveCamera(Vector3 anchorPos,Vector3 camPos)
     {
         if(!isLocalPlayer) return;
-        Debug.Log("Moving Camera");
         MoveCamera(anchorPos,camPos);
     }
 
     #endregion
     
-    #region Unit Movement
+    #region Unit Accessible Hexes For Movement
     
     [Command]
     public void GetAccessibleHexesForUnitMovement()
@@ -196,19 +204,19 @@ public class PlayerSM : StateMachine
         isAskingForAccessibleHexesForUnitMovement = true;
     }
 
-    public void SetAccessibleHexes(IEnumerable<Hex> hexes)
+    public void SetAccessibleHexes(IEnumerable<Hex> hexes,BFSResult result)
     {
         accessibleHexesReceived = false;
         accessibleHexes.Clear();
         
-        Debug.Log($"Setting accessible hexes ! size : {accessibleHexes.Count}");
+        //Debug.Log($"Setting accessible hexes ! size : {accessibleHexes.Count}");
         foreach (var hex in hexes)
         {
             accessibleHexes.Add(hex);
         }
 
         accessibleHexesReceived = true;
-        Debug.Log($"Accessible hexes set ! size : {accessibleHexes.Count}");
+        //Debug.Log($"Accessible hexes set ! size : {accessibleHexes.Count}");
 
     }
     
@@ -216,7 +224,7 @@ public class PlayerSM : StateMachine
     {
         if(!isLocalPlayer) return;
         
-        Debug.Log($"Accessible Hexes Received ! size : {accessibleHexes.Count}, coloring hexes");
+        //Debug.Log($"Accessible Hexes Received ! size : {accessibleHexes.Count}, coloring hexes");
         foreach (var hex in allHexes)
         {
             var color = accessibleHexes.Contains(hex) ? Hex.HexColors.Selectable : Hex.HexColors.Unselectable;
@@ -224,28 +232,50 @@ public class PlayerSM : StateMachine
         }
     }
     
-    public void ColorAccessibleHexes()
+    #endregion
+
+    #region Unit Movement
+
+    [Command]
+    public void SetUnitMovementUnitAndHex(Unit unit,Hex hex)
     {
-        Debug.Log("server side call");
-        accessibleHexesReceived = true;
-        RpcColorAccessibleHexes();
+        unitMovementUnit = unit;
+        unitMovementHex = hex;
+    }
+
+    [Command]
+    public void GetPathForUnitMovement()
+    {
+        isAskingForUnitMovement = true;
+    }
+    
+    public void SetPathForUnitMovement(IEnumerable<Hex> hexes)
+    {
+        unitMovementReceived = false;
+        unitMovementPath.Clear();
+        
+        Debug.Log($"Setting path hexes ! size : {accessibleHexes.Count}");
+        foreach (var hex in hexes)
+        {
+            unitMovementPath.Add(hex);
+        }
+
+        unitMovementReceived = true;
+        Debug.Log($"Path set ! size : {accessibleHexes.Count}");
+    }
+
+    public void ServerMoveUnitF(Unit unitToMove, Hex[] path)
+    {
+        StartCoroutine(MoveUnitRoutine(unitToMove, path,true));
     }
     
     [ClientRpc]
-    private void RpcColorAccessibleHexes()
+    public void RpcMoveUnitF(Unit unitToMove, Hex[] path)
     {
-        if(!isLocalPlayer) return;
-        Debug.Log("client side call");
-        foreach (var hex in allHexes)
-        {
-            var state = accessibleHexes.Contains(hex) ? Hex.HexColors.Selectable : Hex.HexColors.Unselectable;
-            hex.ChangeHexColor(state);
-        }
+        StartCoroutine(MoveUnitRoutine(unitToMove, path,false));
     }
     
     
-    
-
     [Command]
     public void TryToMoveUnit(Unit unitToMove,Hex[] path)
     {
@@ -269,6 +299,8 @@ public class PlayerSM : StateMachine
     
     private IEnumerator MoveUnitRoutine(Unit unit, Hex[] path,bool decreaseUnitMovement)
     {
+        unitMovementAnimationDone = false;
+        
         foreach (var hex in path)
         {
             unit.currentHex.OnUnitExit(unit);
@@ -281,12 +313,14 @@ public class PlayerSM : StateMachine
             
             yield return new WaitForSeconds(0.5f);
         }
+        
+        unitMovementAnimationDone = true;
     }
 
     #endregion
-    
-    
-    public void TryToEndTurn()
+
+
+    private void TryToEndTurn()
     {
         if(currentState != idleState) return;
         TryEndTurnCommand();

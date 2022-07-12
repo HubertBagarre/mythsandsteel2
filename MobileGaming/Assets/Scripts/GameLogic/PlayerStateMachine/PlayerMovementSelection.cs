@@ -13,8 +13,10 @@ namespace PlayerStates
 
         private Unit selectedUnit;
         private bool waitingForAccessibleHexes;
-        
-        
+
+        private List<Hex> accessibleHexes = new ();
+
+
         private bool waitingForPath;
         
         
@@ -24,9 +26,6 @@ namespace PlayerStates
 
         private bool accessibleHexesDisplayed;
         
-        
-        private HashSet<Hex> accessibleHex = new ();
-
         public PlayerMovementSelection(PlayerSM stateMachine) : base(stateMachine)
         {
             sm = stateMachine;
@@ -85,18 +84,19 @@ namespace PlayerStates
         private void OnHexSelected()
         {
             sm.clickedHex = false;
-            sm.ChangeState(sm.idleState);
-            return;
-            
+
             var selectedHex = sm.selectedHex;
             
-            if (accessibleHex.Contains(sm.selectedHex) && selectedHex != startingHex && selectedHex.currentUnit == null)
+            if (sm.accessibleHexes.Contains(sm.selectedHex) && selectedHex != startingHex && selectedHex.currentUnit == null)
             {
-                hexGrid.SetPath(sm.selectedHex,accessibleHex.ToArray());
-                waitingForPath = true;
+                //hexGrid.SetPath(sm.selectedHex,accessibleHex.ToArray());
+                //waitingForPath = true;
+                
+                sm.SetUnitMovementUnitAndHex(selectedUnit,selectedHex);
+                sm.ChangeState(sm.unitMovingState);
             }
             else
-            {
+            {                        
                 sm.ChangeState(sm.idleState);
             }
         }
