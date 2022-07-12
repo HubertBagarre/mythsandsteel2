@@ -13,10 +13,7 @@ namespace PlayerStates
 
         private Unit selectedUnit;
         private bool waitingForAccessibleHexes;
-
-        private List<Hex> accessibleHexes = new ();
-
-
+        
         private bool waitingForPath;
         
         
@@ -55,7 +52,7 @@ namespace PlayerStates
         
             foreach (var hex in returnHexes)
             {
-                hex.ChangeHexColor(Hex.HexColors.Selectable);
+                hex.ChangeHexColor(Hex.HexColors.Selected);
             }
         }
         
@@ -77,6 +74,7 @@ namespace PlayerStates
         
         private void OnUnitSelected()
         {
+            Debug.Log("Clicked On A Unit");
             sm.clickedUnit = false;
             sm.ChangeState(sm.idleState);
         }
@@ -86,6 +84,13 @@ namespace PlayerStates
             sm.clickedHex = false;
 
             var selectedHex = sm.selectedHex;
+
+            Debug.Log("Accessible Hexes are");
+            foreach (var hex in sm.accessibleHexes)
+            {
+                Debug.Log($"{hex}, in position {hex.col},{hex.row}");
+            }
+            Debug.Log($"Clicked on {selectedHex}, in position {selectedHex.col},{selectedHex.row}");
             
             if (sm.accessibleHexes.Contains(sm.selectedHex) && selectedHex != startingHex && selectedHex.currentUnit == null)
             {
@@ -100,15 +105,6 @@ namespace PlayerStates
                 sm.ChangeState(sm.idleState);
             }
         }
-        
-        private void OnPathFound()
-        {
-            waitingForPath = false;
-            var path = hexGrid.path.ToArray().Reverse().ToArray();
-            sm.TryToMoveUnit(unitToMove,path);
-            sm.ChangeState(sm.idleState);
-        }
-        
 
         public override void Exit()
         {

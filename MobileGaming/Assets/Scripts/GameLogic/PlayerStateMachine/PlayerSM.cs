@@ -216,6 +216,14 @@ public class PlayerSM : StateMachine
         }
 
         accessibleHexesReceived = true;
+        
+        Debug.Log("Accessible Hexes are");
+        foreach (var hex in accessibleHexes)
+        {
+            Debug.Log($"{hex}, in position {hex.col},{hex.row}");
+        }
+        
+        
         //Debug.Log($"Accessible hexes set ! size : {accessibleHexes.Count}");
 
     }
@@ -249,23 +257,10 @@ public class PlayerSM : StateMachine
         isAskingForUnitMovement = true;
     }
     
-    public void SetPathForUnitMovement(IEnumerable<Hex> hexes)
-    {
-        unitMovementReceived = false;
-        unitMovementPath.Clear();
-        
-        Debug.Log($"Setting path hexes ! size : {accessibleHexes.Count}");
-        foreach (var hex in hexes)
-        {
-            unitMovementPath.Add(hex);
-        }
-
-        unitMovementReceived = true;
-        Debug.Log($"Path set ! size : {accessibleHexes.Count}");
-    }
-
     public void ServerMoveUnitF(Unit unitToMove, Hex[] path)
     {
+        if(!unitToMove.hasBeenActivated) actionsLeft--;
+        unitToMove.hasBeenActivated = true;
         StartCoroutine(MoveUnitRoutine(unitToMove, path,true));
     }
     

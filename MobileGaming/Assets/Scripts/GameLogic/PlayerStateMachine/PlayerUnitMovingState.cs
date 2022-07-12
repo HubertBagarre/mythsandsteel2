@@ -18,8 +18,6 @@ namespace PlayerStates
             Debug.Log($"Going to move {sm.unitMovementUnit} to {sm.unitMovementHex}");
 
             sm.GetPathForUnitMovement();
-            
-            sm.ChangeState(sm.idleState);
         }
 
         public override void UpdateLogic()

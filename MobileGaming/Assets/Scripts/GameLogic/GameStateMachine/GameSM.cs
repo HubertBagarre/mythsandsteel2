@@ -254,6 +254,7 @@ public class GameSM : StateMachine
         var path = bfsResult.GetPathTo(destinationHex);
         
         //player.SetPathForUnitMovement(returnHexes);
+        player.unitMovementReceived = true;
         ServerSideUnitMovement(movingUnit,path.ToArray(),player);
     }
 
