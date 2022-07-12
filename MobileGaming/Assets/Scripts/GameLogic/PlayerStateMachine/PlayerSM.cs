@@ -19,6 +19,10 @@ public class PlayerSM : StateMachine
     [Header("Managers")]
     public HexGrid hexGrid;
 
+    [Header("Game Information")]
+    [SerializeField] private readonly SyncList<Unit> allUnits = new ();
+    [SerializeField] private readonly SyncList<Hex>  allHexes = new ();
+    
     [Header("User Interface")] 
     [SerializeField] private TextMeshProUGUI actionsLeftText;
     
@@ -96,23 +100,36 @@ public class PlayerSM : StateMachine
         clickedUnit = selectedUnit;
         clickedHex = selectedHex;
     }
-
-    public void RefreshUnitOutlines()
+    
+    public void SetUnitsAndHexesArrays(Unit[] units, Hex[] hexes)
     {
-        //StartCoroutine(OutlineUnits());
+        allUnits.Clear();
+        allHexes.Clear();
+        foreach (var unit in units)
+        {
+            allUnits.Add(unit);
+        }
+        foreach (var hex in hexes)
+        {
+            allHexes.Add(hex);
+        }
+        Debug.Log($"Set Lists, they have {allUnits.Count} and {allHexes.Count} elements");
     }
     
-    private IEnumerator OutlineUnits()
+    public void RefreshUnitOutlines()
     {
-        if(!isLocalPlayer) yield break;
-
-        yield return new WaitUntil(() => hexGrid.isDoneLoadingMap);
+        if(!isLocalPlayer) return;
         
-        foreach (var unit in hexGrid.units)
+        Debug.Log($"Refreshing Outline of {allUnits.Count} units");
+        
+        foreach (var unit in allUnits)
         {
             unit.outlineScript.OutlineColor = unit.playerId == playerId ? allyOutlineColor : enemyOutlineColor;
         }
     }
+    
+    
+    
 
     #region Camera Management
     private void MoveCamera(Vector3 anchorPos,Vector3 camPos)
@@ -223,6 +240,7 @@ public class PlayerSM : StateMachine
             abilityButton.onClick.AddListener(TryToUseAbility);
             
             Debug.Log("You Can Send");
+            
         }
         else
         {
@@ -233,6 +251,7 @@ public class PlayerSM : StateMachine
             
             Debug.Log("You Can't Send");
         }
+        RefreshUnitOutlines();
     }
 
     #endregion

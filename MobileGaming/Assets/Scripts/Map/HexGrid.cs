@@ -138,7 +138,11 @@ public class HexGrid : NetworkBehaviour
 
         camAnchor.position = new Vector3(2 * xPos, 0,-yPos * 1.74f);
     }
-    
+
+    public void SetPlayerLists(PlayerSM player)
+    {
+        player.SetUnitsAndHexesArrays(units.ToArray(),hexes.Values.ToArray());
+    }
     
 
     public Hex[] GetNeighbours(Hex hex)

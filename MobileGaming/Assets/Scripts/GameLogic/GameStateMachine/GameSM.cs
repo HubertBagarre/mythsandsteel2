@@ -200,6 +200,11 @@ public class GameSM : StateMachine
 
         yield return new WaitForSeconds(1f);
 
+        foreach (var player in players)
+        {
+            HexGrid.instance.SetPlayerLists(player);
+        }
+        
         unitsPlaced = true;
     }
 
