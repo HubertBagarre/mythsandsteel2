@@ -95,10 +95,16 @@ public class PlayerSM : StateMachine
         if (!Physics.Raycast(ray, out var hit,layersToHit)) return;
         
         var objectHit = hit.transform;
-        selectedUnit = objectHit.GetComponent<Unit>();
         selectedHex = objectHit.GetComponent<Hex>();
-        clickedUnit = selectedUnit;
+        if (selectedHex.currentUnit != null)
+        {
+            selectedUnit = selectedHex.currentUnit;
+            clickedUnit = true;
+            return;
+        }
         clickedHex = selectedHex;
+        selectedUnit = objectHit.GetComponent<Unit>();
+        clickedUnit = selectedUnit;
     }
     
     public void SetUnitsAndHexesArrays(Unit[] units, Hex[] hexes)
