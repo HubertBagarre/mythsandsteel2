@@ -58,7 +58,6 @@ public class PlayerSM : StateMachine
         inactiveState = new PlayerInactiveState(this);
         
         inputManager = PlayerInputManager.instance;
-        cam = Camera.main;
     }
 
     protected override BaseState GetInitialState()
@@ -69,7 +68,7 @@ public class PlayerSM : StateMachine
             return inactiveState;
         }
         
-        ResetInstances();
+        cam = Camera.main;
         
         clickedUnit = false;
         clickedHex = false;
@@ -78,12 +77,7 @@ public class PlayerSM : StateMachine
         
         return idleState;
     }
-
-    public void ResetInstances()
-    {
-        hexGrid = HexGrid.instance;
-    }
-
+    
     public override void ChangeState(BaseState newState)
     {
         base.ChangeState(newState);
@@ -119,8 +113,28 @@ public class PlayerSM : StateMachine
             unit.outlineScript.OutlineColor = unit.playerId == playerId ? allyOutlineColor : enemyOutlineColor;
         }
     }
+
+    #region Camera Management
+    private void MoveCamera(Vector3 anchorPos,Vector3 camPos)
+    {
+        var camAnchor = cam.transform.parent;
+        camAnchor.localPosition = anchorPos;
+        camAnchor.localRotation = Quaternion.identity;
+        camAnchor.GetChild(0).localPosition = camPos;
+        camAnchor.GetChild(0).localRotation = Quaternion.Euler(new Vector3(70,0,0));
+    }
+
+    [ClientRpc]
+    public void RpcMoveCamera(Vector3 anchorPos,Vector3 camPos)
+    {
+        if(!isLocalPlayer) return;
+        Debug.Log("Moving Camera");
+        MoveCamera(anchorPos,camPos);
+    }
+
+    #endregion
     
-    #region UnitMovement
+    #region Unit Movement
 
     [Command]
     public void TryToMoveUnit(Unit unitToMove,Hex[] path)

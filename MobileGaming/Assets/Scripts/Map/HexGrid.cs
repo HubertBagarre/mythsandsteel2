@@ -64,7 +64,6 @@ public class HexGrid : NetworkBehaviour
     
     public void ServerAssignUnitsToTiles()
     {
-        Debug.Log($"Assigning units to hexes");
         for (var i = 0; i < units.Count; i++)
         {
             var unit = units[i];
@@ -111,28 +110,11 @@ public class HexGrid : NetworkBehaviour
     public void CenterCamera()
     {
         // TODO - Center Camera on map center, instead of fixed value
-        
-        ServerCenterCamera();
-        RpcCenterCamera();
-    }
-
-    private void ServerCenterCamera()
-    {
-        camAnchor.localPosition = new Vector3(10, 0, -3.5f);
-        camAnchor.localRotation = Quaternion.identity;
-        camAnchor.GetChild(0).localPosition = new Vector3(0, 34, -15.35f);
-        camAnchor.GetChild(0).localRotation = Quaternion.Euler(new Vector3(70,0,0));
-    }
-
-    [ClientRpc]
-    private void RpcCenterCamera()
-    {
-        var camAncho = Camera.main.transform.parent;
-        if(camAncho == null) return;
-        camAnchor.localPosition = new Vector3(10, 0, -3.5f);
-        camAnchor.localRotation = Quaternion.identity;
-        camAnchor.GetChild(0).localPosition = new Vector3(0, 34, -15.35f);
-        camAnchor.GetChild(0).localRotation = Quaternion.Euler(new Vector3(70,0,0));
+        Debug.Log("Centering Cam");
+        foreach (var player in GameSM.instance.players)
+        {
+            player.RpcMoveCamera(new Vector3(10, 0, -3.5f),new Vector3(0, 34, -15.35f));
+        }
     }
 
     public void CenterCamera1()

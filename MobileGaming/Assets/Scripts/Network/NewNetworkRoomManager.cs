@@ -130,7 +130,6 @@ public class NewNetworkRoomManager : NetworkRoomManager
         var playerSm = gamePlayer.GetComponent<PlayerSM>();
         playerSm.playerId = roomPlayer.GetComponent<NetworkRoomPlayer>().index;
         gameSm.players[playerSm.playerId] = playerSm;
-        playerSm.ResetInstances();
         return true;
     }
 

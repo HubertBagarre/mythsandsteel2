@@ -53,7 +53,6 @@ public class Unit : NetworkBehaviour
 
     public void ChangeTransformPosition(Vector3 newPos)
     {
-        Debug.Log("Changing pos");
         ServerChangePosition(newPos);
         RpcChangePosition(newPos);
     }
