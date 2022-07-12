@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2528794637835303011}
   - component: {fileID: 1299631325910147714}
   - component: {fileID: 6625971187027076601}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Hex
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -83,6 +83,7 @@ MonoBehaviour:
   syncInterval: 0.1
   movementCost: 1
   currentUnit: {fileID: 0}
+  currentTileID: 0
   tile: {fileID: 0}
   col: 0
   row: 0
@@ -100,6 +101,7 @@ MonoBehaviour:
   selectableMat: {fileID: 2100000, guid: f9de21341bf6e9e46ade2d66f6186473, type: 2}
   unselectableMat: {fileID: 2100000, guid: 696437754694ea647b5efeaaf52e6634, type: 2}
   selectedMat: {fileID: 2100000, guid: 5ec9ed9a61ea3f343941f17d0a0a15c2, type: 2}
+  currentCostToMove: -1
 --- !u!1 &2528794637939914094
 GameObject:
   m_ObjectHideFlags: 0

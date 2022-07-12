@@ -132,7 +132,7 @@ public class GameSM : StateMachine
 
         yield return null;
 
-        
+        hexGrid.CenterCamera();
         
         yield return null;
         

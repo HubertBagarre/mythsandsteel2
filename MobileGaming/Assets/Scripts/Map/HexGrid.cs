@@ -19,8 +19,6 @@ public class HexGrid : NetworkBehaviour
     public Vector2Int mapSize = new (8,10);
     private Transform camAnchor;
     
-    
-
     [Header("PathFinding")]
     public bool isFindingHex = false;
     public List<Hex> hexesToReturn = new();
@@ -63,33 +61,7 @@ public class HexGrid : NetworkBehaviour
         DestroyPreviousGrid();
         NetworkSpawner.SpawnGrid(mapSize);
     }
-
-    public void UpdateHexNeighbours()
-    {
-        foreach (var hex in hexes.Values)
-        {
-            UpdateNeighbours(hex);
-        }
-    }
     
-    /*
-    private void Start()
-    {
-        
-        NetworkSpawner.SpawnUnits();
-        
-        StartCoroutine(LateStart());
-    }
-
-    private IEnumerator LateStart()
-    {
-        yield return null;
-        CenterCamera();
-        
-        isDoneLoadingMap = true;
-    }
-    */
-
     public void ServerAssignUnitsToTiles()
     {
         Debug.Log($"Assigning units to hexes");
@@ -135,8 +107,38 @@ public class HexGrid : NetworkBehaviour
             }
         }
     }
-    private void CenterCamera()
+
+    public void CenterCamera()
     {
+        // TODO - Center Camera on map center, instead of fixed value
+        
+        ServerCenterCamera();
+        RpcCenterCamera();
+    }
+
+    private void ServerCenterCamera()
+    {
+        camAnchor.localPosition = new Vector3(10, 0, -3.5f);
+        camAnchor.localRotation = Quaternion.identity;
+        camAnchor.GetChild(0).localPosition = new Vector3(0, 34, -15.35f);
+        camAnchor.GetChild(0).localRotation = Quaternion.Euler(new Vector3(70,0,0));
+    }
+
+    [ClientRpc]
+    private void RpcCenterCamera()
+    {
+        var camAncho = Camera.main.transform.parent;
+        if(camAncho == null) return;
+        camAnchor.localPosition = new Vector3(10, 0, -3.5f);
+        camAnchor.localRotation = Quaternion.identity;
+        camAnchor.GetChild(0).localPosition = new Vector3(0, 34, -15.35f);
+        camAnchor.GetChild(0).localRotation = Quaternion.Euler(new Vector3(70,0,0));
+    }
+
+    public void CenterCamera1()
+    {
+        
+        
         sbyte maxRow = 0;
         sbyte minRow = 0;
         sbyte maxCol = 0;
@@ -154,6 +156,8 @@ public class HexGrid : NetworkBehaviour
 
         camAnchor.position = new Vector3(2 * xPos, 0,-yPos * 1.74f);
     }
+    
+    
 
     public Hex[] GetNeighbours(Hex hex)
     {

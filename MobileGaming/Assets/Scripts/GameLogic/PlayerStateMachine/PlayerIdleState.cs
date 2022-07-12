@@ -29,12 +29,16 @@ namespace PlayerStates
         private void OnUnitSelected()
         {
             sm.clickedUnit = false;
+            Debug.Log($"Clicked Unit {sm.selectedUnit}");
+            return;
             if(sm.selectedUnit.playerId == sm.playerId && !sm.isMovingUnit && (sm.actionsLeft > 0 || sm.selectedUnit.hasBeenActivated)) sm.ChangeState(sm.movementSelectionState);
         }
 
         private void OnHexSelected()
         {
             sm.clickedHex = false;
+            Debug.Log($"Clicked Hex {sm.selectedHex}");
+            return;
         }
     }
 }
