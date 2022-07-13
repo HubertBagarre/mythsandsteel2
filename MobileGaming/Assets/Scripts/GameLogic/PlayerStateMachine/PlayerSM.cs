@@ -417,7 +417,6 @@ public class PlayerSM : StateMachine
         clickedUnit = false;
     }
     
-    
     private void OnUnitClickedValueChanged(bool prevValue,bool newValue)
     {
         if(!isLocalPlayer) return;

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace PlayerStates
@@ -38,6 +39,16 @@ namespace PlayerStates
                         sm.ChangeState(sm.movementSelectionState);
                     }
                 }
+            }
+        }
+
+        protected override void OnHexClicked()
+        {
+            base.OnHexClicked();
+            var hex = sm.selectedHex;
+            for (int i = 0; i < 3; i++)
+            {
+                Debug.Log($"{hex} has {hex.GetNeighborsInRange(i).Count()} neighbours in a range of {i}");
             }
         }
     }

@@ -66,12 +66,12 @@ public class Hex : NetworkBehaviour
         return returnArray;
     }
 
-    public IEnumerable<Hex> GetAccessibleNeighbours(sbyte movement)
+    public IEnumerable<Hex> GetNeighborsInRange(int range)
     {
-        return neighbours.Where(hex => hex != null).Where(hex => hex.movementCost <= movement).ToList();
+        var bfsResult = GraphSearch.BFSGetRange(this,range,true);
+        return bfsResult.GetHexesInRange();
     }
 
-    
     public void ApplyTileServer(int tileID)
     {
         ApplyTile(tileID);

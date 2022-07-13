@@ -1,15 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.Rendering;
 
 public class GraphSearch
 {
-    public static BFSResult BFSGetRange(Unit unit)
+    public static BFSResult BFSGetRange(Hex startPoint, int movementPoints, bool ignoreUnits, bool withAttack = false)
     {
-        var startPoint = unit.currentHex;
-        int movementPoints = unit.move;
-        int attackRange = unit.range;
-        int friendlyPlayer = unit.playerId;
+        var unit = ignoreUnits ? null : startPoint.currentUnit;
+        var attackRange = 0;
+        var friendlyPlayer = 0;
+        if (unit != null)
+        {
+            attackRange = unit.range;
+            friendlyPlayer = unit.playerId;
+        }
+
+        // need ref of enemies;
+        // just check the range lmao;
+        
+
+        
         
         var visitedHex = new Dictionary<Hex, Hex?>();
         var costSoFar = new Dictionary<Hex, int>();
@@ -26,9 +37,9 @@ public class GraphSearch
             foreach (var hexNeighbour in currentHex.neighbours)
             {
                 if(hexNeighbour == null) continue;
-                if(hexNeighbour.currentUnit != null) if(hexNeighbour.currentUnit.playerId != friendlyPlayer) continue;
+                if(!ignoreUnits) if(hexNeighbour.currentUnit != null) if(hexNeighbour.currentUnit.playerId != friendlyPlayer) continue;
 
-                int hexCost = hexNeighbour.movementCost;
+                int hexCost = ignoreUnits ? 1 : hexNeighbour.movementCost;
                 int currentCost = costSoFar[currentHex];
                 int newCost = currentCost + hexCost;
 
@@ -39,6 +50,7 @@ public class GraphSearch
                         visitedHex[hexNeighbour] = currentHex;
                         costSoFar[hexNeighbour] = newCost;
                         hexesToVisitQueue.Enqueue(hexNeighbour);
+                        
                     }
                     else if (costSoFar[hexNeighbour] > newCost)
                     {
@@ -51,6 +63,11 @@ public class GraphSearch
         }
 
         return new BFSResult() {visitedHexesDict = visitedHex,attackableUnitsDict = attackableUnits};
+    }
+    
+    public static BFSResult BFSGetRange(Unit unit,bool withAttack = true)
+    {
+        return BFSGetRange(unit.currentHex, unit.move, false,withAttack);
     }
     
     
@@ -82,11 +99,28 @@ public struct BFSResult
 
         return GraphSearch.GeneratePathBFS(destination, visitedHexesDict);
     }
+    
+    public List<Hex> GetPathTo(Unit targetUnit)
+    {
+        if (!attackableUnitsDict.ContainsKey(targetUnit))
+        {
+            return new List<Hex>();
+        }
+
+        return GetPathTo(attackableUnitsDict[targetUnit]);
+    }
 
     public bool IsHexInRange(Hex hex)
     {
         return visitedHexesDict.ContainsKey(hex);
     }
+    
+    public bool IsUnitAttackable(Unit unit)
+    {
+        return attackableUnitsDict.ContainsKey(unit);
+    }
+
+    public IEnumerable<Unit> GetAttackableUnits => attackableUnitsDict.Keys;
 
     public IEnumerable<Hex> GetHexesInRange() => visitedHexesDict.Keys;
 }
