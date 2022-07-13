@@ -40,14 +40,14 @@ namespace PlayerStates
                 hex.ChangeHexColor(Hex.HexColors.Unselectable);
             }
 
-            ClientSideSetAccessibleHexesNew(selectedUnit.currentHex, selectedUnit.move, sm);
+            ClientSideSetAccessibleHexesNew(selectedUnit);
             
             sm.GetAccessibleHexesForUnitMovement();
         }
         
-        private void ClientSideSetAccessibleHexesNew(Hex startHex, int maxMovement, PlayerSM player)
+        private void ClientSideSetAccessibleHexesNew(Unit unitToGetAccessibleHexes)
         {
-            var bfsResult = GraphSearch.BFSGetRange(startHex, maxMovement, player.playerId);
+            var bfsResult = GraphSearch.BFSGetRange(unitToGetAccessibleHexes);
             var returnHexes = bfsResult.GetHexesInRange();
         
             foreach (var hex in returnHexes)

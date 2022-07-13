@@ -34,7 +34,7 @@ namespace GameStates
             
             var selectedUnit = currentPlayer.selectedUnit;
             Debug.Log($"Player {currentPlayer} is asking for accessibles hexes of {selectedUnit}, on hex {selectedUnit.currentHex}, with a movement of {selectedUnit.move}");
-            sm.ServerSideSetAccessibleHexesNew(selectedUnit.currentHex,selectedUnit.move,currentPlayer);
+            sm.ServerSideSetAccessibleHexesNew(selectedUnit);
         }
 
         private void OnUnitMovementAsked()

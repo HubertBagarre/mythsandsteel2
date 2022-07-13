@@ -228,13 +228,14 @@ public class GameSM : StateMachine
 
     #region Accessible Tiles For Unit Movement  
 
-    public void ServerSideSetAccessibleHexesNew(Hex startingHex, int maxMovement, PlayerSM player)
+    public void ServerSideSetAccessibleHexesNew(Unit unitToGetAccessibleHexes)
     {
         Debug.Log("Setting Accessible Hexes");
         
-        var bfsResult = GraphSearch.BFSGetRange(startingHex, maxMovement, player.playerId);
+        var bfsResult = GraphSearch.BFSGetRange(unitToGetAccessibleHexes);
         var returnHexes = bfsResult.GetHexesInRange();
-        
+
+        var player = players[unitToGetAccessibleHexes.playerId];
         player.SetAccessibleHexes(returnHexes,bfsResult);
     }
     
@@ -246,7 +247,7 @@ public class GameSM : StateMachine
     {
         Debug.Log("Setting Accessible Hexes Before Moving");
 
-        var bfsResult = GraphSearch.BFSGetRange(movingUnit.currentHex, movingUnit.move, player.playerId);
+        var bfsResult = GraphSearch.BFSGetRange(movingUnit);
         var path = bfsResult.GetPathTo(destinationHex);
         
         ServerSideUnitMovement(movingUnit,path.ToArray(),player);

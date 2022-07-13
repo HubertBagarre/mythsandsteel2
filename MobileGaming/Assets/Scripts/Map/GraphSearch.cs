@@ -4,12 +4,18 @@ using System.Linq;
 
 public class GraphSearch
 {
-    public static BFSResult BFSGetRange(Hex startPoint, int movementPoints,int friendlyPlayer)
+    public static BFSResult BFSGetRange(Unit unit)
     {
+        var startPoint = unit.currentHex;
+        int movementPoints = unit.move;
+        int attackRange = unit.range;
+        int friendlyPlayer = unit.playerId;
+        
         var visitedHex = new Dictionary<Hex, Hex?>();
         var costSoFar = new Dictionary<Hex, int>();
+        var attackableUnits = new Dictionary<Unit, Hex>();
         var hexesToVisitQueue = new Queue<Hex>();
-        
+
         hexesToVisitQueue.Enqueue(startPoint);
         costSoFar.Add(startPoint,0);
         visitedHex.Add(startPoint,null);
@@ -44,7 +50,7 @@ public class GraphSearch
 
         }
 
-        return new BFSResult() {visitedHexesDict = visitedHex};
+        return new BFSResult() {visitedHexesDict = visitedHex,attackableUnitsDict = attackableUnits};
     }
     
     
@@ -65,6 +71,7 @@ public class GraphSearch
 public struct BFSResult
 {
     public Dictionary<Hex, Hex?> visitedHexesDict;
+    public Dictionary<Unit, Hex> attackableUnitsDict;
 
     public List<Hex> GetPathTo(Hex destination)
     {
