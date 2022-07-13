@@ -32,7 +32,11 @@ namespace PlayerStates
             {
                 if (sm.canSendInfo)
                 {
-                    if(sm.actionsLeft > 0 || selectedUnit.hasBeenActivated) sm.ChangeState(sm.movementSelectionState);
+                    if (sm.actionsLeft > 0 || selectedUnit.hasBeenActivated)
+                    {
+                        Debug.Log("Going in Movement");
+                        sm.ChangeState(sm.movementSelectionState);
+                    }
                 }
             }
         }

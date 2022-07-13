@@ -22,9 +22,9 @@ namespace PlayerStates
 
         public override void UpdateLogic()
         {
+            base.UpdateLogic();
             if(sm.unitMovementReceived) OnUnitMovementReceived();
             if(sm.unitMovementAnimationDone) OnUnitMovementAnimationDone();
-            base.UpdateLogic();
         }
 
         private void OnUnitMovementReceived()

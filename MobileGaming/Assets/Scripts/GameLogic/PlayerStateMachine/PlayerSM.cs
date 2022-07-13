@@ -122,6 +122,8 @@ public class PlayerSM : StateMachine
         debugText.text = $"Player {playerId}, {currentState}";
     }
 
+    #region Raycast Gaming
+    
     private void TryToSelectUnitOrTile(Vector2 screenPosition,float time)
     {
         var ray = cam.ScreenPointToRay(screenPosition);
@@ -131,14 +133,52 @@ public class PlayerSM : StateMachine
             var objectHit = hit.transform;
         
             Debug.Log(objectHit);
-        
             
+            var objectHex = objectHit.GetComponent<Hex>();
+            if (objectHex != null)
+            {
+                SendHexClicked(objectHex);
+                return;
+            }
+            
+            var objectUnit = objectHit.GetComponent<Unit>();
+            if (objectUnit != null)
+            {
+                SendUnitClicked(objectUnit);
+            }
             
             return;
         }
 
-        SendHitInfo(null);
+        SendNothingClicked();
     }
+
+
+    [Command]
+    private void SendUnitClicked(Unit unit)
+    {
+        Debug.Log($"{unit} got clicked");
+        selectedUnit = unit;
+        clickedUnit = true;
+    }
+    
+    [Command]
+    private void SendHexClicked(Hex hex)
+    {
+        Debug.Log($"{hex} got clicked");
+        selectedHex = hex;
+        clickedHex = true;
+    }
+    
+    [Command]
+    private void SendNothingClicked()
+    {
+        Debug.Log("Nothing got clicked");
+        clickedNothing = true;
+    }
+    
+    #endregion
+    
     
     public void SetUnitsAndHexesArrays(IEnumerable<Unit> units, IEnumerable<Hex> hexes)
     {
@@ -154,31 +194,8 @@ public class PlayerSM : StateMachine
         }
         //Debug.Log($"Set Lists, they have {allUnits.Count} and {allHexes.Count} elements");
     }
+
     
-    [Command]
-    private void SendHitInfo(Transform t)
-    {
-        if (t == null)
-        {
-            clickedNothing = true;
-            return;
-        }
-        
-        selectedHex = t.GetComponent<Hex>();
-        clickedHex = selectedHex;
-        selectedUnit = t.GetComponent<Unit>();
-        clickedUnit = selectedUnit;
-        
-        if (clickedHex)
-        {
-            if (selectedHex.currentUnit != null)
-            {
-                selectedUnit = selectedHex.currentUnit;
-                clickedHex = false;
-                clickedUnit = true;
-            }
-        }
-    }
     
     public void RefreshUnitOutlines()
     {
@@ -289,19 +306,20 @@ public class PlayerSM : StateMachine
         
         foreach (var hex in path)
         {
-            unit.currentHex.OnUnitExit(unit);
+            if (isServer)
+            {
+                unit.currentHex.OnUnitExit(unit);
             
-            hex.OnUnitEnter(unit);
-            
-            if(isServer) hex.DecreaseUnitMovement(unit);
+                hex.OnUnitEnter(unit);
+                
+                hex.DecreaseUnitMovement(unit);
+            }
             
             unit.transform.position = hex.transform.position + Vector3.up * 2f;
             
             //TODO - Wait for animation to finish
             
             yield return new WaitForSeconds(0.5f);
-            
-            
             
         }
 
