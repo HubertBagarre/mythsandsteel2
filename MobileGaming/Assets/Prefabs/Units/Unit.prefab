@@ -206,6 +206,7 @@ MonoBehaviour:
   physicDef: 0
   magicDef: 0
   atkPerTurn: 0
+  attacksLeft: 0
   physicDamage: 0
   magicDamage: 0
   range: 0
@@ -213,7 +214,7 @@ MonoBehaviour:
   hasBeenActivated: 0
   animator: {fileID: 0}
   outlineScript: {fileID: 7322122498380247939}
-  unitScriptable: {fileID: 0}
+  unitScriptable: {fileID: 11400000, guid: fde8563e0f6fa594e80a0e3a84ec3d4b, type: 2}
   abilityScriptable: {fileID: 0}
   damageModifier: {fileID: 0}
 --- !u!136 &8842474755492759944

@@ -68,7 +68,7 @@ public class Hex : NetworkBehaviour
 
     public IEnumerable<Hex> GetNeighborsInRange(int range)
     {
-        var bfsResult = GraphSearch.BFSGetRange(this,range,true);
+        var bfsResult = GraphSearch.BFSGetRange(this,range,null);
         return bfsResult.GetHexesInRange();
     }
 

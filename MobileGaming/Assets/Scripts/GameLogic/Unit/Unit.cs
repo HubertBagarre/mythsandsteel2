@@ -35,6 +35,7 @@ public class Unit : NetworkBehaviour
     [SyncVar] public sbyte physicDef;
     [SyncVar] public sbyte magicDef;
     [SyncVar] public sbyte atkPerTurn;
+    [SyncVar] public sbyte attacksLeft;
     [SyncVar] public sbyte physicDamage;
     [SyncVar] public sbyte magicDamage;
     [SyncVar] public sbyte range;
@@ -51,6 +52,41 @@ public class Unit : NetworkBehaviour
     public ScriptableAbility damageModifier;
 
 
+    public void ResetUnitStats()
+    {
+        maxHp = baseMaxHp;
+        actualHp = maxHp;
+        physicDef = basePhysicDef;
+        magicDef = baseMagicDef;
+        atkPerTurn = baseAtkPerTurn;
+        attacksLeft = atkPerTurn;
+        physicDamage = basePhysicDamage;
+        magicDamage = baseMagicDamage;
+        range = baseRange;
+        move = baseMove;
+        hasBeenActivated = false;
+
+    }
+
+    public void LinkUnitScriptable(ScriptableUnit newUnitScriptable)
+    {
+        unitScriptable = newUnitScriptable;
+
+        unitName = unitScriptable.unitName;
+        faction = unitScriptable.faction;
+        className = unitScriptable.className;
+        baseMaxHp = unitScriptable.baseMaxHp;
+        basePhysicDef = unitScriptable.basePhysicDef;
+        baseMagicDef = unitScriptable.baseMagicDef;
+        baseAtkPerTurn = unitScriptable.baseAtkPerTurn;
+        basePhysicDamage = unitScriptable.baseDamage;
+        baseMagicDamage = 0;
+        baseRange = unitScriptable.baseRange;
+        baseMove = unitScriptable.baseMove;
+        
+        ResetUnitStats();
+    }
+    
     public void ChangeTransformPosition(Vector3 newPos)
     {
         ServerChangePosition(newPos);

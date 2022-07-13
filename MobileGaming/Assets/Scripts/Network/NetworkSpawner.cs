@@ -52,7 +52,7 @@ public class NetworkSpawner
         spawnedUnit.hexRow = Convert.ToSByte(position.x);
         spawnedUnit.hexCol = Convert.ToSByte(position.y);
         spawnedUnit.playerId = player;
-        spawnedUnit.baseMove = 3;
+        spawnedUnit.LinkUnitScriptable(spawnedUnit.unitScriptable);
         HexGrid.instance.units.Add(spawnedUnit);
         NetworkServer.Spawn(unitObject);
     }
@@ -66,7 +66,7 @@ public class NetworkSpawner
         spawnedUnit.hexRow = Convert.ToSByte(position.x);
         spawnedUnit.hexCol = Convert.ToSByte(position.y);
         spawnedUnit.playerId = player;
-        spawnedUnit.baseMove = 3;
+        spawnedUnit.LinkUnitScriptable(spawnedUnit.unitScriptable);
         HexGrid.instance.units.Add(spawnedUnit);
         NetworkServer.Spawn(unitObject);
     }

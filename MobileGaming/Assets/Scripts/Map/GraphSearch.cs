@@ -1,27 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using UnityEngine.Rendering;
 
 public class GraphSearch
 {
-    public static BFSResult BFSGetRange(Hex startPoint, int movementPoints, bool ignoreUnits, bool withAttack = false)
+    public static BFSResult BFSGetRange(Hex startPoint, int movementPoints,IEnumerable<Unit> enemyUnits, bool withAttack = false)
     {
-        var unit = ignoreUnits ? null : startPoint.currentUnit;
-        var attackRange = 0;
-        var friendlyPlayer = 0;
-        if (unit != null)
-        {
-            attackRange = unit.range;
-            friendlyPlayer = unit.playerId;
-        }
+        var ignoreUnits = enemyUnits == null;
+        var unit = (enemyUnits != null) ? startPoint.currentUnit : null;
+        var attackRange = (enemyUnits != null) ? unit.range : 0;
+        var friendlyPlayer = (enemyUnits != null) ? unit.playerId : 0;
 
-        // need ref of enemies;
-        // just check the range lmao;
-        
-
-        
-        
         var visitedHex = new Dictionary<Hex, Hex?>();
         var costSoFar = new Dictionary<Hex, int>();
         var attackableUnits = new Dictionary<Unit, Hex>();
@@ -30,7 +21,7 @@ public class GraphSearch
         hexesToVisitQueue.Enqueue(startPoint);
         costSoFar.Add(startPoint,0);
         visitedHex.Add(startPoint,null);
-
+        
         while (hexesToVisitQueue.Count > 0)
         {
             var currentHex = hexesToVisitQueue.Dequeue();
@@ -51,23 +42,46 @@ public class GraphSearch
                         costSoFar[hexNeighbour] = newCost;
                         hexesToVisitQueue.Enqueue(hexNeighbour);
                         
+                        if (!ignoreUnits && withAttack)
+                        {
+                            foreach (var enemyUnit in enemyUnits)
+                            {
+                                if (Hex.DistanceBetween(enemyUnit.currentHex, hexNeighbour) <= attackRange)
+                                {
+                                    if(!attackableUnits.ContainsKey(enemyUnit)) attackableUnits.Add(enemyUnit,hexNeighbour);
+                                }
+                            }
+                        }
                     }
                     else if (costSoFar[hexNeighbour] > newCost)
                     {
                         costSoFar[hexNeighbour] = newCost;
                         visitedHex[hexNeighbour] = currentHex;
+                        if (!ignoreUnits && withAttack)
+                        {
+                            foreach (var enemyUnit in enemyUnits)
+                            {
+                                var newDistanceToHex = Hex.DistanceBetween(enemyUnit.currentHex, hexNeighbour);
+                                var currentDistanceToHex = Hex.DistanceBetween(enemyUnit.currentHex, attackableUnits[enemyUnit]);
+                                if (newDistanceToHex <= attackRange && newDistanceToHex > currentDistanceToHex)
+                                {
+                                    if(attackableUnits.ContainsKey(enemyUnit)) attackableUnits[enemyUnit] = hexNeighbour;
+                                    else attackableUnits.Add(enemyUnit,hexNeighbour);
+                                }
+                            }
+                        }
                     }
                 }
             }
 
         }
-
+        
         return new BFSResult() {visitedHexesDict = visitedHex,attackableUnitsDict = attackableUnits};
     }
     
-    public static BFSResult BFSGetRange(Unit unit,bool withAttack = true)
+    public static BFSResult BFSGetRange(Unit unit,IEnumerable<Unit> enemyUnits,bool withAttack = true)
     {
-        return BFSGetRange(unit.currentHex, unit.move, false,withAttack);
+        return BFSGetRange(unit.currentHex, unit.move, enemyUnits,withAttack);
     }
     
     

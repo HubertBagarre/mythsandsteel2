@@ -27,10 +27,10 @@ public class PlayerSM : StateMachine
 
     [Header("Unit Movement")]
     public readonly SyncHashSet<Hex> accessibleHexes = new();
+    public readonly SyncHashSet<Hex> attackableHexes = new();
     [SyncVar] public Unit unitMovementUnit;
     [SyncVar] public Hex unitMovementHex;
-    public readonly SyncList<Hex> unitMovementPath = new();
-    
+
     [Header("User Interface")] 
     [SerializeField] private TextMeshProUGUI actionsLeftText;
     
@@ -232,15 +232,21 @@ public class PlayerSM : StateMachine
         isAskingForAccessibleHexesForUnitMovement = true;
     }
 
-    public void SetAccessibleHexes(IEnumerable<Hex> hexes,BFSResult result)
+    public void SetAccessibleHexes(IEnumerable<Hex> hexes,IEnumerable<Unit> attackable)
     {
         accessibleHexesReceived = false;
         accessibleHexes.Clear();
-        
+        attackableHexes.Clear();
+
         //Debug.Log($"Setting accessible hexes ! size : {accessibleHexes.Count}");
         foreach (var hex in hexes)
         {
             accessibleHexes.Add(hex);
+        }
+
+        foreach (var unit in attackable)
+        {
+            attackableHexes.Add(unit.currentHex);
         }
 
         accessibleHexesReceived = true;
@@ -269,8 +275,10 @@ public class PlayerSM : StateMachine
         foreach (var hex in allHexes)
         {
             var color = accessibleHexes.Contains(hex) ? Hex.HexColors.Selectable : Hex.HexColors.Unselectable;
+            if (attackableHexes.Contains(hex)) color = Hex.HexColors.Attackable;
             hex.ChangeHexColor(color);
         }
+        
     }
     
     #endregion

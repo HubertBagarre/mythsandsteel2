@@ -12,3 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfe73229900617547adbb2491bbb3526, type: 3}
   m_Name: Default Unit
   m_EditorClassIdentifier: 
+  unitName: Default Unit
+  faction: Default Faction
+  className: Default
+  baseMaxHp: 18
+  basePhysicDef: 0
+  baseMagicDef: 1
+  baseAtkPerTurn: 1
+  baseDamage: 4
+  baseRange: 2
+  baseMove: 3
+  abilityScriptable: {fileID: 0}
+  damageModifier: {fileID: 0}
+  idle: {fileID: 0}
+  movement: {fileID: 0}
+  attack: {fileID: 0}
+  ability: {fileID: 0}
+  takeDamage: {fileID: 0}
+  death: {fileID: 0}

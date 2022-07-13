@@ -171,20 +171,20 @@ public class GameSM : StateMachine
     {
         var positions1 = new List<Vector2Int>()
         {
-            new Vector2Int(0,0),
-            new Vector2Int(2,0),
-            new Vector2Int(4,0),
-            new Vector2Int(6,0),
-            new Vector2Int(8,0),
+            new Vector2Int(0,4),
+            new Vector2Int(2,4),
+            new Vector2Int(4,4),
+            new Vector2Int(6,4),
+            new Vector2Int(8,4),
         };
         
         var positions0 = new List<Vector2Int>()
         {
-            new Vector2Int(0,10),
-            new Vector2Int(2,10),
-            new Vector2Int(4,10),
-            new Vector2Int(6,10),
-            new Vector2Int(8,10),
+            new Vector2Int(0,6),
+            new Vector2Int(2,6),
+            new Vector2Int(4,6),
+            new Vector2Int(6,6),
+            new Vector2Int(8,6),
         };
 
         yield return null;
@@ -231,12 +231,14 @@ public class GameSM : StateMachine
     public void ServerSideSetAccessibleHexesNew(Unit unitToGetAccessibleHexes)
     {
         Debug.Log("Setting Accessible Hexes");
-        
-        var bfsResult = GraphSearch.BFSGetRange(unitToGetAccessibleHexes);
-        var returnHexes = bfsResult.GetHexesInRange();
+
+        var enemyUnits = HexGrid.instance.units.Where(unit => unit.playerId != unitToGetAccessibleHexes.playerId);
+        var bfsResult = GraphSearch.BFSGetRange(unitToGetAccessibleHexes,enemyUnits,true);
+        var accessibleHexes = bfsResult.GetHexesInRange();
+        var attackableUnits = bfsResult.GetAttackableUnits;
 
         var player = players[unitToGetAccessibleHexes.playerId];
-        player.SetAccessibleHexes(returnHexes,bfsResult);
+        player.SetAccessibleHexes(accessibleHexes,attackableUnits);
     }
     
     #endregion
@@ -247,7 +249,8 @@ public class GameSM : StateMachine
     {
         Debug.Log("Setting Accessible Hexes Before Moving");
 
-        var bfsResult = GraphSearch.BFSGetRange(movingUnit);
+        var enemyUnits = HexGrid.instance.units.Where(unit => unit.playerId != movingUnit.playerId);
+        var bfsResult = GraphSearch.BFSGetRange(movingUnit,enemyUnits,false);
         var path = bfsResult.GetPathTo(destinationHex);
         
         ServerSideUnitMovement(movingUnit,path.ToArray(),player);
