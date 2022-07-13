@@ -28,7 +28,7 @@ namespace PlayerStates
         
         private void OnUnitMovementAnimationDone()
         {
-            sm.unitMovementAnimationDone = false;
+            sm.ResetMovementAnimationDoneTrigger();
             sm.ChangeState(sm.idleState);
         }
 

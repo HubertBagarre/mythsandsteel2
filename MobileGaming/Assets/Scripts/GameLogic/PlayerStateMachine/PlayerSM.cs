@@ -337,6 +337,12 @@ public class PlayerSM : StateMachine
             unitMovementAnimationDone = true;
         }
     }
+    
+    [Command]
+    public void ResetMovementAnimationDoneTrigger()
+    {
+        unitMovementAnimationDone = false;
+    }
 
     #endregion
 
