@@ -350,8 +350,8 @@ public class PlayerSM : StateMachine
     private void TryToEndTurn()
     {
         if(currentState != idleState) return;
+        turnIsOver = true;
         TryEndTurnCommand();
-        
     }
     
     [Command]
