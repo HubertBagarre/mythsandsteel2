@@ -229,7 +229,13 @@ public class GameSM : StateMachine
             unit.move = unit.baseMove;
         }
     }
-    
+
+    public void PushHexGridToClients()
+    {
+        Debug.Log("Syncing Grid values");
+        HexGrid.instance.SyncHexGridVariables();
+    }
+
     #region Accessible Tiles For Unit Movement  
 
     public void ServerSideSetAccessibleHexesNew(Hex startingHex, int maxMovement, PlayerSM player)
@@ -248,20 +254,19 @@ public class GameSM : StateMachine
     
     public void ServerSideSetUnitMovementPath(Unit movingUnit,Hex destinationHex,PlayerSM player)
     {
-        Debug.Log("Setting Accessible Hexes");
+        Debug.Log("Setting Accessible Hexes Before Moving");
 
         var bfsResult = GraphSearch.BFSGetRange(movingUnit.currentHex, movingUnit.move, player.playerId);
         var path = bfsResult.GetPathTo(destinationHex);
         
-        //player.SetPathForUnitMovement(returnHexes);
         player.unitMovementReceived = true;
         ServerSideUnitMovement(movingUnit,path.ToArray(),player);
     }
 
     private void ServerSideUnitMovement(Unit movingUnit,Hex[] path,PlayerSM player)
     {
-        player.ServerMoveUnitF(movingUnit,path);
-        player.RpcMoveUnitF(movingUnit,path);
+        player.ServerMoveUnit(movingUnit,path);
+        player.RpcMoveUnit(movingUnit,path);
     }
     
     #endregion

@@ -257,59 +257,46 @@ public class PlayerSM : StateMachine
         isAskingForUnitMovement = true;
     }
     
-    public void ServerMoveUnitF(Unit unitToMove, Hex[] path)
+    public void ServerMoveUnit(Unit unitToMove, Hex[] path)
     {
         if(!unitToMove.hasBeenActivated) actionsLeft--;
         unitToMove.hasBeenActivated = true;
-        StartCoroutine(MoveUnitRoutine(unitToMove, path,true));
+        StartCoroutine(MoveUnitRoutine(unitToMove, path));
     }
     
     [ClientRpc]
-    public void RpcMoveUnitF(Unit unitToMove, Hex[] path)
+    public void RpcMoveUnit(Unit unitToMove, Hex[] path)
     {
-        StartCoroutine(MoveUnitRoutine(unitToMove, path,false));
+        StartCoroutine(MoveUnitRoutine(unitToMove, path));
     }
     
-    
-    [Command]
-    public void TryToMoveUnit(Unit unitToMove,Hex[] path)
+    private IEnumerator MoveUnitRoutine(Unit unit, Hex[] path)
     {
-        if(!canSendInfo || unitToMove.playerId != playerId) return;
-        if(!unitToMove.hasBeenActivated) actionsLeft--;
-        unitToMove.hasBeenActivated = true;
-        ServerMoveUnit(unitToMove,path);
-        RpcMoveUnit(unitToMove,path);
-    }
-
-    private void ServerMoveUnit(Unit unitToMove, Hex[] path)
-    {
-        StartCoroutine(MoveUnitRoutine(unitToMove, path,true));
-    }
-    
-    [ClientRpc]
-    private void RpcMoveUnit(Unit unitToMove, Hex[] path)
-    {
-        StartCoroutine(MoveUnitRoutine(unitToMove, path,false));
-    }
-    
-    private IEnumerator MoveUnitRoutine(Unit unit, Hex[] path,bool decreaseUnitMovement)
-    {
-        unitMovementAnimationDone = false;
+        if(isServer) unitMovementAnimationDone = false;
         
         foreach (var hex in path)
         {
             unit.currentHex.OnUnitExit(unit);
             
-            unit.transform.position = hex.transform.position + Vector3.up * 2f;
-            
             hex.OnUnitEnter(unit);
             
-            if(decreaseUnitMovement) hex.DecreaseUnitMovement(unit);
+            if(isServer) hex.DecreaseUnitMovement(unit);
+            
+            unit.transform.position = hex.transform.position + Vector3.up * 2f;
+            
+            //TODO - Wait for animation to finish
             
             yield return new WaitForSeconds(0.5f);
+            
+            
+            
         }
-        
-        unitMovementAnimationDone = true;
+
+        if (isServer)
+        {
+            HexGrid.instance.SyncHexGridVariables();
+            unitMovementAnimationDone = true;
+        }
     }
 
     #endregion

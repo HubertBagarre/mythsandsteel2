@@ -181,98 +181,17 @@ public class HexGrid : NetworkBehaviour
     {
         return Hex.DistanceBetween(a, b);
     }
-    
-    public void SetAccessibleHexes(Hex startingHex, int movement,int playerBlock)
+
+    public void SyncHexGridVariables()
     {
-        hexesToReturn.Clear();
-        hexesToReturn.Add(startingHex);
+        Debug.Log("Syncing Hexes");
         foreach (var hex in hexes.Values)
         {
-            hex.currentCostToMove = -1;
+            hex.currentUnit = hex.currentUnit;
+            if (hex.currentUnit != null) hex.currentUnit.currentHex = hex;
         }
-        StartCoroutine(AccessibleRecursive(startingHex,movement,playerBlock));
-    }
-    
-    private IEnumerator AccessibleRecursive(Hex startingHex,int movement,int playerBlock,int costToMove = 1)
-    {
-        isFindingHex = false;
         
-        if (movement > 0)
-        {
-            isFindingHex = true;
-            var accessibleHex = new List<Hex>();
-            
-            foreach (var hex in startingHex.neighbours)
-            {
-                if (hex != null)
-                {
-                    if (hex.movementCost != sbyte.MaxValue && !hexesToReturn.Contains(hex) && !accessibleHex.Contains(hex))
-                    {
-                        var noEnemyUnit = true;
-                        if (hex.currentUnit != null) noEnemyUnit = (hex.currentUnit.playerId == playerBlock);
-                        
-                        if (noEnemyUnit)
-                        {
-                            if (hex.movementCost == 1 || costMoreHex.Contains(hex)) accessibleHex.Add(hex);
-                            else if (movement > 1) costMoreHex.Add(hex);
-                        }
-                        
-                    }
-                }
-            }
-
-            yield return null;
-            
-            foreach (var hex in accessibleHex)
-            {
-                if (hex.currentCostToMove == -1) hex.currentCostToMove = costToMove;
-                hexesToReturn.Add(hex);
-                hexesToReturn = hexesToReturn.Distinct().ToList();
-                StartCoroutine(AccessibleRecursive(hex, movement - 1,playerBlock,costToMove + 1));
-            }
-        }
     }
 
-    
-    
-    public List<Hex> path = new List<Hex>();
-    
-    public void SetPath(Hex endPoint,Hex[] accessibleHexes)
-    {
-        path.Clear();
-        path.Add(endPoint);
-        StartCoroutine(RecursivePath(endPoint, accessibleHexes));
-    }
 
-    private IEnumerator RecursivePath(Hex endpoint,Hex[] accessibleHexes)
-    {
-        isFindingPath = true;
-        var cost = sbyte.MaxValue;
-        Hex returnHex = null;
-        foreach (var hex in endpoint.neighbours)
-        {
-            if (accessibleHexes.Contains(hex))
-            {
-                if (hex.currentCostToMove == -1)
-                {
-                    isFindingPath = false;
-                    yield break;
-                }
-                
-                if (hex.currentCostToMove < cost)
-                {
-                    cost = Convert.ToSByte(hex.currentCostToMove);
-                    returnHex = hex;
-                }
-            }
-        }
-
-        yield return null;
-        
-        path.Add(returnHex);
-        StartCoroutine(RecursivePath(returnHex, accessibleHexes));
-
-    }
-    
-    
 }
