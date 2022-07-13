@@ -31,6 +31,12 @@ namespace PlayerStates
             base.Enter();
             
             selectedUnit = sm.selectedUnit;
+            if (selectedUnit == null)
+            {
+                Debug.LogWarning("NO UNIT SELECTED, RETURNING TO IDLE");
+                sm.ChangeState(sm.idleState);
+                return;
+            }
             waitingForAccessibleHexes = true;
 
             sm.accessibleHexesReceived = false;
@@ -65,11 +71,9 @@ namespace PlayerStates
         
         public override void UpdateLogic()
         {
+            base.UpdateLogic();
             if(sm.accessibleHexesReceived && waitingForAccessibleHexes) OnAccessibleHexesReceived();
             if(waitingForAccessibleHexes) return;
-            if (sm.clickedNothing) OnNothingClicked();
-            if(sm.clickedUnit) OnUnitClicked();
-            if(sm.clickedHex) OnHexClicked();
         }
         
         private void OnAccessibleHexesReceived()

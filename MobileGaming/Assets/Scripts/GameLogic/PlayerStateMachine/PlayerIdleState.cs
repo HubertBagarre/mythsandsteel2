@@ -16,8 +16,6 @@ namespace PlayerStates
         {
             base.Enter();
             
-            sm.debugText.text = $"Player {sm.playerId}, {this}";
-            
             sm.RefreshUnitOutlines();
         }
 
@@ -26,29 +24,32 @@ namespace PlayerStates
             base.OnUnitClicked();
             
             //TODO - Update selection info box
-            
-            var selectedUnit = sm.selectedUnit;
 
-            if (selectedUnit.playerId == sm.playerId)
-            {
-                if (sm.canSendInfo)
-                {
-                    if (sm.actionsLeft > 0 || selectedUnit.hasBeenActivated)
-                    {
-                        Debug.Log("Going in Movement");
-                        sm.ChangeState(sm.movementSelectionState);
-                    }
-                }
-            }
+            EnterMovingState(sm.selectedUnit);
         }
-
+        
         protected override void OnHexClicked()
         {
             base.OnHexClicked();
-            var hex = sm.selectedHex;
-            for (int i = 0; i < 3; i++)
+
+            var unit = sm.selectedHex.currentUnit;
+            if (unit != null)
             {
-                Debug.Log($"{hex} has {hex.GetNeighborsInRange(i).Count()} neighbours in a range of {i}");
+                sm.SendUnitClicked(unit);
+            }
+        }
+        
+        private void EnterMovingState(Unit unit)
+        {
+            if (unit.playerId == sm.playerId)
+            {
+                if (sm.canSendInfo)
+                {
+                    if (sm.actionsLeft > 0 || unit.hasBeenActivated)
+                    {
+                        sm.ChangeState(sm.movementSelectionState);
+                    }
+                }
             }
         }
     }

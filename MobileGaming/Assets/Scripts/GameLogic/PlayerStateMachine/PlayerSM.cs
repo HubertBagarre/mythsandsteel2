@@ -153,7 +153,7 @@ public class PlayerSM : StateMachine
 
 
     [Command]
-    private void SendUnitClicked(Unit unit)
+    public void SendUnitClicked(Unit unit)
     {
         Debug.Log($"{unit} got clicked");
         selectedUnit = unit;
@@ -161,7 +161,7 @@ public class PlayerSM : StateMachine
     }
     
     [Command]
-    private void SendHexClicked(Hex hex)
+    public void SendHexClicked(Hex hex)
     {
         Debug.Log($"{hex} got clicked");
         selectedHex = hex;
@@ -169,7 +169,7 @@ public class PlayerSM : StateMachine
     }
     
     [Command]
-    private void SendNothingClicked()
+    public void SendNothingClicked()
     {
         Debug.Log("Nothing got clicked");
         clickedNothing = true;
@@ -237,8 +237,7 @@ public class PlayerSM : StateMachine
         accessibleHexesReceived = false;
         accessibleHexes.Clear();
         attackableHexes.Clear();
-
-        //Debug.Log($"Setting accessible hexes ! size : {accessibleHexes.Count}");
+        
         foreach (var hex in hexes)
         {
             accessibleHexes.Add(hex);
@@ -250,16 +249,6 @@ public class PlayerSM : StateMachine
         }
 
         accessibleHexesReceived = true;
-        
-        Debug.Log("Accessible Hexes are");
-        foreach (var hex in accessibleHexes)
-        {
-            Debug.Log($"{hex}, in position {hex.col},{hex.row}");
-        }
-        
-        
-        //Debug.Log($"Accessible hexes set ! size : {accessibleHexes.Count}");
-
     }
 
     [Command]
@@ -412,8 +401,11 @@ public class PlayerSM : StateMachine
     private void OnNothingClickedValueChanged(bool prevValue,bool newValue)
     {
         if(!isLocalPlayer) return;
+        Debug.Log($"Nothing clicked value is now {newValue}");
+        
         if (currentState is BasePlayerState basePlayerState && !newValue)
         {
+            Debug.Log($"Resetting trigger of {currentState}");
             basePlayerState.onNothingClickedTriggered = false;
         }
     }
@@ -428,8 +420,11 @@ public class PlayerSM : StateMachine
     private void OnUnitClickedValueChanged(bool prevValue,bool newValue)
     {
         if(!isLocalPlayer) return;
+        Debug.Log($"Unit clicked value is now {newValue}");
+        
         if (currentState is BasePlayerState basePlayerState && !newValue)
         {
+            Debug.Log($"Resetting trigger of {currentState}");
             basePlayerState.onNothingClickedTriggered = false;
         }
     }
@@ -444,8 +439,11 @@ public class PlayerSM : StateMachine
     private void OnHexClickedValueChanged(bool prevValue,bool newValue)
     {
         if(!isLocalPlayer) return;
+        Debug.Log($"Hex clicked value is now {newValue}");
+        
         if (currentState is BasePlayerState basePlayerState  && !newValue)
         {
+            Debug.Log($"Resetting trigger of {currentState}");
             basePlayerState.onNothingClickedTriggered = false;
         }
     }

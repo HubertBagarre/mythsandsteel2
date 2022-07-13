@@ -25,33 +25,56 @@ namespace PlayerStates
 
         public override void UpdateLogic()
         {
-            if (sm.clickedNothing && !onNothingClickedTriggered) OnNothingClicked();
-            if (sm.clickedUnit && !onUnitClickedTriggered) OnUnitClicked();
-            if (sm.clickedHex && !onHexClickedTriggered) OnHexClicked();
+            if (sm.clickedNothing) CheckIfCanExecuteOnNothingClicked();
+                
+            if (sm.clickedUnit) CheckIfCanExecuteOnUnitClicked();
+            
+            if (sm.clickedHex) CheckIfCanExecuteOnHexesClicked();
         }
 
-        protected virtual void OnNothingClicked()
+        private void CheckIfCanExecuteOnNothingClicked()
         {
-            Debug.Log("Clicked Nothing");
-            onNothingClickedTriggered = true;
+            Debug.Log($"Clicked Nothing, it has been triggered : {onNothingClickedTriggered}");
             sm.clickedNothing = false;
             sm.OnNothingClicked();
+            if (onNothingClickedTriggered) return;
+            onNothingClickedTriggered = true;
+            OnNothingClicked();
+        }
+        
+        protected virtual void OnNothingClicked()
+        {
+            Debug.Log($"Clicked Nothing, Executing {nameof(OnNothingClicked)}");
+        }
+        
+        private void CheckIfCanExecuteOnUnitClicked()
+        {
+            Debug.Log($"Clicked Unit : {sm.selectedUnit}");
+            sm.clickedUnit = false;
+            sm.OnUnitClicked();
+            if (onUnitClickedTriggered) return;
+            onUnitClickedTriggered = true;
+            OnUnitClicked();
         }
         
         protected virtual void OnUnitClicked()
         {
-            Debug.Log($"Clicked Unit : {sm.selectedUnit}");
-            onUnitClickedTriggered = true;
-            sm.clickedUnit = false;
-            sm.OnUnitClicked();
+            Debug.Log($"Clicked a Unit, Executing {nameof(OnUnitClicked)}");
+        }
+        
+        private void CheckIfCanExecuteOnHexesClicked()
+        {
+            Debug.Log($"Clicked Hex : {sm.selectedHex}");
+            sm.clickedHex = false;
+            sm.OnHexClicked();
+            if (onHexClickedTriggered) return;
+            onHexClickedTriggered = true;
+            OnHexClicked();
         }
         
         protected virtual void OnHexClicked()
         {
-            Debug.Log($"Clicked Hex : {sm.selectedHex}");
-            onHexClickedTriggered = true;
-            sm.clickedHex = false;
-            sm.OnHexClicked();
+            Debug.Log($"Clicked a Hex, Executing {nameof(OnHexClicked)}");
         }
     }
 }
