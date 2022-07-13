@@ -33,10 +33,9 @@ public class Hex : NetworkBehaviour
     private Material normalMat;
     [SerializeField] private Material selectableMat;
     [SerializeField] private Material unselectableMat;
+    [SerializeField] private Material attackableMat;
     [SerializeField] private Material selectedMat;
-
-    [Header("PathFinding")]
-    public int currentCostToMove = -1;
+    
     
     public static void OddrToCube(Hex hex)
     {
@@ -104,7 +103,7 @@ public class Hex : NetworkBehaviour
         ApplyTile(tileID);
     }
 
-    public enum HexColors {Normal, Unselectable, Selectable, Selected}
+    public enum HexColors {Normal, Unselectable, Selectable, Selected, Attackable}
     public void ChangeHexColor(HexColors color)
     {
         modelRenderer.material = color switch
@@ -113,6 +112,7 @@ public class Hex : NetworkBehaviour
             HexColors.Unselectable => unselectableMat,
             HexColors.Selectable => selectableMat,
             HexColors.Selected => selectedMat,
+            HexColors.Attackable => attackableMat,
             _ => throw new ArgumentOutOfRangeException(nameof(color), color, null)
         };
     }

@@ -35,7 +35,6 @@ public class NetworkSpawner
                 var hex = hexGameObject.GetComponent<Hex>();
                 hex.col = x;
                 hex.row = y;
-                hex.currentCostToMove = -1;
                 hex.currentTileID = 1;
                 Hex.OddrToCube(hex);
                 Hex.JoinHexGrid(hex);

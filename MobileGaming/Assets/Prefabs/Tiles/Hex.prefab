@@ -90,18 +90,11 @@ MonoBehaviour:
   q: 0
   r: 0
   s: 0
-  neighbours:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   modelParent: {fileID: 2528794637939914081}
   selectableMat: {fileID: 2100000, guid: f9de21341bf6e9e46ade2d66f6186473, type: 2}
   unselectableMat: {fileID: 2100000, guid: 696437754694ea647b5efeaaf52e6634, type: 2}
+  attackableMat: {fileID: 2100000, guid: bb0cc2b5fbbfb2d488410f140b70a739, type: 2}
   selectedMat: {fileID: 2100000, guid: 5ec9ed9a61ea3f343941f17d0a0a15c2, type: 2}
-  currentCostToMove: -1
 --- !u!1 &2528794637939914094
 GameObject:
   m_ObjectHideFlags: 0

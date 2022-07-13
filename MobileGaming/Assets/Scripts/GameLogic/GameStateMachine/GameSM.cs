@@ -226,12 +226,6 @@ public class GameSM : StateMachine
         }
     }
 
-    public void PushHexGridToClients()
-    {
-        Debug.Log("Syncing Grid values");
-        HexGrid.instance.SyncHexGridVariables();
-    }
-
     #region Accessible Tiles For Unit Movement  
 
     public void ServerSideSetAccessibleHexesNew(Hex startingHex, int maxMovement, PlayerSM player)

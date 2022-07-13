@@ -34,6 +34,7 @@ namespace PlayerStates
         {
             Debug.Log("Clicked Nothing");
             onNothingClickedTriggered = true;
+            sm.clickedNothing = false;
             sm.OnNothingClicked();
         }
         
@@ -41,6 +42,7 @@ namespace PlayerStates
         {
             Debug.Log($"Clicked Unit : {sm.selectedUnit}");
             onUnitClickedTriggered = true;
+            sm.clickedUnit = false;
             sm.OnUnitClicked();
         }
         
@@ -48,6 +50,7 @@ namespace PlayerStates
         {
             Debug.Log($"Clicked Hex : {sm.selectedHex}");
             onHexClickedTriggered = true;
+            sm.clickedHex = false;
             sm.OnHexClicked();
         }
     }
