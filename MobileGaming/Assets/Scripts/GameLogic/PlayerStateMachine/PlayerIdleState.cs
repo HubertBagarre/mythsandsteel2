@@ -4,10 +4,8 @@ using UnityEngine;
 
 namespace PlayerStates
 {
-    public class PlayerIdleState : BaseState
+    public class PlayerIdleState : BasePlayerState
     {
-        private PlayerSM sm;
-
         public PlayerIdleState(PlayerSM stateMachine) : base(stateMachine)
         {
             sm = stateMachine;
@@ -15,20 +13,16 @@ namespace PlayerStates
 
         public override void Enter()
         {
+            base.Enter();
+            
             sm.debugText.text = $"Player {sm.playerId}, {this}";
             
             sm.RefreshUnitOutlines();
         }
 
-        public override void UpdateLogic()
+        protected override void OnUnitClicked()
         {
-            if(sm.clickedUnit) OnUnitSelected();
-            if(sm.clickedHex) OnHexSelected();
-        }
-
-        private void OnUnitSelected()
-        {
-            sm.clickedUnit = false;
+            base.OnUnitClicked();
             
             //TODO - Update selection info box
             
@@ -41,13 +35,6 @@ namespace PlayerStates
                     if(sm.actionsLeft > 0 || selectedUnit.hasBeenActivated) sm.ChangeState(sm.movementSelectionState);
                 }
             }
-        }
-
-        private void OnHexSelected()
-        {
-            sm.clickedHex = false;
-            Debug.Log($"Clicked Hex {sm.selectedHex}");
-            return;
         }
     }
 }

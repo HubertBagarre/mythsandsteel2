@@ -4,10 +4,8 @@ using UnityEngine;
 
 namespace PlayerStates
 {
-    public class PlayerUnitMovingState : BaseState
+    public class PlayerUnitMovingState : BasePlayerState
     {
-        private PlayerSM sm;
-
         public PlayerUnitMovingState(PlayerSM stateMachine) : base(stateMachine)
         {
             sm = stateMachine;
@@ -15,6 +13,8 @@ namespace PlayerStates
 
         public override void Enter()
         {
+            base.Enter();
+            
             Debug.Log($"Going to move {sm.unitMovementUnit} to {sm.unitMovementHex}");
 
             sm.GetPathForUnitMovement();
@@ -24,6 +24,7 @@ namespace PlayerStates
         {
             if(sm.unitMovementReceived) OnUnitMovementReceived();
             if(sm.unitMovementAnimationDone) OnUnitMovementAnimationDone();
+            base.UpdateLogic();
         }
 
         private void OnUnitMovementReceived()

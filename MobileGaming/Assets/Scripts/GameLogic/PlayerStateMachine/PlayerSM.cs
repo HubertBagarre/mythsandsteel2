@@ -50,13 +50,15 @@ public class PlayerSM : StateMachine
     [SerializeField] private LayerMask layersToHit;
     
     [Header("Trigger Bools")]
-    [SyncVar] public bool clickedUnit;
-    [SyncVar] public bool clickedHex;
+    [SyncVar(hook = nameof(OnUnitClickedValueChanged))] public bool clickedUnit;
+    [SyncVar(hook = nameof(OnHexClickedValueChanged))] public bool clickedHex;
+    [SyncVar(hook = nameof(OnNothingClickedValueChanged))] public bool clickedNothing;
     [SyncVar] public bool isAskingForAccessibleHexesForUnitMovement;
     [SyncVar] public bool accessibleHexesReceived;
     [SyncVar] public bool isAskingForUnitMovement;
     [SyncVar] public bool unitMovementReceived;
     [SyncVar] public bool unitMovementAnimationDone;
+    [SyncVar] public bool turnIsOver;
     
     
     private Camera cam;
@@ -106,6 +108,7 @@ public class PlayerSM : StateMachine
         isAskingForUnitMovement = false;
         unitMovementReceived = false;
         unitMovementAnimationDone = false;
+        turnIsOver = false;
     }
     
     public override void ChangeState(BaseState newState)
@@ -122,14 +125,19 @@ public class PlayerSM : StateMachine
     private void TryToSelectUnitOrTile(Vector2 screenPosition,float time)
     {
         var ray = cam.ScreenPointToRay(screenPosition);
+
+        if (Physics.Raycast(ray, out var hit, layersToHit))
+        {
+            var objectHit = hit.transform;
         
-        if (!Physics.Raycast(ray, out var hit,layersToHit)) return;
+            Debug.Log(objectHit);
         
-        var objectHit = hit.transform;
-        
-        Debug.Log(objectHit);
-        
-        SendHitInfo(objectHit);
+            
+            
+            return;
+        }
+
+        SendHitInfo(null);
     }
     
     public void SetUnitsAndHexesArrays(IEnumerable<Unit> units, IEnumerable<Hex> hexes)
@@ -150,7 +158,12 @@ public class PlayerSM : StateMachine
     [Command]
     private void SendHitInfo(Transform t)
     {
-        //Debug.Log($"Player {playerId} is sending Hitscan Info");
+        if (t == null)
+        {
+            clickedNothing = true;
+            return;
+        }
+        
         selectedHex = t.GetComponent<Hex>();
         clickedHex = selectedHex;
         selectedUnit = t.GetComponent<Unit>();
@@ -312,7 +325,7 @@ public class PlayerSM : StateMachine
     [Command]
     private void TryEndTurnCommand()
     {
-        GameSM.instance.playerTurnOver = true;
+        turnIsOver = true;
     }
 
     public void EndTurn()
@@ -348,6 +361,55 @@ public class PlayerSM : StateMachine
     }
 
     #region hooks
+
+    [Command]
+    public void OnNothingClicked()
+    {
+        Debug.Log($"SERVER Clicked Nothing");
+        clickedNothing = false;
+    }
+    
+    private void OnNothingClickedValueChanged(bool prevValue,bool newValue)
+    {
+        if(!isLocalPlayer) return;
+        if (currentState is BasePlayerState basePlayerState && !newValue)
+        {
+            basePlayerState.onNothingClickedTriggered = false;
+        }
+    }
+    
+    [Command]
+    public void OnUnitClicked()
+    {
+        Debug.Log($"SERVER Clicked Unit : {selectedUnit}");
+        clickedUnit = false;
+    }
+    
+    
+    private void OnUnitClickedValueChanged(bool prevValue,bool newValue)
+    {
+        if(!isLocalPlayer) return;
+        if (currentState is BasePlayerState basePlayerState && !newValue)
+        {
+            basePlayerState.onNothingClickedTriggered = false;
+        }
+    }
+    
+    [Command]
+    public void OnHexClicked()
+    {
+        Debug.Log($"SERVER Clicked Hex : {selectedHex}");
+        clickedHex = false;
+    }
+    
+    private void OnHexClickedValueChanged(bool prevValue,bool newValue)
+    {
+        if(!isLocalPlayer) return;
+        if (currentState is BasePlayerState basePlayerState  && !newValue)
+        {
+            basePlayerState.onNothingClickedTriggered = false;
+        }
+    }
 
     private void OnActionsLeftValueChanged(int prevValue, int newValue)
     {

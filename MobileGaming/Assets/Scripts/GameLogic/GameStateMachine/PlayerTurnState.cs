@@ -22,7 +22,7 @@ namespace GameStates
 
         public override void UpdateLogic()
         {
-            if(sm.playerTurnOver) EndTurn();
+            if (currentPlayer.turnIsOver) EndTurn();
             if (currentPlayer.isAskingForAccessibleHexesForUnitMovement) OnAccessibleHexesForUnitMovementAsked();
             if (currentPlayer.isAskingForUnitMovement) OnUnitMovementAsked();
 
@@ -49,7 +49,7 @@ namespace GameStates
 
         private void EndTurn()
         {
-            sm.playerTurnOver = false;
+            currentPlayer.turnIsOver = false;
             currentPlayer.EndTurn();
             sm.ChangeState(sm.postPlayerTurn);
         }

@@ -7,10 +7,8 @@ using UnityEngine;
 
 namespace PlayerStates
 {
-    public class PlayerMovementSelection : BaseState
+    public class PlayerMovementSelection : BasePlayerState
     {
-        private PlayerSM sm;
-
         private Unit selectedUnit;
         private bool waitingForAccessibleHexes;
         
@@ -30,6 +28,8 @@ namespace PlayerStates
 
         public override void Enter()
         {
+            base.Enter();
+            
             selectedUnit = sm.selectedUnit;
             waitingForAccessibleHexes = true;
 
@@ -60,8 +60,9 @@ namespace PlayerStates
         {
             if(sm.accessibleHexesReceived && waitingForAccessibleHexes) OnAccessibleHexesReceived();
             if(waitingForAccessibleHexes) return;
-            if(sm.clickedUnit) OnUnitSelected();
-            if(sm.clickedHex) OnHexSelected();
+            if (sm.clickedNothing) OnNothingClicked();
+            if(sm.clickedUnit) OnUnitClicked();
+            if(sm.clickedHex) OnHexClicked();
         }
         
         private void OnAccessibleHexesReceived()
@@ -72,16 +73,21 @@ namespace PlayerStates
             waitingForAccessibleHexes = false;
         }
         
-        private void OnUnitSelected()
+        protected override void OnNothingClicked()
         {
-            Debug.Log("Clicked On A Unit");
-            sm.clickedUnit = false;
+            base.OnNothingClicked();
             sm.ChangeState(sm.idleState);
         }
 
-        private void OnHexSelected()
+        protected override void OnUnitClicked()
         {
-            sm.clickedHex = false;
+            base.OnUnitClicked();
+            sm.ChangeState(sm.idleState);
+        }
+        
+        protected override void OnHexClicked()
+        {
+            base.OnHexClicked();
 
             var selectedHex = sm.selectedHex;
 

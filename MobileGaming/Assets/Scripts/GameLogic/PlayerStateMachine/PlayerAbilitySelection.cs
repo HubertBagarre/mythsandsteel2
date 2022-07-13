@@ -4,10 +4,8 @@ using UnityEngine;
 
 namespace PlayerStates
 {
-    public class PlayerAbilitySelection : BaseState
+    public class PlayerAbilitySelection : BasePlayerState
     {
-        private PlayerSM sm;
-
         public PlayerAbilitySelection(PlayerSM stateMachine) : base(stateMachine)
         {
             sm = stateMachine;

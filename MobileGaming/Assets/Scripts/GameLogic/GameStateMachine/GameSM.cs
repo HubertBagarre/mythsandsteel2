@@ -33,9 +33,6 @@ public class GameSM : StateMachine
     public bool player0UnitsPlaced;
     public bool player1UnitsPlaced;
     
-    [Header("Triggers")]
-    public bool playerTurnOver;
-    
     public static GameSM instance;
     
     private void Awake()
@@ -78,7 +75,6 @@ public class GameSM : StateMachine
     {
         isMapGenerated = false;
         unitsPlaced = false;
-        playerTurnOver = false;
 
         player0UnitsPlaced = false;
         player1UnitsPlaced = false;
