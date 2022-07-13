@@ -255,7 +255,6 @@ public class GameSM : StateMachine
         var bfsResult = GraphSearch.BFSGetRange(movingUnit.currentHex, movingUnit.move, player.playerId);
         var path = bfsResult.GetPathTo(destinationHex);
         
-        player.unitMovementReceived = true;
         ServerSideUnitMovement(movingUnit,path.ToArray(),player);
     }
 

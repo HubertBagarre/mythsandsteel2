@@ -67,12 +67,13 @@ namespace PlayerStates
         
         private void OnAccessibleHexesReceived()
         {
-            sm.accessibleHexesReceived = false;
+            waitingForAccessibleHexes = false;
+            sm.ResetAccessibleHexesTrigger();
             Debug.Log($"Received Accessible Hexes Count : {sm.accessibleHexes.Count}");
             sm.OnAccessibleHexesReceived();
-            waitingForAccessibleHexes = false;
+            
         }
-        
+
         protected override void OnNothingClicked()
         {
             base.OnNothingClicked();

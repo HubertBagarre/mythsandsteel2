@@ -56,7 +56,6 @@ public class PlayerSM : StateMachine
     [SyncVar] public bool isAskingForAccessibleHexesForUnitMovement;
     [SyncVar] public bool accessibleHexesReceived;
     [SyncVar] public bool isAskingForUnitMovement;
-    [SyncVar] public bool unitMovementReceived;
     [SyncVar] public bool unitMovementAnimationDone;
     [SyncVar] public bool turnIsOver;
     
@@ -106,7 +105,6 @@ public class PlayerSM : StateMachine
         isAskingForAccessibleHexesForUnitMovement = false;
         accessibleHexesReceived = false;
         isAskingForUnitMovement = false;
-        unitMovementReceived = false;
         unitMovementAnimationDone = false;
         turnIsOver = false;
     }
@@ -257,12 +255,17 @@ public class PlayerSM : StateMachine
         //Debug.Log($"Accessible hexes set ! size : {accessibleHexes.Count}");
 
     }
+
+    [Command]
+    public void ResetAccessibleHexesTrigger()
+    {
+        accessibleHexesReceived = false;
+    }
     
     public void OnAccessibleHexesReceived()
     {
         if(!isLocalPlayer) return;
         
-        //Debug.Log($"Accessible Hexes Received ! size : {accessibleHexes.Count}, coloring hexes");
         foreach (var hex in allHexes)
         {
             var color = accessibleHexes.Contains(hex) ? Hex.HexColors.Selectable : Hex.HexColors.Unselectable;
@@ -303,6 +306,8 @@ public class PlayerSM : StateMachine
     private IEnumerator MoveUnitRoutine(Unit unit, Hex[] path)
     {
         if(isServer) unitMovementAnimationDone = false;
+
+        unit.currentHex.currentUnit = null;
         
         foreach (var hex in path)
         {
@@ -326,6 +331,9 @@ public class PlayerSM : StateMachine
         if (isServer)
         {
             HexGrid.instance.SyncHexGridVariables();
+
+            unit.currentHex.currentUnit = unit;
+            
             unitMovementAnimationDone = true;
         }
     }

@@ -12,7 +12,6 @@ public class Hex : NetworkBehaviour
     [Header("Gaming")]
     [SyncVar] public sbyte movementCost = 1;
     [SyncVar] public Unit currentUnit;
-    [SyncVar] private Unit previousUnit;
     [SyncVar] public int currentTileID;
     public ScriptableTile tile;
     
@@ -120,25 +119,20 @@ public class Hex : NetworkBehaviour
     
     public void OnUnitEnter(Unit unit)
     {
-        if(currentUnit != null) previousUnit = currentUnit;
-        currentUnit = unit;
-        currentUnit.currentHex = this;
-        currentUnit.hexCol = col;
-        currentUnit.hexRow = row;
+        Debug.Log($"{unit} entered {this}");
+        unit.currentHex = this;
+        unit.hexCol = col;
+        unit.hexRow = row;
     }
     
     public void DecreaseUnitMovement(Unit unit)
     {
-        currentUnit.move -= movementCost;
+        unit.move -= movementCost;
     }
 
     public void OnUnitExit(Unit unit)
     {
-        currentUnit = null;
-        if (previousUnit == null) return;
-        currentUnit = previousUnit;
-        previousUnit = null;
-
+        Debug.Log($"{unit} exited {this}");
     }
     
 }
