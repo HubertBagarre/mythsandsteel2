@@ -25,7 +25,7 @@ public class GraphSearch
         while (hexesToVisitQueue.Count > 0)
         {
             var currentHex = hexesToVisitQueue.Dequeue();
-            if (!ignoreUnits && withAttack)
+            if (!ignoreUnits && withAttack && currentHex.currentUnit == null)
             {
                 foreach (var enemyUnit in enemyUnits)
                 {

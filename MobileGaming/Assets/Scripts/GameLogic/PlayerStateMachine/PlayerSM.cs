@@ -504,7 +504,6 @@ public class PlayerSM : StateMachine
     [Command]
     public void OnUnitClicked()
     {
-        Debug.Log($"SERVER Clicked Unit : {selectedUnit}");
         clickedUnit = false;
     }
     
@@ -521,7 +520,6 @@ public class PlayerSM : StateMachine
     [Command]
     public void OnHexClicked()
     {
-        Debug.Log($"SERVER Clicked Hex : {selectedHex}");
         clickedHex = false;
     }
     
@@ -542,7 +540,7 @@ public class PlayerSM : StateMachine
 
     private void OnAccessibleHexesReceivedValueChange(bool prevValue,bool newValue)
     {
-        Debug.Log($"accessibleHexesReceived value changed, was {prevValue}, now is {newValue}");
+        
     } 
     
     private void OnCanInputValueChanged(bool prevValue,bool newValue)
@@ -554,9 +552,6 @@ public class PlayerSM : StateMachine
             nextPhaseButton.onClick.AddListener(TryToEndTurn);
             attackButton.onClick.AddListener(TryToAttack);
             abilityButton.onClick.AddListener(TryToUseAbility);
-            
-            Debug.Log("You Can Send");
-            
         }
         else
         {
@@ -564,8 +559,6 @@ public class PlayerSM : StateMachine
             nextPhaseButton.onClick.RemoveListener(TryToEndTurn);
             attackButton.onClick.RemoveListener(TryToAttack);
             abilityButton.onClick.RemoveListener(TryToUseAbility);
-            
-            Debug.Log("You Can't Send");
         }
         RefreshUnitOutlines();
     }

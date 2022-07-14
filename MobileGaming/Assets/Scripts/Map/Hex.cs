@@ -119,7 +119,6 @@ public class Hex : NetworkBehaviour
     
     public void OnUnitEnter(Unit unit)
     {
-        Debug.Log($"{unit} entered {this}");
         unit.currentHex = this;
         unit.hexCol = col;
         unit.hexRow = row;
@@ -132,7 +131,7 @@ public class Hex : NetworkBehaviour
 
     public void OnUnitExit(Unit unit)
     {
-        Debug.Log($"{unit} exited {this}");
+        
     }
     
 }

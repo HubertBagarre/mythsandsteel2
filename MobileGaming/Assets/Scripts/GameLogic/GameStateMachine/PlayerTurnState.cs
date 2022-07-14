@@ -35,7 +35,6 @@ namespace GameStates
             currentPlayer.isAskingForAccessibleHexesForUnitMovement = false;
             
             var movingUnit = currentPlayer.unitMovementUnit;
-            Debug.Log($"Player {currentPlayer} is asking for accessibles hexes of {movingUnit}, on hex {movingUnit.currentHex}, with a movement of {movingUnit.move}");
             sm.ServerSideSetAccessibleHexesNew(movingUnit);
         }
 
@@ -49,7 +48,6 @@ namespace GameStates
             var attackedUnit = currentPlayer.attackedUnit;
             if (attackingUnit != null && attackedUnit != null)
             {
-                Debug.Log($"ATTACK MODE");
                 movingUnit = attackingUnit;
                 if (Hex.DistanceBetween(attackingUnit.currentHex, attackedUnit.currentHex) <= attackedUnit.range)
                 {
@@ -67,8 +65,6 @@ namespace GameStates
                 }
             }
             
-            Debug.Log(currentPlayer.unitMovementUnit);
-            Debug.Log($"Player {currentPlayer} is asking to move {movingUnit}, on hex {movingUnit.currentHex}, to {destinationHex}");
             sm.ServerSideSetUnitMovementPath(movingUnit,destinationHex,currentPlayer);
         }
 
