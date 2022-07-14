@@ -9,18 +9,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dfe73229900617547adbb2491bbb3526, type: 3}
-  m_Name: ErinsuhaScriptable
+  m_Script: {fileID: 11500000, guid: 6bd13bff01f728c46987d84eec33b25b, type: 3}
+  m_Name: Karbantos
   m_EditorClassIdentifier: 
-  unitName: Erinsuha
-  faction: Sumerian
-  className: Anti-Cavalry
-  baseMaxHp: 8
+  unitName: Karbantos
+  faction: ff
+  className: ta mer
+  baseMaxHp: 18
   basePhysicDef: 0
-  baseMagicDef: 1
+  baseMagicDef: 0
   baseAtkPerTurn: 1
-  baseDamage: 2
-  baseRange: 1
+  baseDamage: 4
+  baseRange: 2
   baseMove: 3
   abilityScriptable: {fileID: 0}
   damageModifier: {fileID: 0}

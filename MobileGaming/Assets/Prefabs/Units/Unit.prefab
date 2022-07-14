@@ -206,15 +206,16 @@ MonoBehaviour:
   currentHp: 0
   physicDef: 0
   magicDef: 0
-  atkPerTurn: 0
+  attacksPerTurn: 0
   attacksLeft: 0
   attackDamage: 0
   range: 0
   move: 0
   hasBeenActivated: 0
+  canUseAbility: 0
   animator: {fileID: 0}
   outlineScript: {fileID: 7322122498380247939}
-  unitScriptable: {fileID: 11400000, guid: fde8563e0f6fa594e80a0e3a84ec3d4b, type: 2}
+  unitScriptable: {fileID: 11400000, guid: 694593e0431d41845accc36c844c7d6d, type: 2}
   attackAbility: {fileID: 0}
   abilityScriptable: {fileID: 0}
 --- !u!136 &8842474755492759944

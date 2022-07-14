@@ -107,9 +107,12 @@ public class Unit : NetworkBehaviour
     public void AttackUnit(Unit attackedUnit)
     {
         Debug.Log($"Attacking {attackedUnit} !!");
-        attackedUnit.TakePhysicalDamage(attackDamage);
+
+        sbyte moreDamage = 0;
+        if (unitScriptable is IUnitCallBacks scriptableAdded) moreDamage = scriptableAdded.OnAttackTriggered(this, attackedUnit);
+
+        attackedUnit.TakePhysicalDamage(Convert.ToSByte(attackDamage + moreDamage));
         
-        unitScriptable.OnAttackTriggered(this,attackedUnit);
     }
 
     public void TakeDamage(sbyte damage)
@@ -120,34 +123,33 @@ public class Unit : NetworkBehaviour
         {
             Death();
         }
-        
-        unitScriptable.OnDamageTaken(this,damage);
+        if (unitScriptable is IUnitCallBacks scriptableAdded) scriptableAdded.OnDamageTaken(this,damage);
     }
 
     public void TakePhysicalDamage(sbyte damage)
     {
         damage -= physicDef;
         TakeDamage(damage);
-        unitScriptable.OnPhysicalDamageTaken(this,damage);
+        if (unitScriptable is IUnitCallBacks scriptableAdded) scriptableAdded.OnPhysicalDamageTaken(this,damage);
     }
 
     public void TakeMagicalDamage(sbyte damage)
     {
         damage -= magicDef;
         TakeDamage(damage);
-        unitScriptable.OnMagicalDamageTaken(this,damage);
+        if (unitScriptable is IUnitCallBacks scriptableAdded) scriptableAdded.OnMagicalDamageTaken(this,damage);
     }
 
     #region Unit CallBacks
     
     public void OnUnitEnterAdjacentHex(Unit enteringUnit)
     {
-        unitScriptable.OnUnitEnterAdjacentHex(this,enteringUnit);
+        if (unitScriptable is IUnitCallBacks scriptableAdded) scriptableAdded.OnUnitEnterAdjacentHex(this,enteringUnit);
     }
 
     public void OnUnitExitAdjacentHex(Unit exitingUnit)
     {
-        unitScriptable.OnUnitExitAdjacentHex(this,exitingUnit);
+        if (unitScriptable is IUnitCallBacks scriptableAdded) scriptableAdded.OnUnitExitAdjacentHex(this,exitingUnit);
     }
     
     #endregion
@@ -155,7 +157,7 @@ public class Unit : NetworkBehaviour
     
     public void Death()
     {
-        unitScriptable.OnDeath(this);
+        if (unitScriptable is IUnitCallBacks scriptableAdded) scriptableAdded.OnDeath(this);
     }
 
     public void OnHexChange(Hex previousHex, Hex newHex)

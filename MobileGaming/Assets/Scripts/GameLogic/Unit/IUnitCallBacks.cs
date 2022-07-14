@@ -4,7 +4,9 @@ using UnityEngine;
 
 public interface IUnitCallBacks
 {
-    public void OnAttackTriggered(Unit attackingUnit, Unit attackedUnit);
+    public sbyte OnAttackTriggered(Unit attackingUnit, Unit attackedUnit);
+    public void OnAbilityTargetingUnits(IEnumerable<Unit> targetedUnits);
+    public void OnAbilityTargetingHexes(IEnumerable<Hex> targetedHexes);
     public void OnDamageTaken(Unit attackedUnit, sbyte damage);
     public void OnDeath(Unit unit);
     public void OnPhysicalDamageTaken(Unit attackedUnit, sbyte damage);
