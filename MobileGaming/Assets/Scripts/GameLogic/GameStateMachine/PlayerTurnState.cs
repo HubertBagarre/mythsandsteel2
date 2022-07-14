@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
 
 namespace GameStates
 {
@@ -50,9 +51,10 @@ namespace GameStates
             {
                 Debug.Log($"ATTACK MODE");
                 movingUnit = attackingUnit;
-                if (Hex.DistanceBetween(attackedUnit.currentHex, attackedUnit.currentHex) <= attackedUnit.range)
+                if (Hex.DistanceBetween(attackingUnit.currentHex, attackedUnit.currentHex) <= attackedUnit.range)
                 {
-                    destinationHex = attackedUnit.currentHex;
+                    Debug.Log("Unit Doesn't have to move");
+                    destinationHex = attackingUnit.currentHex;
                 }
                 else if(currentPlayer.attackableUnitDict.Count > 0)
                 {
