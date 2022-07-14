@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
 namespace PlayerStates
@@ -74,7 +73,6 @@ namespace PlayerStates
         private void OnAccessibleHexesReceived()
         {
             receivedAccessibleHexesTriggered = true;
-            Debug.Log($"Received Accessible Hexes Count : {sm.accessibleHexes.Count}");
             sm.OnAccessibleHexesReceived();
         }
 
@@ -122,7 +120,6 @@ namespace PlayerStates
 
         private void AttackUnit(Hex hex)
         {
-            Debug.Log($"Attacking {hex.currentUnit}, on {hex}");
             sm.attackingUnit = movingUnit;
             sm.attackedUnit = hex.currentUnit;
             sm.SetAttackingUnits(movingUnit,hex.currentUnit);

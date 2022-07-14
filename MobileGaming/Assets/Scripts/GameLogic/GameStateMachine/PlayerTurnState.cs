@@ -50,7 +50,11 @@ namespace GameStates
             {
                 Debug.Log($"ATTACK MODE");
                 movingUnit = attackingUnit;
-                if (currentPlayer.attackableUnitDict.Count > 0)
+                if (Hex.DistanceBetween(attackedUnit.currentHex, attackedUnit.currentHex) <= attackedUnit.range)
+                {
+                    destinationHex = attackedUnit.currentHex;
+                }
+                else if(currentPlayer.attackableUnitDict.Count > 0)
                 {
                     if (currentPlayer.attackableUnitDict.ContainsKey(attackedUnit))
                         destinationHex = currentPlayer.attackableUnitDict[attackedUnit];
@@ -59,7 +63,6 @@ namespace GameStates
                         Debug.LogWarning("KEY NOT FOUND");
                     } 
                 }
-                
             }
             
             Debug.Log(currentPlayer.unitMovementUnit);

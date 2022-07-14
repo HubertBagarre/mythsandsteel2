@@ -250,6 +250,12 @@ public class GameSM : StateMachine
     public void ServerSideSetUnitMovementPath(Unit movingUnit,Hex destinationHex,PlayerSM player)
     {
         Debug.Log("Setting Accessible Hexes Before Moving");
+        if (movingUnit.currentHex == destinationHex)
+        {
+            Debug.Log("Unit doesn't have to move");
+            player.unitMovementAnimationDone = true;
+            return;
+        }
 
         var enemyUnits = HexGrid.instance.units.Where(unit => unit.playerId != movingUnit.playerId);
         var bfsResult = GraphSearch.BFSGetRange(movingUnit,enemyUnits,false);
