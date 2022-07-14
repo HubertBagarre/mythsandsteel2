@@ -494,11 +494,9 @@ public class PlayerSM : StateMachine
     private void OnNothingClickedValueChanged(bool prevValue,bool newValue)
     {
         if(!isLocalPlayer) return;
-        Debug.Log($"Nothing clicked value is now {newValue}");
-        
-        if (currentState is BasePlayerState basePlayerState && !newValue)
+
+        if (currentState is BasePlayerState basePlayerState && newValue)
         {
-            Debug.Log($"Resetting trigger of {currentState}");
             basePlayerState.onNothingClickedTriggered = false;
         }
     }
@@ -513,12 +511,10 @@ public class PlayerSM : StateMachine
     private void OnUnitClickedValueChanged(bool prevValue,bool newValue)
     {
         if(!isLocalPlayer) return;
-        Debug.Log($"Unit clicked value is now {newValue}");
-        
-        if (currentState is BasePlayerState basePlayerState && !newValue)
+
+        if (currentState is BasePlayerState basePlayerState && newValue)
         {
-            Debug.Log($"Resetting trigger of {currentState}");
-            basePlayerState.onNothingClickedTriggered = false;
+            basePlayerState.onUnitClickedTriggered = false;
         }
     }
     
@@ -532,12 +528,10 @@ public class PlayerSM : StateMachine
     private void OnHexClickedValueChanged(bool prevValue,bool newValue)
     {
         if(!isLocalPlayer) return;
-        Debug.Log($"Hex clicked value is now {newValue}");
-        
-        if (currentState is BasePlayerState basePlayerState  && !newValue)
+
+        if (currentState is BasePlayerState basePlayerState && newValue)
         {
-            Debug.Log($"Resetting trigger of {currentState}");
-            basePlayerState.onNothingClickedTriggered = false;
+            basePlayerState.onHexClickedTriggered = false;
         }
     }
 
