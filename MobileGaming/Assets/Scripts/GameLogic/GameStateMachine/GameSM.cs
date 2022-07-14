@@ -234,11 +234,12 @@ public class GameSM : StateMachine
 
         var enemyUnits = HexGrid.instance.units.Where(unit => unit.playerId != unitToGetAccessibleHexes.playerId);
         var bfsResult = GraphSearch.BFSGetRange(unitToGetAccessibleHexes,enemyUnits,true);
-        var accessibleHexes = bfsResult.GetHexesInRange();
-        var attackableUnits = bfsResult.GetAttackableUnits;
-
+        var accessibleHexes = bfsResult.hexesInRange;
+        var attackableDict = bfsResult.attackableUnitsDict;
+        var attackableUnits = bfsResult.attackableUnits;
+        
         var player = players[unitToGetAccessibleHexes.playerId];
-        player.SetAccessibleHexes(accessibleHexes,attackableUnits);
+        player.SetAccessibleHexes(accessibleHexes,attackableUnits,attackableDict);
     }
     
     #endregion

@@ -9,18 +9,11 @@ namespace PlayerStates
 {
     public class PlayerMovementSelection : BasePlayerState
     {
-        private Unit selectedUnit;
-        private bool waitingForAccessibleHexes;
+        private Unit movingUnit;
+        private bool receivedAccessibleHexesTriggered;
         
-        private bool waitingForPath;
-        
-        
-        private HexGrid hexGrid;
         private Hex startingHex;
-        private Unit unitToMove;
 
-        private bool accessibleHexesDisplayed;
-        
         public PlayerMovementSelection(PlayerSM stateMachine) : base(stateMachine)
         {
             sm = stateMachine;
@@ -30,23 +23,25 @@ namespace PlayerStates
         {
             base.Enter();
             
-            selectedUnit = sm.selectedUnit;
-            if (selectedUnit == null)
+            sm.unitMovementUnit = sm.selectedUnit;
+            sm.SetUnitMovementUnit(sm.selectedUnit);
+            movingUnit = sm.unitMovementUnit;
+            
+            if (movingUnit == null)
             {
                 Debug.LogWarning("NO UNIT SELECTED, RETURNING TO IDLE");
                 sm.ChangeState(sm.idleState);
                 return;
             }
-            waitingForAccessibleHexes = true;
-
-            sm.accessibleHexesReceived = false;
+            
+            receivedAccessibleHexesTriggered = false;
             
             foreach (var hex in sm.allHexes)
             {
                 hex.ChangeHexColor(Hex.HexColors.Unselectable);
             }
 
-            ClientSideSetAccessibleHexesNew(selectedUnit);
+            ClientSideSetAccessibleHexesNew(movingUnit);
             
             sm.GetAccessibleHexesForUnitMovement();
         }
@@ -55,12 +50,12 @@ namespace PlayerStates
         {
             var enemyUnits = sm.allUnits.Where(unit => unit.playerId != unitToGetAccessibleHexes.playerId);
             var bfsResult = GraphSearch.BFSGetRange(unitToGetAccessibleHexes,enemyUnits);
-            var returnHexes = bfsResult.GetHexesInRange();
-            var attackableUnits = bfsResult.GetAttackableUnits;
+            var returnHexes = bfsResult.hexesInRange;
+            var attackableUnits = bfsResult.attackableUnits;
         
             foreach (var hex in returnHexes)
             {
-                hex.ChangeHexColor(Hex.HexColors.Selectable);
+                hex.ChangeHexColor(Hex.HexColors.Selected);
             }
 
             foreach (var unit in attackableUnits)
@@ -71,18 +66,16 @@ namespace PlayerStates
         
         public override void UpdateLogic()
         {
+            if (!sm.accessibleHexesReceived) return;
+            if(!receivedAccessibleHexesTriggered) OnAccessibleHexesReceived();
             base.UpdateLogic();
-            if(sm.accessibleHexesReceived && waitingForAccessibleHexes) OnAccessibleHexesReceived();
-            if(waitingForAccessibleHexes) return;
         }
         
         private void OnAccessibleHexesReceived()
         {
-            waitingForAccessibleHexes = false;
-            sm.ResetAccessibleHexesTrigger();
+            receivedAccessibleHexesTriggered = true;
             Debug.Log($"Received Accessible Hexes Count : {sm.accessibleHexes.Count}");
             sm.OnAccessibleHexesReceived();
-            
         }
 
         protected override void OnNothingClicked()
@@ -114,7 +107,7 @@ namespace PlayerStates
             var selectedHex = sm.selectedHex;
             if (sm.accessibleHexes.Contains(selectedHex) && selectedHex != startingHex && selectedHex.currentUnit == null)
             {
-                sm.SetUnitMovementUnitAndHex(selectedUnit,selectedHex);
+                sm.SetUnitMovementHex(selectedHex);
                 sm.ChangeState(sm.unitMovingState);
             }
             else if (sm.attackableHexes.Contains(selectedHex))
@@ -130,11 +123,16 @@ namespace PlayerStates
         private void AttackUnit(Hex hex)
         {
             Debug.Log($"Attacking {hex.currentUnit}, on {hex}");
-            //sm.ChangeState(sm.unitMovingState);
+            sm.attackingUnit = movingUnit;
+            sm.attackedUnit = hex.currentUnit;
+            sm.SetAttackingUnits(movingUnit,hex.currentUnit);
+            sm.ChangeState(sm.unitMovingState);
         }
 
         public override void Exit()
         {
+            sm.accessibleHexesReceived = false;
+            sm.ResetAccessibleHexesTrigger();
             foreach (var hex in sm.allHexes)
             {
                 hex.ChangeHexColor(Hex.HexColors.Normal);

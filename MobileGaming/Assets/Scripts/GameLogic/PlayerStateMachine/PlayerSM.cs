@@ -28,8 +28,14 @@ public class PlayerSM : StateMachine
     [Header("Unit Movement")]
     public readonly SyncHashSet<Hex> accessibleHexes = new();
     public readonly SyncHashSet<Hex> attackableHexes = new();
+    public readonly SyncDictionary<Unit, Hex> attackableUnitDict = new();
     [SyncVar] public Unit unitMovementUnit;
     [SyncVar] public Hex unitMovementHex;
+
+    [Header("Unit Attack")]
+    [SyncVar] public Unit attackingUnit;
+    [SyncVar] public Unit attackedUnit;
+
 
     [Header("User Interface")] 
     [SerializeField] private TextMeshProUGUI actionsLeftText;
@@ -54,7 +60,7 @@ public class PlayerSM : StateMachine
     [SyncVar(hook = nameof(OnHexClickedValueChanged))] public bool clickedHex;
     [SyncVar(hook = nameof(OnNothingClickedValueChanged))] public bool clickedNothing;
     [SyncVar] public bool isAskingForAccessibleHexesForUnitMovement;
-    [SyncVar] public bool accessibleHexesReceived;
+    [SyncVar(hook = nameof(OnAccessibleHexesReceivedValueChange))] public bool accessibleHexesReceived;
     [SyncVar] public bool isAskingForUnitMovement;
     [SyncVar] public bool unitMovementAnimationDone;
     [SyncVar] public bool turnIsOver;
@@ -223,6 +229,19 @@ public class PlayerSM : StateMachine
     }
 
     #endregion
+
+    #region IdleState
+
+    [Command]
+    public void ResetTempVariables()
+    {
+        unitMovementHex = null;
+        unitMovementUnit = null;
+        attackedUnit = null;
+        attackingUnit = null;
+    }
+
+    #endregion
     
     #region Unit Accessible Hexes For Movement
     
@@ -230,13 +249,19 @@ public class PlayerSM : StateMachine
     public void GetAccessibleHexesForUnitMovement()
     {
         isAskingForAccessibleHexesForUnitMovement = true;
+        accessibleHexesReceived = false;
     }
 
-    public void SetAccessibleHexes(IEnumerable<Hex> hexes,IEnumerable<Unit> attackable)
+    public void SetAccessibleHexes(IEnumerable<Hex> hexes,IEnumerable<Unit> attackable, Dictionary<Unit,Hex> dict)
     {
-        accessibleHexesReceived = false;
         accessibleHexes.Clear();
         attackableHexes.Clear();
+        attackableUnitDict.Clear();
+        
+        foreach (var pair in dict)
+        {
+            attackableUnitDict.Add(pair);
+        }
         
         foreach (var hex in hexes)
         {
@@ -249,6 +274,7 @@ public class PlayerSM : StateMachine
         }
 
         accessibleHexesReceived = true;
+        Debug.Log("Received Hexes");
     }
 
     [Command]
@@ -275,9 +301,14 @@ public class PlayerSM : StateMachine
     #region Unit Movement
 
     [Command]
-    public void SetUnitMovementUnitAndHex(Unit unit,Hex hex)
+    public void SetUnitMovementUnit(Unit unit)
     {
         unitMovementUnit = unit;
+    }
+    
+    [Command]
+    public void SetUnitMovementHex(Hex hex)
+    {
         unitMovementHex = hex;
     }
 
@@ -344,6 +375,17 @@ public class PlayerSM : StateMachine
     #endregion
 
 
+    #region Unit Attack
+    
+    [Command]
+    public void SetAttackingUnits(Unit attacking,Unit attacked)
+    {
+        attackingUnit = attacking;
+        attackedUnit = attacked;
+    }
+
+    #endregion
+    
     private void TryToEndTurn()
     {
         if(currentState != idleState) return;
@@ -452,6 +494,11 @@ public class PlayerSM : StateMachine
     {
         actionsLeftText.text = newValue.ToString();
     }
+
+    private void OnAccessibleHexesReceivedValueChange(bool prevValue,bool newValue)
+    {
+        Debug.Log($"accessibleHexesReceived value changed, was {prevValue}, now is {newValue}");
+    } 
     
     private void OnCanInputValueChanged(bool prevValue,bool newValue)
     {

@@ -25,6 +25,24 @@ public class GraphSearch
         while (hexesToVisitQueue.Count > 0)
         {
             var currentHex = hexesToVisitQueue.Dequeue();
+            if (!ignoreUnits && withAttack)
+            {
+                foreach (var enemyUnit in enemyUnits)
+                {
+                    var newDistanceToHex = Hex.DistanceBetween(enemyUnit.currentHex, currentHex);
+                    if (newDistanceToHex <= attackRange)
+                    {
+                        if(!attackableUnits.ContainsKey(enemyUnit)) attackableUnits.Add(enemyUnit,currentHex);
+                        else
+                        {
+                            var currentDistanceToHex = Hex.DistanceBetween(enemyUnit.currentHex, attackableUnits[enemyUnit]);
+                            if (newDistanceToHex > currentDistanceToHex) attackableUnits[enemyUnit] = currentHex;
+                        }
+                    }
+                }
+            }
+            
+            
             foreach (var hexNeighbour in currentHex.neighbours)
             {
                 if(hexNeighbour == null) continue;
@@ -41,35 +59,11 @@ public class GraphSearch
                         visitedHex[hexNeighbour] = currentHex;
                         costSoFar[hexNeighbour] = newCost;
                         hexesToVisitQueue.Enqueue(hexNeighbour);
-                        
-                        if (!ignoreUnits && withAttack)
-                        {
-                            foreach (var enemyUnit in enemyUnits)
-                            {
-                                if (Hex.DistanceBetween(enemyUnit.currentHex, hexNeighbour) <= attackRange)
-                                {
-                                    if(!attackableUnits.ContainsKey(enemyUnit)) attackableUnits.Add(enemyUnit,hexNeighbour);
-                                }
-                            }
-                        }
                     }
                     else if (costSoFar[hexNeighbour] > newCost)
                     {
                         costSoFar[hexNeighbour] = newCost;
                         visitedHex[hexNeighbour] = currentHex;
-                        if (!ignoreUnits && withAttack)
-                        {
-                            foreach (var enemyUnit in enemyUnits)
-                            {
-                                var newDistanceToHex = Hex.DistanceBetween(enemyUnit.currentHex, hexNeighbour);
-                                var currentDistanceToHex = Hex.DistanceBetween(enemyUnit.currentHex, attackableUnits[enemyUnit]);
-                                if (newDistanceToHex <= attackRange && newDistanceToHex > currentDistanceToHex)
-                                {
-                                    if(attackableUnits.ContainsKey(enemyUnit)) attackableUnits[enemyUnit] = hexNeighbour;
-                                    else attackableUnits.Add(enemyUnit,hexNeighbour);
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -134,7 +128,7 @@ public struct BFSResult
         return attackableUnitsDict.ContainsKey(unit);
     }
 
-    public IEnumerable<Unit> GetAttackableUnits => attackableUnitsDict.Keys;
+    public IEnumerable<Unit> attackableUnits => attackableUnitsDict.Keys;
 
-    public IEnumerable<Hex> GetHexesInRange() => visitedHexesDict.Keys;
+    public IEnumerable<Hex> hexesInRange => visitedHexesDict.Keys;
 }

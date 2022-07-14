@@ -69,7 +69,7 @@ public class Hex : NetworkBehaviour
     public IEnumerable<Hex> GetNeighborsInRange(int range)
     {
         var bfsResult = GraphSearch.BFSGetRange(this,range,null);
-        return bfsResult.GetHexesInRange();
+        return bfsResult.hexesInRange;
     }
 
     public void ApplyTileServer(int tileID)

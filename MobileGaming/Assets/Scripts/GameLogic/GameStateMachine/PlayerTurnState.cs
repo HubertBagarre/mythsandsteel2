@@ -32,9 +32,9 @@ namespace GameStates
         {
             currentPlayer.isAskingForAccessibleHexesForUnitMovement = false;
             
-            var selectedUnit = currentPlayer.selectedUnit;
-            Debug.Log($"Player {currentPlayer} is asking for accessibles hexes of {selectedUnit}, on hex {selectedUnit.currentHex}, with a movement of {selectedUnit.move}");
-            sm.ServerSideSetAccessibleHexesNew(selectedUnit);
+            var movingUnit = currentPlayer.unitMovementUnit;
+            Debug.Log($"Player {currentPlayer} is asking for accessibles hexes of {movingUnit}, on hex {movingUnit.currentHex}, with a movement of {movingUnit.move}");
+            sm.ServerSideSetAccessibleHexesNew(movingUnit);
         }
 
         private void OnUnitMovementAsked()
@@ -42,6 +42,25 @@ namespace GameStates
             currentPlayer.isAskingForUnitMovement = false;
             var movingUnit = currentPlayer.unitMovementUnit;
             var destinationHex = currentPlayer.unitMovementHex;
+
+            var attackingUnit = currentPlayer.attackingUnit;
+            var attackedUnit = currentPlayer.attackedUnit;
+            if (attackingUnit != null && attackedUnit != null)
+            {
+                Debug.Log($"ATTACK MODE");
+                movingUnit = attackingUnit;
+                if (currentPlayer.attackableUnitDict.Count > 0)
+                {
+                    if (currentPlayer.attackableUnitDict.ContainsKey(attackedUnit))
+                        destinationHex = currentPlayer.attackableUnitDict[attackedUnit];
+                    else
+                    {
+                        Debug.LogWarning("KEY NOT FOUND");
+                    } 
+                }
+                
+            }
+            
             Debug.Log(currentPlayer.unitMovementUnit);
             Debug.Log($"Player {currentPlayer} is asking to move {movingUnit}, on hex {movingUnit.currentHex}, to {destinationHex}");
             sm.ServerSideSetUnitMovementPath(movingUnit,destinationHex,currentPlayer);

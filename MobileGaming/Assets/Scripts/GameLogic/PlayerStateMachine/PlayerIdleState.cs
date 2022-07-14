@@ -1,8 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-
 namespace PlayerStates
 {
     public class PlayerIdleState : BasePlayerState
@@ -15,10 +10,20 @@ namespace PlayerStates
         public override void Enter()
         {
             base.Enter();
-            
+
+            ResetTempVariables();
+            sm.ResetTempVariables();
             sm.RefreshUnitOutlines();
         }
-
+        
+        private void ResetTempVariables()
+        {
+            sm.unitMovementHex = null;
+            sm.unitMovementUnit = null;
+            sm.attackedUnit = null;
+            sm.attackingUnit = null;
+        }
+        
         protected override void OnUnitClicked()
         {
             base.OnUnitClicked();
@@ -41,15 +46,11 @@ namespace PlayerStates
         
         private void EnterMovingState(Unit unit)
         {
-            if (unit.playerId == sm.playerId)
+            if (unit.playerId != sm.playerId) return;
+            if (!sm.canSendInfo) return;
+            if (sm.actionsLeft > 0 || unit.hasBeenActivated)
             {
-                if (sm.canSendInfo)
-                {
-                    if (sm.actionsLeft > 0 || unit.hasBeenActivated)
-                    {
-                        sm.ChangeState(sm.movementSelectionState);
-                    }
-                }
+                sm.ChangeState(sm.movementSelectionState);
             }
         }
     }

@@ -7,9 +7,6 @@ using UnityEngine;
 
 public class HexGrid : NetworkBehaviour
 {
-    [Header("Network")]
-    [SyncVar] public bool isDoneLoadingMap;
-
     [Header("Data Container")]
     public List<Unit> units = new();
     public Dictionary<Vector3Int,Hex> hexes = new ();
@@ -17,14 +14,7 @@ public class HexGrid : NetworkBehaviour
     [Header("Generation Settings")]
     public Vector2Int mapSize = new (8,10);
     private Transform camAnchor;
-    
-    [Header("PathFinding")]
-    public bool isFindingHex = false;
-    public List<Hex> hexesToReturn = new();
-    public List<Hex> costMoreHex = new();
-    public bool isMovingUnit = false;
-    public bool isFindingPath = false;
-    
+
     private static Vector3Int[] directionOffsets = new[]
     {
         new Vector3Int(1, 0, -1),
@@ -56,7 +46,6 @@ public class HexGrid : NetworkBehaviour
     public void GenerateMap()
     {
         camAnchor = Camera.main.transform.parent;
-        isDoneLoadingMap = false;
         DestroyPreviousGrid();
         NetworkSpawner.SpawnGrid(mapSize);
     }
