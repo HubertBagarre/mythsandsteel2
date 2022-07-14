@@ -402,6 +402,8 @@ public class PlayerSM : StateMachine
     {
         if(!attacking.hasBeenActivated) actionsLeft--;
         attacking.hasBeenActivated = true;
+        attacking.move = 0;
+        attacking.canUseAbility = false;
         attacking.attacksLeft--;
         StartCoroutine(PlayAttackAnimationRoutine(attacking, attacked));
     }

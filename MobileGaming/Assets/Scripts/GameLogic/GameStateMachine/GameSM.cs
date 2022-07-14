@@ -223,6 +223,7 @@ public class GameSM : StateMachine
         {
             unit.hasBeenActivated = false;
             unit.move = unit.baseMove;
+            unit.attacksLeft = unit.attacksPerTurn;
         }
     }
 
@@ -233,7 +234,7 @@ public class GameSM : StateMachine
         Debug.Log("Setting Accessible Hexes");
 
         var enemyUnits = HexGrid.instance.units.Where(unit => unit.playerId != unitToGetAccessibleHexes.playerId);
-        var bfsResult = GraphSearch.BFSGetRange(unitToGetAccessibleHexes,enemyUnits,true);
+        var bfsResult = GraphSearch.BFSGetRange(unitToGetAccessibleHexes,enemyUnits,unitToGetAccessibleHexes.attacksLeft > 0);
         var accessibleHexes = bfsResult.hexesInRange;
         var attackableDict = bfsResult.attackableUnitsDict;
         var attackableUnits = bfsResult.attackableUnits;

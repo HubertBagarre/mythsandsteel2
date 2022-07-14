@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace PlayerStates
 {
     public class PlayerIdleState : BasePlayerState
@@ -29,8 +31,8 @@ namespace PlayerStates
             base.OnUnitClicked();
             
             //TODO - Update selection info box
-
-            EnterMovingState(sm.selectedUnit);
+            
+            if(CanMoveOrAttackOrUseAbilityWithUnit(sm.selectedUnit)) EnterMovingState(sm.selectedUnit);
         }
         
         protected override void OnHexClicked()
@@ -43,11 +45,24 @@ namespace PlayerStates
                 sm.SendUnitClicked(unit);
             }
         }
+
+        private bool CanMoveOrAttackOrUseAbilityWithUnit(Unit unit)
+        {
+            if (unit.playerId != sm.playerId)
+            {
+                Debug.Log("This is an enemy unit");
+                return false;
+            };
+            
+            Debug.Log($"Unit can use ability : {unit.canUseAbility}, attacks left : {unit.attacksLeft}, movement left : {unit.move}");
+            
+            return unit.canUseAbility || unit.attacksLeft > 0 || unit.move > 0;
+        }
+        
+        
         
         private void EnterMovingState(Unit unit)
         {
-            if (unit.playerId != sm.playerId) return;
-            if (!sm.canSendInfo) return;
             if (sm.actionsLeft > 0 || unit.hasBeenActivated)
             {
                 sm.ChangeState(sm.movementSelectionState);

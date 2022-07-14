@@ -35,7 +35,7 @@ public class UnitEffect : MonoBehaviour, ICancelable
                 defUnit.magicDef += modifier;
                 break;
             case statEnum.atkPerTurn:
-                if (defUnit.atkPerTurn + modifier >= 0) defUnit.atkPerTurn += modifier;
+                if (defUnit.attacksPerTurn + modifier >= 0) defUnit.attacksPerTurn += modifier;
                 break;
             case statEnum.physicDamage:
                 if (defUnit.attackDamage + modifier >= 0) defUnit.attackDamage += modifier;

@@ -34,12 +34,13 @@ public class Unit : NetworkBehaviour
     [SyncVar] public sbyte currentHp;
     [SyncVar] public sbyte physicDef;
     [SyncVar] public sbyte magicDef;
-    [SyncVar] public sbyte atkPerTurn;
+    [SyncVar] public sbyte attacksPerTurn;
     [SyncVar] public sbyte attacksLeft;
     [SyncVar] public sbyte attackDamage;
     [SyncVar] public sbyte range;
     [SyncVar] public sbyte move;
     [SyncVar] public bool hasBeenActivated;
+    [SyncVar] public bool canUseAbility;
 
     [Header("Components")]
     public NetworkAnimator animator;
@@ -58,13 +59,13 @@ public class Unit : NetworkBehaviour
         currentHp = maxHp;
         physicDef = basePhysicDef;
         magicDef = baseMagicDef;
-        atkPerTurn = baseAtkPerTurn;
-        attacksLeft = atkPerTurn;
+        attacksPerTurn = baseAtkPerTurn;
+        attacksLeft = attacksPerTurn;
         attackDamage = baseAttackDamage;
         range = baseRange;
         move = baseMove;
         hasBeenActivated = false;
-
+        canUseAbility = true;
     }
 
     public void LinkUnitScriptable(ScriptableUnit newUnitScriptable)
