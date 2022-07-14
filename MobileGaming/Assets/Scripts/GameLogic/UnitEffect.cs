@@ -12,8 +12,8 @@ public class UnitEffect : MonoBehaviour, ICancelable
     public void DoAttack(Unit atkUnit, Unit defUnit)
     {
         totalDamage = 0;
-        physicDamageDone = Convert.ToSByte(atkUnit.physicDamage - defUnit.physicDef);
-        magicDamageDone = Convert.ToSByte(atkUnit.magicDamage - defUnit.magicDef);
+        physicDamageDone = Convert.ToSByte(atkUnit.attackDamage - defUnit.physicDef);
+        //magicDamageDone = Convert.ToSByte(atkUnit.magicDamage - defUnit.magicDef);
 
         if (physicDamageDone >= 0) totalDamage += physicDamageDone;
         if (magicDamageDone >= 0) totalDamage += magicDamageDone;
@@ -38,10 +38,10 @@ public class UnitEffect : MonoBehaviour, ICancelable
                 if (defUnit.atkPerTurn + modifier >= 0) defUnit.atkPerTurn += modifier;
                 break;
             case statEnum.physicDamage:
-                if (defUnit.physicDamage + modifier >= 0) defUnit.physicDamage += modifier;
+                if (defUnit.attackDamage + modifier >= 0) defUnit.attackDamage += modifier;
                 break;
             case statEnum.magicDamage:
-                if (defUnit.magicDamage + modifier >= 0) defUnit.magicDamage += modifier;
+                //if (defUnit.magicDamage + modifier >= 0) defUnit.magicDamage += modifier;
                 break;
             case statEnum.range:
                 if (defUnit.range + modifier >= 0) defUnit.range += modifier;

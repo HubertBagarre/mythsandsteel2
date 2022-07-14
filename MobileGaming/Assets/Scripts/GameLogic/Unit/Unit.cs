@@ -24,20 +24,19 @@ public class Unit : NetworkBehaviour
     [SyncVar,ReadOnly] public sbyte basePhysicDef;
     [SyncVar,ReadOnly] public sbyte baseMagicDef;
     [SyncVar,ReadOnly] public sbyte baseAtkPerTurn;
-    [SyncVar,ReadOnly] public sbyte basePhysicDamage;
+    [SyncVar,ReadOnly] public sbyte baseAttackDamage;
     [SyncVar,ReadOnly] public sbyte baseMagicDamage;
     [SyncVar,ReadOnly] public sbyte baseRange;
     [SyncVar,ReadOnly] public sbyte baseMove;
 
     [Header("Current Stats")]
     [SyncVar] public sbyte maxHp;
-    [SyncVar] public sbyte actualHp;
+    [SyncVar] public sbyte currentHp;
     [SyncVar] public sbyte physicDef;
     [SyncVar] public sbyte magicDef;
     [SyncVar] public sbyte atkPerTurn;
     [SyncVar] public sbyte attacksLeft;
-    [SyncVar] public sbyte physicDamage;
-    [SyncVar] public sbyte magicDamage;
+    [SyncVar] public sbyte attackDamage;
     [SyncVar] public sbyte range;
     [SyncVar] public sbyte move;
     [SyncVar] public bool hasBeenActivated;
@@ -48,20 +47,20 @@ public class Unit : NetworkBehaviour
     
     [Header("Scriptables")]
     public ScriptableUnit unitScriptable;
+    public ScriptableAbility attackAbility;
     public ScriptableAbility abilityScriptable;
-    public ScriptableAbility damageModifier;
+    
 
-
+    
     public void ResetUnitStats()
     {
         maxHp = baseMaxHp;
-        actualHp = maxHp;
+        currentHp = maxHp;
         physicDef = basePhysicDef;
         magicDef = baseMagicDef;
         atkPerTurn = baseAtkPerTurn;
         attacksLeft = atkPerTurn;
-        physicDamage = basePhysicDamage;
-        magicDamage = baseMagicDamage;
+        attackDamage = baseAttackDamage;
         range = baseRange;
         move = baseMove;
         hasBeenActivated = false;
@@ -79,7 +78,7 @@ public class Unit : NetworkBehaviour
         basePhysicDef = unitScriptable.basePhysicDef;
         baseMagicDef = unitScriptable.baseMagicDef;
         baseAtkPerTurn = unitScriptable.baseAtkPerTurn;
-        basePhysicDamage = unitScriptable.baseDamage;
+        baseAttackDamage = unitScriptable.baseDamage;
         baseMagicDamage = 0;
         baseRange = unitScriptable.baseRange;
         baseMove = unitScriptable.baseMove;
@@ -102,19 +101,60 @@ public class Unit : NetworkBehaviour
     private void RpcChangePosition(Vector3 newPos)
     {
         transform.position = newPos;
-        
     }
     
-    public void TakeDamage(sbyte damageTaken)
+    public void AttackUnit(Unit attackedUnit)
     {
-        actualHp -= damageTaken;
-
-        if (actualHp <= 0) Death();
+        Debug.Log($"Attacking {attackedUnit} !!");
+        attackedUnit.TakePhysicalDamage(attackDamage);
+        
+        unitScriptable.OnAttackTriggered(this,attackedUnit);
     }
 
+    public void TakeDamage(sbyte damage)
+    {
+        Debug.Log($"Took {damage} !!");
+        currentHp -= damage;
+        if (currentHp <= 0)
+        {
+            Death();
+        }
+        
+        unitScriptable.OnDamageTaken(this,damage);
+    }
+
+    public void TakePhysicalDamage(sbyte damage)
+    {
+        damage -= physicDef;
+        TakeDamage(damage);
+        unitScriptable.OnPhysicalDamageTaken(this,damage);
+    }
+
+    public void TakeMagicalDamage(sbyte damage)
+    {
+        damage -= magicDef;
+        TakeDamage(damage);
+        unitScriptable.OnMagicalDamageTaken(this,damage);
+    }
+
+    #region Unit CallBacks
+    
+    public void OnUnitEnterAdjacentHex(Unit enteringUnit)
+    {
+        unitScriptable.OnUnitEnterAdjacentHex(this,enteringUnit);
+    }
+
+    public void OnUnitExitAdjacentHex(Unit exitingUnit)
+    {
+        unitScriptable.OnUnitExitAdjacentHex(this,exitingUnit);
+    }
+    
+    #endregion
+    
+    
     public void Death()
     {
-
+        unitScriptable.OnDeath(this);
     }
 
     public void OnHexChange(Hex previousHex, Hex newHex)
@@ -122,4 +162,6 @@ public class Unit : NetworkBehaviour
         if(previousHex != null) previousHex.OnUnitExit(this);
         newHex.OnUnitEnter(this);
     }
+
+   
 }

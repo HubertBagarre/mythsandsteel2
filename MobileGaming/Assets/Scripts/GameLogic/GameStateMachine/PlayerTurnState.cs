@@ -25,6 +25,7 @@ namespace GameStates
             if (currentPlayer.turnIsOver) EndTurn();
             if (currentPlayer.isAskingForAccessibleHexesForUnitMovement) OnAccessibleHexesForUnitMovementAsked();
             if (currentPlayer.isAskingForUnitMovement) OnUnitMovementAsked();
+            if (currentPlayer.isAskingForAttackResolve) OnAttackResolveAsked();
 
         }
 
@@ -64,6 +65,13 @@ namespace GameStates
             Debug.Log(currentPlayer.unitMovementUnit);
             Debug.Log($"Player {currentPlayer} is asking to move {movingUnit}, on hex {movingUnit.currentHex}, to {destinationHex}");
             sm.ServerSideSetUnitMovementPath(movingUnit,destinationHex,currentPlayer);
+        }
+
+        private void OnAttackResolveAsked()
+        {
+            currentPlayer.isAskingForAttackResolve = false;
+
+            sm.ServerSideAttackResolve(currentPlayer.attackingUnit, currentPlayer.attackedUnit,currentPlayer);
         }
 
         private void EndTurn()

@@ -62,7 +62,9 @@ public class PlayerSM : StateMachine
     [SyncVar] public bool isAskingForAccessibleHexesForUnitMovement;
     [SyncVar(hook = nameof(OnAccessibleHexesReceivedValueChange))] public bool accessibleHexesReceived;
     [SyncVar] public bool isAskingForUnitMovement;
+    [SyncVar] public bool isAskingForAttackResolve;
     [SyncVar] public bool unitMovementAnimationDone;
+    [SyncVar] public bool unitAttackAnimationDone;
     [SyncVar] public bool turnIsOver;
     
     
@@ -111,6 +113,7 @@ public class PlayerSM : StateMachine
         isAskingForAccessibleHexesForUnitMovement = false;
         accessibleHexesReceived = false;
         isAskingForUnitMovement = false;
+        isAskingForAttackResolve = false;
         unitMovementAnimationDone = false;
         turnIsOver = false;
     }
@@ -373,9 +376,14 @@ public class PlayerSM : StateMachine
     }
 
     #endregion
-
-
+    
     #region Unit Attack
+    
+    [Command]
+    public void ResetAttackAnimationDoneTrigger()
+    {
+        unitAttackAnimationDone = false;
+    }
     
     [Command]
     public void SetAttackingUnits(Unit attacking,Unit attacked)
@@ -383,7 +391,48 @@ public class PlayerSM : StateMachine
         attackingUnit = attacking;
         attackedUnit = attacked;
     }
+    
+    [Command]
+    public void TryToResolveAttack()
+    {
+        isAskingForAttackResolve = true;
+    }
 
+    public void ServerAttackResolve(Unit attacking,Unit attacked)
+    {
+        if(!attacking.hasBeenActivated) actionsLeft--;
+        attacking.hasBeenActivated = true;
+        attacking.attacksLeft--;
+        StartCoroutine(PlayAttackAnimationRoutine(attacking, attacked));
+    }
+
+    [ClientRpc]
+    public void RpcAttackResolve(Unit attacking,Unit attacked)
+    {
+        StartCoroutine(PlayAttackAnimationRoutine(attacking, attacked));
+    }
+
+    private IEnumerator PlayAttackAnimationRoutine(Unit attacking,Unit attacked)
+    {
+        if(isServer) unitAttackAnimationDone = false;
+        
+        yield return null;
+        
+        //TODO - Look at attacked
+        //TODO - Play Animation
+        
+        yield return new WaitForSeconds(0.5f);
+        
+        if (isServer)
+        {
+            attacking.AttackUnit(attacked);
+            attackingUnit = null;
+            attackedUnit = null;
+            unitAttackAnimationDone = true;
+        }
+        
+    }
+    
     #endregion
     
     private void TryToEndTurn()

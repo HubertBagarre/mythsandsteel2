@@ -265,5 +265,15 @@ public class GameSM : StateMachine
     
     #endregion
     
+    #region Unit Attack
+
+    public void ServerSideAttackResolve(Unit attacking, Unit attacked,PlayerSM player)
+    {
+        player.ServerAttackResolve(attacking,attacked);
+        player.RpcAttackResolve(attacking,attacked);
+    }
+    
+    #endregion
+    
     
 }

@@ -29,18 +29,26 @@ namespace PlayerStates
         {
             base.UpdateLogic();
             if(sm.unitMovementAnimationDone) OnUnitMovementAnimationDone();
+            if(sm.unitAttackAnimationDone) OnUnitAttackAnimationDone();
         }
         
         private void OnUnitMovementAnimationDone()
         {
+            sm.unitMovementAnimationDone = false;
             sm.ResetMovementAnimationDoneTrigger();
             if (sm.attackingUnit != null && sm.attackedUnit != null)
             {
-                //TODO - Resolve Attack
-                Debug.Log("Resolving Attack");
-                sm.ChangeState(sm.idleState);
+                sm.TryToResolveAttack();
                 return;
             }
+            sm.ChangeState(sm.idleState);
+        }
+
+        private void OnUnitAttackAnimationDone()
+        {
+            sm.unitAttackAnimationDone = false;
+            sm.ResetAttackAnimationDoneTrigger();
+            
             sm.ChangeState(sm.idleState);
         }
 
