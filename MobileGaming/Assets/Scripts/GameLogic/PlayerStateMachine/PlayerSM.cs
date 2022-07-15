@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 using PlayerStates;
-using TMPro;
-using UnityEngine.PlayerLoop;
-using UnityEngine.UI;
 
 public class PlayerSM : StateMachine
 {
@@ -85,8 +82,7 @@ public class PlayerSM : StateMachine
         cam = Camera.main;
         
         ResetTriggerVariables();
-
-        uiManager.RefreshUnitOutlines(allUnits,playerId);
+        
         uiManager.ChangeDebugText($"Player {playerId}, {currentState}");
         return idleState;
     }
@@ -530,7 +526,6 @@ public class PlayerSM : StateMachine
             inputManager.OnStartTouch -= TryToSelectUnitOrTile;
             uiManager.RemoveButtonListeners(TryToEndTurn,CmdTryToUseAbility);
         }
-        uiManager.RefreshUnitOutlines(allUnits,playerId);
     }
 
     #endregion
@@ -553,6 +548,7 @@ public class PlayerSM : StateMachine
     {
         Debug.Log("Rpc Updating Unit Hud");
         uiManager.UpdateUnitHud();
+        if(isLocalPlayer) uiManager.RefreshUnitOutlines(allUnits,playerId);
     }
 
     public void UpdateUnitHud()
