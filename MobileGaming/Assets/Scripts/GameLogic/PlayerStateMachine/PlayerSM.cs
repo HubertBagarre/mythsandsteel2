@@ -338,7 +338,7 @@ public class PlayerSM : StateMachine
     }
     
     [Command]
-    public void ResetMovementAnimationDoneTrigger()
+    public void CmdResetMovementAnimationDoneTrigger()
     {
         unitMovementAnimationDone = false;
     }
@@ -348,20 +348,20 @@ public class PlayerSM : StateMachine
     #region Unit Attack
     
     [Command]
-    public void ResetAttackAnimationDoneTrigger()
+    public void CmdResetAttackAnimationDoneTrigger()
     {
         unitAttackAnimationDone = false;
     }
     
     [Command]
-    public void SetAttackingUnits(Unit attacking,Unit attacked)
+    public void CmdSetAttackingUnits(Unit attacking,Unit attacked)
     {
         attackingUnit = attacking;
         attackedUnit = attacked;
     }
     
     [Command]
-    public void TryToResolveAttack()
+    public void CmdTryToResolveAttack()
     {
         isAskingForAttackResolve = true;
     }

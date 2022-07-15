@@ -36,10 +36,10 @@ namespace PlayerStates
         private void OnUnitMovementAnimationDone()
         {
             sm.unitMovementAnimationDone = false;
-            sm.ResetMovementAnimationDoneTrigger();
+            sm.CmdResetMovementAnimationDoneTrigger();
             if (sm.attackingUnit != null && sm.attackedUnit != null)
             {
-                sm.TryToResolveAttack();
+                sm.CmdTryToResolveAttack();
                 return;
             }
             sm.ChangeState(sm.idleState);
@@ -48,7 +48,7 @@ namespace PlayerStates
         private void OnUnitAttackAnimationDone()
         {
             sm.unitAttackAnimationDone = false;
-            sm.ResetAttackAnimationDoneTrigger();
+            sm.CmdResetAttackAnimationDoneTrigger();
             
             sm.ChangeState(sm.idleState);
         }

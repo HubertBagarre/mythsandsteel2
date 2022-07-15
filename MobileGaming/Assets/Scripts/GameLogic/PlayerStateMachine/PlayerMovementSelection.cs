@@ -124,7 +124,7 @@ namespace PlayerStates
         {
             sm.attackingUnit = movingUnit;
             sm.attackedUnit = hex.currentUnit;
-            sm.SetAttackingUnits(movingUnit,hex.currentUnit);
+            sm.CmdSetAttackingUnits(movingUnit,hex.currentUnit);
             sm.ChangeState(sm.unitMovingState);
         }
 
