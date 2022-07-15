@@ -12,6 +12,8 @@ public class GraphSearch
         var unit = (enemyUnits != null) ? startPoint.currentUnit : null;
         var attackRange = (enemyUnits != null) ? unit.range : 0;
         var friendlyPlayer = (enemyUnits != null) ? unit.playerId : 0;
+        var movingUnit = (withAttack) ? startPoint.currentUnit : null;
+
 
         var visitedHex = new Dictionary<Hex, Hex?>();
         var costSoFar = new Dictionary<Hex, int>();
@@ -25,7 +27,7 @@ public class GraphSearch
         while (hexesToVisitQueue.Count > 0)
         {
             var currentHex = hexesToVisitQueue.Dequeue();
-            if (!ignoreUnits && withAttack && currentHex.currentUnit == null)
+            if (!ignoreUnits && withAttack && (currentHex.currentUnit == null || currentHex.currentUnit == movingUnit))
             {
                 foreach (var enemyUnit in enemyUnits)
                 {
