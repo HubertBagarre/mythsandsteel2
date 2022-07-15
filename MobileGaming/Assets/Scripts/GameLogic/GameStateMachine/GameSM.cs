@@ -307,6 +307,14 @@ public class GameSM : StateMachine
         return player.allUnits.All(unit => unit.playerId == player.playerId || unit.isDead);
     }
 
+    public void DisconnectPlayers()
+    {
+        foreach (var player in players)
+        {
+            player.RpcEndGame(winner);
+        }
+    }
+
     #endregion
     
     public void RefreshUnitHuds()

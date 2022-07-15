@@ -412,11 +412,11 @@ public class PlayerSM : StateMachine
     {
         if(currentState != idleState) return;
         turnIsOver = true;
-        TryEndTurnCommand();
+        CmdTryEndTurnCommand();
     }
     
     [Command]
-    private void TryEndTurnCommand()
+    private void CmdTryEndTurnCommand()
     {
         turnIsOver = true;
     }
@@ -442,7 +442,7 @@ public class PlayerSM : StateMachine
     }
 
     [Command]
-    public void TryToUseAbility()
+    public void CmdTryToUseAbility()
     {
         Debug.Log("Ability");
     }
@@ -458,7 +458,7 @@ public class PlayerSM : StateMachine
     #region hooks
 
     [Command]
-    public void OnNothingClicked()
+    public void CmdOnNothingClicked()
     {
         Debug.Log($"SERVER Clicked Nothing");
         clickedNothing = false;
@@ -475,7 +475,7 @@ public class PlayerSM : StateMachine
     }
     
     [Command]
-    public void OnUnitClicked()
+    public void CmdOnUnitClicked()
     {
         clickedUnit = false;
     }
@@ -491,7 +491,7 @@ public class PlayerSM : StateMachine
     }
     
     [Command]
-    public void OnHexClicked()
+    public void CmdOnHexClicked()
     {
         clickedHex = false;
     }
@@ -522,13 +522,13 @@ public class PlayerSM : StateMachine
         if (newValue)
         {
             inputManager.OnStartTouch += TryToSelectUnitOrTile;
-            uiManager.AddButtonListeners(TryToEndTurn,TryToUseAbility);
+            uiManager.AddButtonListeners(TryToEndTurn,CmdTryToUseAbility);
             uiManager.UpdateActionsLeft(actionsLeft);
         }
         else
         {
             inputManager.OnStartTouch -= TryToSelectUnitOrTile;
-            uiManager.RemoveButtonListeners(TryToEndTurn,TryToUseAbility);
+            uiManager.RemoveButtonListeners(TryToEndTurn,CmdTryToUseAbility);
         }
         uiManager.RefreshUnitOutlines(allUnits,playerId);
     }
@@ -561,4 +561,16 @@ public class PlayerSM : StateMachine
     }
 
     #endregion
+
+    [ClientRpc]
+    public void RpcEndGame(int winner)
+    {
+        if(!isLocalPlayer) return;
+        var moreText = winner == playerId ? "It's you !" : "It's not you !";
+        Debug.Log($"Player {winner} won ! {moreText}");
+        if (NetworkClient.isConnected)
+        {
+            NetworkManager.singleton.StopClient();
+        }
+    }
 }

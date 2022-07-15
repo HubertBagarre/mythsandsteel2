@@ -17,17 +17,17 @@ namespace GameStates
         {
             sm.AllowPlayerSend(-1);
             
-            sm.players[0] = null;
-            sm.players[1] = null;
-
+            sm.DisconnectPlayers();
+            
             sm.debugText2.text = $"Player {sm.winner} won !";
         }
 
         public override void Exit()
         {
+            sm.players[0] = null;
+            sm.players[1] = null;
+            
             sm.ResetHexGrid();
-            
-            
         }
     }
 }

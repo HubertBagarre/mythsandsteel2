@@ -36,7 +36,7 @@ namespace PlayerStates
         {
             Debug.Log($"Clicked Nothing, it has been triggered : {onNothingClickedTriggered}");
             sm.clickedNothing = false;
-            sm.OnNothingClicked();
+            sm.CmdOnNothingClicked();
             if (onNothingClickedTriggered) return;
             onNothingClickedTriggered = true;
             OnNothingClicked();
@@ -51,7 +51,7 @@ namespace PlayerStates
         {
             Debug.Log($"Clicked Unit : {sm.selectedUnit}");
             sm.clickedUnit = false;
-            sm.OnUnitClicked();
+            sm.CmdOnUnitClicked();
             if (onUnitClickedTriggered) return;
             onUnitClickedTriggered = true;
             OnUnitClicked();
@@ -66,7 +66,7 @@ namespace PlayerStates
         {
             Debug.Log($"Clicked Hex : {sm.selectedHex}");
             sm.clickedHex = false;
-            sm.OnHexClicked();
+            sm.CmdOnHexClicked();
             if (onHexClickedTriggered) return;
             onHexClickedTriggered = true;
             OnHexClicked();
