@@ -20,7 +20,7 @@ MonoBehaviour:
   baseMagicDef: 1
   baseAtkPerTurn: 1
   baseDamage: 4
-  baseRange: 2
+  baseRange: 1
   baseMove: 3
   abilityScriptable: {fileID: 0}
   damageModifier: {fileID: 0}
