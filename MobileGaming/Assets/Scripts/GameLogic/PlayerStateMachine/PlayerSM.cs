@@ -59,6 +59,9 @@ public class PlayerSM : StateMachine
     [Header("Actions")]
     [SyncVar] public int maxActions;
     [SyncVar(hook = nameof(OnActionsLeftValueChanged))] public int actionsLeft;
+    [SyncVar] public int faith;
+    [SyncVar] public int victoryPoints;
+    
     
     private void Awake()
     {

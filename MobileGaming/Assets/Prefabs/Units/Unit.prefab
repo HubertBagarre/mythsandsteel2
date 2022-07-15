@@ -188,7 +188,6 @@ MonoBehaviour:
   syncInterval: 0.1
   unitName: 
   playerId: 0
-  hexGridIndex: 0
   hexCol: 0
   hexRow: 0
   currentHex: {fileID: 0}
@@ -215,7 +214,7 @@ MonoBehaviour:
   canUseAbility: 0
   animator: {fileID: 0}
   outlineScript: {fileID: 7322122498380247939}
-  unitScriptable: {fileID: 11400000, guid: 694593e0431d41845accc36c844c7d6d, type: 2}
+  unitScriptable: {fileID: 11400000, guid: fde8563e0f6fa594e80a0e3a84ec3d4b, type: 2}
   attackAbility: {fileID: 0}
   abilityScriptable: {fileID: 0}
 --- !u!136 &8842474755492759944
