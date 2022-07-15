@@ -15,6 +15,8 @@ namespace PlayerStates
             
             sm.UpdateUnitHud();
 
+            sm.CmdCheckVictoryConditions();
+
             ResetTempVariables();
             sm.ResetTempVariables();
         }

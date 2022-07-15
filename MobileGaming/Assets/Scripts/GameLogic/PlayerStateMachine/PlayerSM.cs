@@ -433,9 +433,12 @@ public class PlayerSM : StateMachine
     }
 
     [Command]
-    public void TryToAttack()
+    public void CmdCheckVictoryConditions()
     {
-        Debug.Log("Attack");
+        var gameSM = GameSM.instance;
+        if(allUnits.Count <= 0) return;
+        if (gameSM == null) return;
+        if(gameSM.CheckIfPlayerWon()) gameSM.ChangeState(gameSM.endingState);
     }
 
     [Command]

@@ -15,10 +15,10 @@ MonoBehaviour:
   unitName: Karbantos
   faction: ff
   className: ta mer
-  baseMaxHp: 18
+  baseMaxHp: 1
   basePhysicDef: 0
   baseMagicDef: 0
-  baseAtkPerTurn: 1
+  baseAtkPerTurn: 2
   baseDamage: 6
   baseRange: 2
   baseMove: 3

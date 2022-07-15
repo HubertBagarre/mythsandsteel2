@@ -22,6 +22,8 @@ namespace GameStates
             currentPlayer = sm.players[sm.currentPlayer];
             
             sm.AllowPlayerSend(sm.currentPlayer);
+            
+            if(sm.CheckIfPlayerWon()) sm.ChangeState(sm.endingState);
         }
 
         public override void UpdateLogic()

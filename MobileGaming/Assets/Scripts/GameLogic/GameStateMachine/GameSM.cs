@@ -26,6 +26,7 @@ public class GameSM : StateMachine
     [Header("Game Info")]
     public int currentPlayer;
     public PlayerSM[] players = new PlayerSM[2];
+    public int winner;
     
     [Header("Trash Flags")]
     public bool isMapGenerated;
@@ -80,6 +81,7 @@ public class GameSM : StateMachine
         player1UnitsPlaced = false;
 
         currentPlayer = -1;
+        winner = -1;
     }
     
     public override void ChangeState(BaseState newState)
@@ -282,6 +284,29 @@ public class GameSM : StateMachine
         RefreshUnitHuds();
     }
     
+    #endregion
+
+    #region Victory
+    
+    public bool CheckIfPlayerWon()
+    {
+        foreach (var player in players)
+        {
+            if (VictoryByElimination(player))
+            {
+                winner = player.playerId;
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
+    public bool VictoryByElimination(PlayerSM player)
+    {
+        return player.allUnits.All(unit => unit.playerId == player.playerId || unit.isDead);
+    }
+
     #endregion
     
     public void RefreshUnitHuds()

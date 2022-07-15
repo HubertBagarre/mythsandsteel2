@@ -15,13 +15,19 @@ namespace GameStates
 
         public override void Enter()
         {
+            sm.AllowPlayerSend(-1);
+            
             sm.players[0] = null;
             sm.players[1] = null;
+
+            sm.debugText2.text = $"Player {sm.winner} won !";
         }
 
         public override void Exit()
         {
             sm.ResetHexGrid();
+            
+            
         }
     }
 }

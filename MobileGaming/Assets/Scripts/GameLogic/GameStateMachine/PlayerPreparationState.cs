@@ -15,9 +15,16 @@ namespace GameStates
         
         public override void Enter()
         {
-            sm.ResetPlayerActions(sm.players[sm.currentPlayer]);
-            
             sm.RefreshUnitHuds();
+            
+            if (sm.CheckIfPlayerWon())
+            {
+                
+                sm.ChangeState(sm.endingState);
+                return;
+            }
+            
+            sm.ResetPlayerActions(sm.players[sm.currentPlayer]);
             
             sm.ChangeState(sm.playerTurnState);
         }
@@ -25,6 +32,8 @@ namespace GameStates
         public override void Exit()
         {
             sm.RefreshUnitHuds();
+            
+            
         }
     }
 }

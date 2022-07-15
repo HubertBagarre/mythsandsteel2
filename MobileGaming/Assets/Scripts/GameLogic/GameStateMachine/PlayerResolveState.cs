@@ -16,6 +16,13 @@ namespace GameStates
         public override void Enter()
         {
             sm.RefreshUnitHuds();
+
+            if (sm.CheckIfPlayerWon())
+            {
+                
+                sm.ChangeState(sm.endingState);
+                return;
+            }
             
             sm.ChangeState(sm.betweenTurnState);
         }
