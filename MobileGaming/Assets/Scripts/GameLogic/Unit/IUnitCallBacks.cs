@@ -5,8 +5,8 @@ using UnityEngine;
 public interface IUnitCallBacks
 {
     public sbyte OnAttackTriggered(Unit attackingUnit, Unit attackedUnit);
-    public void OnAbilityTargetingUnits(IEnumerable<Unit> targetedUnits);
-    public void OnAbilityTargetingHexes(IEnumerable<Hex> targetedHexes);
+    public void OnAbilityTargetingUnits(IEnumerable<Unit> targetedUnits,sbyte playerId);
+    public void OnAbilityTargetingHexes(IEnumerable<Hex> targetedHexes,sbyte playerId);
     public void OnDamageTaken(Unit attackedUnit, sbyte damage);
     public void OnDeath(Unit unit);
     public void OnPhysicalDamageTaken(Unit attackedUnit, sbyte damage);

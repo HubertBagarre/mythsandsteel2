@@ -11,12 +11,12 @@ public class TestUnit : ScriptableUnit, IUnitCallBacks
         return 1;
     }
 
-    public void OnAbilityTargetingUnits(IEnumerable<Unit> targetedUnits)
+    public void OnAbilityTargetingUnits(IEnumerable<Unit> targetedUnits,sbyte playerId)
     {
         
     }
 
-    public void OnAbilityTargetingHexes(IEnumerable<Hex> targetedHexes)
+    public void OnAbilityTargetingHexes(IEnumerable<Hex> targetedHexes,sbyte playerId)
     {
         
     }
@@ -24,6 +24,7 @@ public class TestUnit : ScriptableUnit, IUnitCallBacks
     public void OnDamageTaken(Unit attackedUnit, sbyte damage)
     {
         
+
     }
 
     public void OnDeath(Unit unit)
