@@ -31,6 +31,7 @@ public class GraphSearch
             {
                 foreach (var enemyUnit in enemyUnits)
                 {
+                    if (enemyUnit.isDead) continue;
                     var newDistanceToHex = Hex.DistanceBetween(enemyUnit.currentHex, currentHex);
                     if (newDistanceToHex <= attackRange)
                     {
@@ -41,6 +42,7 @@ public class GraphSearch
                             if (newDistanceToHex > currentDistanceToHex) attackableUnits[enemyUnit] = currentHex;
                         }
                     }
+
                 }
             }
             

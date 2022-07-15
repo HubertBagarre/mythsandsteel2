@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -21,6 +22,11 @@ public class UnitHud : MonoBehaviour
     public void UpdateHud()
     {
         if(assignedUnit == null) return;
+        if (assignedUnit.isDead)
+        {
+            textComponent.text = string.Empty;
+            return;
+        }
         var unitPosition = assignedUnit.transform.position;
         var newPosition = cam.WorldToScreenPoint(unitPosition) + offset;
         transform.position = newPosition;

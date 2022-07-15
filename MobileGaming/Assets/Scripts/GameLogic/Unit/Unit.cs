@@ -32,6 +32,7 @@ public class Unit : NetworkBehaviour
     [Header("Current Stats")]
     [SyncVar] public sbyte maxHp;
     [SyncVar] public sbyte currentHp;
+    public bool isDead => currentHp <= 0;
     [SyncVar] public sbyte physicDef;
     [SyncVar] public sbyte magicDef;
     [SyncVar] public sbyte attacksPerTurn;
@@ -157,14 +158,32 @@ public class Unit : NetworkBehaviour
     
     public void Death()
     {
+        currentHex.currentUnit = null;
+        currentHex = null;
+        gameObject.SetActive(false);
+        RpcSetUnitActive(false);
         if (unitScriptable is IUnitCallBacks scriptableAdded) scriptableAdded.OnDeath(this);
     }
+    
 
-    public void OnHexChange(Hex previousHex, Hex newHex)
+    [ClientRpc]
+    private void RpcSetUnitActive(bool value)
     {
+        gameObject.SetActive(value);
+    }
+
+    #region Hooks
+
+    private void OnHexChange(Hex previousHex, Hex newHex)
+    {
+        if(newHex == null) return;
         if(previousHex != null) previousHex.OnUnitExit(this);
         newHex.OnUnitEnter(this);
     }
+
+    #endregion
+
+    
 
    
 }
