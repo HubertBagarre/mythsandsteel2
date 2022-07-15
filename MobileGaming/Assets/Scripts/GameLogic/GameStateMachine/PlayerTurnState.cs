@@ -17,7 +17,10 @@ namespace GameStates
         
         public override void Enter()
         {
+            sm.RefreshUnitHuds();
+            
             currentPlayer = sm.players[sm.currentPlayer];
+            
             sm.AllowPlayerSend(sm.currentPlayer);
         }
 
@@ -80,6 +83,11 @@ namespace GameStates
             currentPlayer.turnIsOver = false;
             currentPlayer.EndTurn();
             sm.ChangeState(sm.postPlayerTurn);
+        }
+
+        public override void Exit()
+        {
+            sm.RefreshUnitHuds();
         }
     }
 }

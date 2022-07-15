@@ -4,6 +4,7 @@ using Mirror;
 using UnityEngine;
 using PlayerStates;
 using TMPro;
+using UnityEngine.PlayerLoop;
 using UnityEngine.UI;
 
 public class PlayerSM : StateMachine
@@ -17,10 +18,6 @@ public class PlayerSM : StateMachine
     [Header("Network")] [SyncVar] public int playerId;
     [SyncVar(hook = nameof(OnCanInputValueChanged))] public bool canSendInfo;
 
-    [Header("Debug")]
-    [SerializeField] private string state;
-    public TextMeshProUGUI debugText;
-    
     [Header("Game Information")]
     public readonly SyncHashSet<Unit> allUnits = new ();
     public readonly SyncHashSet<Hex> allHexes = new ();
@@ -36,23 +33,15 @@ public class PlayerSM : StateMachine
     [SyncVar] public Unit attackingUnit;
     [SyncVar] public Unit attackedUnit;
 
-
-    [Header("User Interface")] 
-    [SerializeField] private TextMeshProUGUI actionsLeftText;
-    
-    [SerializeField] private Color allyOutlineColor;
-    [SerializeField] private Color enemyOutlineColor;
+    [Header("User Interface")]
+    [SerializeField] private PlayerUIManager uiManager;
     
     [Header("Selection")]
     [SyncVar] public Unit selectedUnit;
     [SyncVar] public Hex selectedHex;
 
     [Header("Inputs")] private PlayerInputManager inputManager;
-
-    [SerializeField] private Button nextPhaseButton;
-    [SerializeField] private Button attackButton;
-    [SerializeField] private Button abilityButton;
-
+    
     [SerializeField] private LayerMask layersToHit;
     
     [Header("Trigger Bools")]
@@ -69,8 +58,6 @@ public class PlayerSM : StateMachine
     
     
     private Camera cam;
-    
-    
     
     [Header("Actions")]
     [SyncVar] public int maxActions;
@@ -92,7 +79,6 @@ public class PlayerSM : StateMachine
         if (!isLocalPlayer)
         {
             transform.GetChild(0).gameObject.SetActive(false);
-            state = inactiveState.ToString();
             return inactiveState;
         }
         
@@ -100,9 +86,8 @@ public class PlayerSM : StateMachine
         
         ResetTriggerVariables();
 
-        RefreshUnitOutlines();
-        
-        state = idleState.ToString();
+        uiManager.RefreshUnitOutlines(allUnits,playerId);
+        uiManager.ChangeDebugText($"Player {playerId}, {currentState}");
         return idleState;
     }
 
@@ -124,9 +109,8 @@ public class PlayerSM : StateMachine
         currentState.Exit();
         currentState = newState;
         currentState.Enter();
-        state = newState.ToString();
         Debug.Log($"Entering {currentState}");
-        debugText.text = $"Player {playerId}, {currentState}";
+        RpcChangeDebugText();
     }
 
     #region Raycast Gaming
@@ -200,18 +184,6 @@ public class PlayerSM : StateMachine
             allHexes.Add(hex);
         }
         //Debug.Log($"Set Lists, they have {allUnits.Count} and {allHexes.Count} elements");
-    }
-
-    
-    
-    public void RefreshUnitOutlines()
-    {
-        if(!isLocalPlayer) return;
-        
-        foreach (var unit in allUnits)
-        {
-            unit.outlineScript.OutlineColor = unit.playerId == playerId ? allyOutlineColor : enemyOutlineColor;
-        }
     }
     
     #region Camera Management
@@ -352,6 +324,8 @@ public class PlayerSM : StateMachine
             }
             
             unit.transform.position = hex.transform.position + Vector3.up * 2f;
+
+            UpdateUnitHud();
             
             //TODO - Wait for animation to finish
             
@@ -367,6 +341,8 @@ public class PlayerSM : StateMachine
             
             unitMovementAnimationDone = true;
         }
+        
+        UpdateUnitHud();
     }
     
     [Command]
@@ -432,7 +408,8 @@ public class PlayerSM : StateMachine
             attackedUnit = null;
             unitAttackAnimationDone = true;
         }
-        
+
+        UpdateUnitHud();
     }
     
     #endregion
@@ -478,8 +455,7 @@ public class PlayerSM : StateMachine
     {
         // TODO - Replace with disable button and play animation
         
-        var textToDisplay = (playerId == playerTurn) ? actionsLeft.ToString() : "E";
-        actionsLeftText.text = $"{textToDisplay}";
+        uiManager.EnableNextTurnButton(playerId == playerTurn);
     }
 
     #region hooks
@@ -535,7 +511,7 @@ public class PlayerSM : StateMachine
 
     private void OnActionsLeftValueChanged(int prevValue, int newValue)
     {
-        actionsLeftText.text = newValue.ToString();
+        uiManager.UpdateActionsLeft(newValue);
     }
 
     private void OnAccessibleHexesReceivedValueChange(bool prevValue,bool newValue)
@@ -549,21 +525,44 @@ public class PlayerSM : StateMachine
         if (newValue)
         {
             inputManager.OnStartTouch += TryToSelectUnitOrTile;
-            nextPhaseButton.onClick.AddListener(TryToEndTurn);
-            attackButton.onClick.AddListener(TryToAttack);
-            abilityButton.onClick.AddListener(TryToUseAbility);
+            uiManager.AddButtonListeners(TryToEndTurn,TryToUseAbility);
+            uiManager.UpdateActionsLeft(actionsLeft);
         }
         else
         {
             inputManager.OnStartTouch -= TryToSelectUnitOrTile;
-            nextPhaseButton.onClick.RemoveListener(TryToEndTurn);
-            attackButton.onClick.RemoveListener(TryToAttack);
-            abilityButton.onClick.RemoveListener(TryToUseAbility);
+            uiManager.RemoveButtonListeners(TryToEndTurn,TryToUseAbility);
         }
-        RefreshUnitOutlines();
+        uiManager.RefreshUnitOutlines(allUnits,playerId);
     }
 
     #endregion
+
+    #region Update UI
     
+    public void RpcChangeDebugText()
+    {
+        uiManager.ChangeDebugText($"Player {playerId}, {currentState}");
+    }
     
+    [ClientRpc]
+    public void RpcSetupUnitHuds()
+    {
+        uiManager.GenerateUnitHuds(allUnits);
+    }
+    
+    [ClientRpc]
+    public void RpcUpdateUnitHud()
+    {
+        Debug.Log("Rpc Updating Unit Hud");
+        uiManager.UpdateUnitHud();
+    }
+
+    public void UpdateUnitHud()
+    {
+        uiManager.UpdateUnitHud();
+        if(isServer) GameSM.instance.RefreshUnitHuds();
+    }
+
+    #endregion
 }

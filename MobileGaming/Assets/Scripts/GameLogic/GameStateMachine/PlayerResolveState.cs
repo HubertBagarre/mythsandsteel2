@@ -15,7 +15,14 @@ namespace GameStates
         
         public override void Enter()
         {
+            sm.RefreshUnitHuds();
+            
             sm.ChangeState(sm.betweenTurnState);
+        }
+
+        public override void Exit()
+        {
+            sm.RefreshUnitHuds();
         }
     }
 }

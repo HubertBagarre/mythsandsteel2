@@ -268,6 +268,7 @@ public class GameSM : StateMachine
     {
         player.ServerMoveUnit(movingUnit,path);
         player.RpcMoveUnit(movingUnit,path);
+        RefreshUnitHuds();
     }
     
     #endregion
@@ -278,9 +279,18 @@ public class GameSM : StateMachine
     {
         player.ServerAttackResolve(attacking,attacked);
         player.RpcAttackResolve(attacking,attacked);
+        RefreshUnitHuds();
     }
     
     #endregion
+    
+    public void RefreshUnitHuds()
+    {
+        foreach (var player in players)
+        {
+            player.RpcUpdateUnitHud();
+        }
+    }
     
     
 }

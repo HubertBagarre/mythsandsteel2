@@ -23,7 +23,7 @@ namespace GameStates
 
         public override void UpdateLogic()
         {
-            if (sm.unitsPlaced) OnUnitsPlaced();
+            if(sm.unitsPlaced) OnUnitsPlaced();
             if(sm.player0UnitsPlaced && sm.player1UnitsPlaced) OnPlayerUnitsPlaced();
         }
         
@@ -31,6 +31,7 @@ namespace GameStates
         {
             sm.unitsPlaced = false;
             hexGrid.ServerAssignUnitsToTiles();
+            
             sm.ChangeState(sm.prePlayerTurn);
         }
 
@@ -41,6 +42,17 @@ namespace GameStates
             sm.PlaceUnits();
         }
 
-        
+        public override void Exit()
+        {
+            SetupUnitHuds();
+        }
+
+        private void SetupUnitHuds()
+        {
+            foreach (var player in sm.players)
+            {
+                player.RpcSetupUnitHuds();
+            }
+        }
     }
 }

@@ -125,8 +125,6 @@ public class HexGrid : NetworkBehaviour
 
     public void CenterCamera1()
     {
-        
-        
         sbyte maxRow = 0;
         sbyte minRow = 0;
         sbyte maxCol = 0;
@@ -150,27 +148,6 @@ public class HexGrid : NetworkBehaviour
         player.SetUnitsAndHexesArrays(units.ToArray(),hexes.Values.ToArray());
     }
     
-    public Hex[] GetNeighbours(Hex hex)
-    {
-        var returnArray = new Hex[6];
-        for (var i = 0; i < 6; i++)
-        {
-            var offset = directionOffsets[i];
-            var testPos = new Vector3Int(hex.q,hex.r,hex.s) + offset;
-            if (hexes.ContainsKey(testPos))
-            {
-                returnArray[i] = hexes[testPos];
-            }
-        }
-
-        return returnArray;
-    }
-
-    public float GetDistanceBetweenHexes(Hex a, Hex b)
-    {
-        return Hex.DistanceBetween(a, b);
-    }
-
     public void SyncHexGridVariables()
     {
         Debug.Log("Syncing Hexes");
@@ -179,8 +156,7 @@ public class HexGrid : NetworkBehaviour
             hex.currentUnit = hex.currentUnit;
             if (hex.currentUnit != null) hex.currentUnit.currentHex = hex;
         }
-        
     }
-
+    
 
 }

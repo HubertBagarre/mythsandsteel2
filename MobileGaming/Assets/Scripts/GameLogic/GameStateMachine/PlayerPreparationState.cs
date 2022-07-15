@@ -17,7 +17,14 @@ namespace GameStates
         {
             sm.ResetPlayerActions(sm.players[sm.currentPlayer]);
             
+            sm.RefreshUnitHuds();
+            
             sm.ChangeState(sm.playerTurnState);
+        }
+
+        public override void Exit()
+        {
+            sm.RefreshUnitHuds();
         }
     }
 }

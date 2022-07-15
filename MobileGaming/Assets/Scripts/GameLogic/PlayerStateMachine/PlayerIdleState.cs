@@ -15,7 +15,6 @@ namespace PlayerStates
 
             ResetTempVariables();
             sm.ResetTempVariables();
-            sm.RefreshUnitOutlines();
         }
         
         private void ResetTempVariables()
