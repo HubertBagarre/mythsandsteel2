@@ -22,6 +22,8 @@ namespace PlayerStates
         {
             base.Enter();
             
+            sm.UpdateUnitHud();
+            
             sm.unitMovementUnit = sm.selectedUnit;
             sm.SetUnitMovementUnit(sm.selectedUnit);
             movingUnit = sm.unitMovementUnit;
@@ -134,6 +136,8 @@ namespace PlayerStates
             {
                 hex.ChangeHexColor(Hex.HexColors.Normal);
             }
+            
+            sm.UpdateUnitHud();
         }
     }
 

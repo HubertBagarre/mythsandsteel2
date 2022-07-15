@@ -324,8 +324,6 @@ public class PlayerSM : StateMachine
             }
             
             unit.transform.position = hex.transform.position + Vector3.up * 2f;
-
-            UpdateUnitHud();
             
             //TODO - Wait for animation to finish
             
@@ -341,8 +339,6 @@ public class PlayerSM : StateMachine
             
             unitMovementAnimationDone = true;
         }
-        
-        UpdateUnitHud();
     }
     
     [Command]
@@ -408,8 +404,6 @@ public class PlayerSM : StateMachine
             attackedUnit = null;
             unitAttackAnimationDone = true;
         }
-
-        UpdateUnitHud();
     }
     
     #endregion
@@ -561,7 +555,6 @@ public class PlayerSM : StateMachine
     public void UpdateUnitHud()
     {
         uiManager.UpdateUnitHud();
-        if(isServer) GameSM.instance.RefreshUnitHuds();
     }
 
     #endregion

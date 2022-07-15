@@ -10,7 +10,7 @@ public class Unit : NetworkBehaviour
     [Header("Identification")]
     public string unitName;
     [SyncVar] public sbyte playerId;
-    [SyncVar] public sbyte hexGridIndex;
+    //[SyncVar] public sbyte hexGridIndex;
     
     [Header("Position")]
     [SyncVar] public sbyte hexCol;

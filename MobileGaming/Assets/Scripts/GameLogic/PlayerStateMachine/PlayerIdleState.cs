@@ -12,6 +12,8 @@ namespace PlayerStates
         public override void Enter()
         {
             base.Enter();
+            
+            sm.UpdateUnitHud();
 
             ResetTempVariables();
             sm.ResetTempVariables();
@@ -24,7 +26,13 @@ namespace PlayerStates
             sm.attackedUnit = null;
             sm.attackingUnit = null;
         }
-        
+
+        public override void UpdateLogic()
+        {
+            base.UpdateLogic();
+            sm.UpdateUnitHud();
+        }
+
         protected override void OnUnitClicked()
         {
             base.OnUnitClicked();
@@ -58,14 +66,17 @@ namespace PlayerStates
             return unit.canUseAbility || unit.attacksLeft > 0 || unit.move > 0;
         }
         
-        
-        
         private void EnterMovingState(Unit unit)
         {
             if (sm.actionsLeft > 0 || unit.hasBeenActivated)
             {
                 sm.ChangeState(sm.movementSelectionState);
             }
+        }
+
+        public override void Exit()
+        {
+            sm.UpdateUnitHud();
         }
     }
 }

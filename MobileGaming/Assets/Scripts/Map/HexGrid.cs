@@ -56,7 +56,7 @@ public class HexGrid : NetworkBehaviour
         {
             var unit = units[i];
 
-            unit.hexGridIndex = Convert.ToSByte(i);
+            //unit.hexGridIndex = Convert.ToSByte(i);
             
             var q = Convert.ToSByte(unit.hexCol - (unit.hexRow - (unit.hexRow & 1)) / 2);
             var r = unit.hexRow;
@@ -158,5 +158,4 @@ public class HexGrid : NetworkBehaviour
         }
     }
     
-
 }

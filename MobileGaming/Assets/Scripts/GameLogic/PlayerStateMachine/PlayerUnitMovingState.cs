@@ -30,6 +30,7 @@ namespace PlayerStates
             base.UpdateLogic();
             if(sm.unitMovementAnimationDone) OnUnitMovementAnimationDone();
             if(sm.unitAttackAnimationDone) OnUnitAttackAnimationDone();
+            sm.UpdateUnitHud();
         }
         
         private void OnUnitMovementAnimationDone()

@@ -36,8 +36,18 @@ public class PlayerUIManager : NetworkBehaviour
     [SerializeField] private Vector2 unitHudOffset;
     private Dictionary<Unit, UnitHud> unitHudDict = new();
 
-    
-    
+    public static PlayerUIManager instance;
+
+    public void Awake()
+    {
+        if (isLocalPlayer) instance = this;
+    }
+
+    private void OnDestroy()
+    {
+        instance = null;
+    }
+
     public void ChangeDebugText(string text)
     {
         debugText.text = text;
