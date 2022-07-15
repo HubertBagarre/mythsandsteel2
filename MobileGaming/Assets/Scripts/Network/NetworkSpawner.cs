@@ -30,15 +30,18 @@ public class NetworkSpawner
             for (sbyte y = 0; y < mapSize.y; y++)
             {
                 var xPos = y % 2 == 0 ? 2 * x : 2 * x + 1;
+                if (y % 2 == 1 && x == 10) continue;
                 var hexGameObject = Object.Instantiate(((NewNetworkRoomManager)NetworkManager.singleton).hexPrefab, new Vector3(xPos, 0, -1.73f * y), Quaternion.identity);
                 hexGameObject.name = $"Hex {x},{y}";
                 var hex = hexGameObject.GetComponent<Hex>();
                 hex.col = x;
                 hex.row = y;
                 hex.currentTileID = 1;
+                if((x==4&&y==8)||(x==5&&y==8)||(x==6&&y==8)||(x==4&&y==7)||(x==4&&y==0)||(x==5&&y==0)||(x==6&&y==0)||(x==5&&y==1)) hex.currentTileID = 2;
                 Hex.OddrToCube(hex);
                 Hex.JoinHexGrid(hex);
                 NetworkServer.Spawn(hexGameObject);
+
             }
         }
     }

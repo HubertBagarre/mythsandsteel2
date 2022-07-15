@@ -173,20 +173,20 @@ public class GameSM : StateMachine
     {
         var positions1 = new List<Vector2Int>()
         {
-            new Vector2Int(0,4),
-            new Vector2Int(2,4),
-            new Vector2Int(4,4),
-            new Vector2Int(6,4),
-            new Vector2Int(8,4),
+            new Vector2Int(0,3),
+            new Vector2Int(2,3),
+            new Vector2Int(4,3),
+            new Vector2Int(6,3),
+            new Vector2Int(8,3),
         };
         
         var positions0 = new List<Vector2Int>()
         {
-            new Vector2Int(0,6),
-            new Vector2Int(2,6),
-            new Vector2Int(4,6),
-            new Vector2Int(6,6),
-            new Vector2Int(8,6),
+            new Vector2Int(0,7),
+            new Vector2Int(2,7),
+            new Vector2Int(4,7),
+            new Vector2Int(6,7),
+            new Vector2Int(8,7),
         };
 
         yield return null;
