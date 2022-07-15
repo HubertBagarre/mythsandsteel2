@@ -546,7 +546,6 @@ public class PlayerSM : StateMachine
     [ClientRpc]
     public void RpcUpdateUnitHud()
     {
-        Debug.Log("Rpc Updating Unit Hud");
         uiManager.UpdateUnitHud();
         if(isLocalPlayer) uiManager.RefreshUnitOutlines(allUnits,playerId);
     }
