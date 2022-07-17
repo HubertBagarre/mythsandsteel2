@@ -14,7 +14,7 @@ namespace PlayerStates
         public override void Enter()
         {
             base.Enter();
-
+            
             sm.DisplayAbilityConfirmPanel(true);
         }
 
@@ -23,6 +23,8 @@ namespace PlayerStates
             base.Exit();
             
             sm.DisplayAbilityConfirmPanel(false);
+            
+            sm.DisplayAbilityButton(false);
             
             foreach (var hex in sm.allHexes)
             {

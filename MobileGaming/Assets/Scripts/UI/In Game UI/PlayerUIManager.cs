@@ -67,6 +67,11 @@ public class PlayerUIManager : NetworkBehaviour
         if (!value) actionsLeftText.text = string.Empty;
     }
 
+    public void EnableAbilityButton(bool value)
+    {
+        abilityGameObject.SetActive(value);
+    }
+
     public void EnableAbilitySelection(bool value)
     {
         abilitySelectionGameObject.SetActive(value);

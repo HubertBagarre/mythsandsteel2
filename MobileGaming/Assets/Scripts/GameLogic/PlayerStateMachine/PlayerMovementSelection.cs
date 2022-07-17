@@ -28,6 +28,8 @@ namespace PlayerStates
             sm.SetUnitMovementUnit(sm.selectedUnit);
             movingUnit = sm.unitMovementUnit;
             
+            sm.DisplayAbilityButton(true);
+            
             if (movingUnit == null)
             {
                 Debug.LogWarning("NO UNIT SELECTED, RETURNING TO IDLE");

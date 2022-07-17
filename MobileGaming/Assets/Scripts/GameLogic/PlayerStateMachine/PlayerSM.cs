@@ -416,7 +416,7 @@ public class PlayerSM : StateMachine
 
     private void TryToUseAbility()
     {
-        if(currentState != idleState) return;
+        if(currentState != idleState || currentState != movementSelectionState) return;
         ChangeState(abilitySelectionState);
     }
 
@@ -436,6 +436,11 @@ public class PlayerSM : StateMachine
     private void CmdTryToUseAbility()
     {
         Debug.Log("Ability");
+    }
+
+    public void DisplayAbilityButton(bool value)
+    {
+        uiManager.EnableAbilityButton(value);
     }
 
     public void DisplayAbilityConfirmPanel(bool value)

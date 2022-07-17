@@ -13,6 +13,8 @@ namespace PlayerStates
         {
             base.Enter();
             
+            sm.DisplayAbilityButton(false);
+            
             sm.UpdateUnitHud();
 
             sm.CmdCheckVictoryConditions();
