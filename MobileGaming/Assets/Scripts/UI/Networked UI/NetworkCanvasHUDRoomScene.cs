@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class NetworkCanvasHUDRoomScene : MonoBehaviour
 {
     [SerializeField] private Button leaveButton, readyButton;
-    [SerializeField] private Toggle deckToggle, mapToggle;
     [SerializeField] private TextMeshProUGUI buttonReadyText;
     private bool readyButtonState;
     private NetworkRoomPlayer roomPlayer;
@@ -29,8 +28,8 @@ public class NetworkCanvasHUDRoomScene : MonoBehaviour
             if (roomSlot.isLocalPlayer) roomPlayer = roomSlot;
         }
     }
-    
-    public void ButtonStop()
+
+    private void ButtonStop()
     {
         // stop host if host mode
         if (NetworkServer.active && NetworkClient.isConnected)
@@ -49,20 +48,8 @@ public class NetworkCanvasHUDRoomScene : MonoBehaviour
         }
     }
 
-    public void ButtonReady()
+    private void ButtonReady()
     {
-        if (!deckToggle.isOn)
-        {
-            Debug.Log("Please select a Deck");
-            return;
-        }
-            
-        if(!mapToggle.isOn)
-        {
-            Debug.Log("Please select a Map");
-            return;
-        }
-
         readyButtonState = !readyButtonState;
         buttonReadyText.text = readyButtonState ? "Not Ready" : "Ready";
         

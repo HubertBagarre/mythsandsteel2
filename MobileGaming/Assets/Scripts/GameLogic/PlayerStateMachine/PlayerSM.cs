@@ -30,6 +30,9 @@ public class PlayerSM : StateMachine
     [SyncVar] public Unit attackingUnit;
     [SyncVar] public Unit attackedUnit;
 
+    [Header("Ability Selection")]
+    [SyncVar] public int entitiesToSelect;
+
     [Header("User Interface")]
     [SerializeField] private PlayerUIManager uiManager;
     
@@ -49,6 +52,8 @@ public class PlayerSM : StateMachine
     [SyncVar(hook = nameof(OnAccessibleHexesReceivedValueChange))] public bool accessibleHexesReceived;
     [SyncVar] public bool isAskingForUnitMovement;
     [SyncVar] public bool isAskingForAttackResolve;
+    [SyncVar] public bool isAskingForAbilitySelectionWithHexes;
+    [SyncVar] public bool isAskingForAbilitySelectionWithUnits;
     [SyncVar] public bool unitMovementAnimationDone;
     [SyncVar] public bool unitAttackAnimationDone;
     [SyncVar] public bool turnIsOver;
@@ -407,6 +412,40 @@ public class PlayerSM : StateMachine
     
     #endregion
     
+    #region Unit Ability Selection
+
+    private void TryToUseAbility()
+    {
+        if(currentState != idleState) return;
+        ChangeState(abilitySelectionState);
+    }
+
+    public void ExitAbilitySelection()
+    {
+        if(currentState != abilitySelectionState) return;
+        ChangeState(idleState);
+    }
+
+    public void TryToLaunchAbility()
+    {
+        if(currentState != abilitySelectionState) return;
+        CmdTryToUseAbility();
+    }
+
+    [Command]
+    private void CmdTryToUseAbility()
+    {
+        Debug.Log("Ability");
+    }
+
+    public void DisplayAbilityConfirmPanel(bool value)
+    {
+        uiManager.EnableAbilitySelection(value);
+    }
+
+    #endregion
+
+    
     private void TryToEndTurn()
     {
         if(currentState != idleState) return;
@@ -440,12 +479,7 @@ public class PlayerSM : StateMachine
         if(gameSM.CheckIfPlayerWon()) gameSM.ChangeState(gameSM.endingState);
     }
 
-    [Command]
-    public void CmdTryToUseAbility()
-    {
-        Debug.Log("Ability");
-    }
-
+   
     [ClientRpc]
     public void DisplayIfItsYourTurn(int playerTurn)
     {
@@ -521,13 +555,13 @@ public class PlayerSM : StateMachine
         if (newValue)
         {
             inputManager.OnStartTouch += TryToSelectUnitOrTile;
-            uiManager.AddButtonListeners(TryToEndTurn,CmdTryToUseAbility);
+            uiManager.AddButtonListeners(TryToEndTurn,TryToUseAbility,TryToLaunchAbility,ExitAbilitySelection);
             uiManager.UpdateActionsLeft(actionsLeft);
         }
         else
         {
             inputManager.OnStartTouch -= TryToSelectUnitOrTile;
-            uiManager.RemoveButtonListeners(TryToEndTurn,CmdTryToUseAbility);
+            uiManager.RemoveButtonListeners(TryToEndTurn,TryToUseAbility,TryToLaunchAbility,ExitAbilitySelection);
         }
     }
 

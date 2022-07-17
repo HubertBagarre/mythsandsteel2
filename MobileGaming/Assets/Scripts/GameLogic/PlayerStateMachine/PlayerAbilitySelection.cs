@@ -10,6 +10,25 @@ namespace PlayerStates
         {
             sm = stateMachine;
         }
+
+        public override void Enter()
+        {
+            base.Enter();
+
+            sm.DisplayAbilityConfirmPanel(true);
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+            
+            sm.DisplayAbilityConfirmPanel(false);
+            
+            foreach (var hex in sm.allHexes)
+            {
+                hex.ChangeHexColor(Hex.HexColors.Normal);
+            }
+        }
     }
 }
 

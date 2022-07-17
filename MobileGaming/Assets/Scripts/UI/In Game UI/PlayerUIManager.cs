@@ -19,6 +19,8 @@ public class PlayerUIManager : NetworkBehaviour
     [Header("Buttons")]
     [SerializeField] private Button nextTurnButton;
     [SerializeField] private Button abilityButton;
+    [SerializeField] private Button abilityConfirmButton;
+    [SerializeField] private Button abilityCancelButton;
     [SerializeField] private Button faithButton;
     [SerializeField] private Button pauseButton;
     [SerializeField] private Button allyUnitPortraitButton;
@@ -26,6 +28,7 @@ public class PlayerUIManager : NetworkBehaviour
     [Header("GameObjects")]
     [SerializeField] private UnitHud unitHudPrefab;
     [SerializeField] private GameObject abilityGameObject;
+    [SerializeField] private GameObject abilitySelectionGameObject;
     [SerializeField] private GameObject allyUnitPortraitGameObject;
     
     [Header("Other")]
@@ -64,18 +67,30 @@ public class PlayerUIManager : NetworkBehaviour
         if (!value) actionsLeftText.text = string.Empty;
     }
 
-    public void AddButtonListeners(UnityAction nextTurnAction,UnityAction abilityAction)
+    public void EnableAbilitySelection(bool value)
+    {
+        abilitySelectionGameObject.SetActive(value);
+        abilityGameObject.SetActive(!value);
+    }
+
+    public void AddButtonListeners(UnityAction nextTurnAction,UnityAction abilityAction,UnityAction confirmAbilityAction,UnityAction cancelAbilityAction)
     {
         nextTurnButton.onClick.AddListener(nextTurnAction);
         abilityButton.onClick.AddListener(abilityAction);
+        abilityConfirmButton.onClick.AddListener(confirmAbilityAction);
+        abilityCancelButton.onClick.AddListener(cancelAbilityAction);
     }
 
-    public void RemoveButtonListeners(UnityAction nextTurnAction,UnityAction abilityAction)
+    public void RemoveButtonListeners(UnityAction nextTurnAction,UnityAction abilityAction,UnityAction confirmAbilityAction,UnityAction cancelAbilityAction)
     {
         nextTurnButton.onClick.RemoveListener(nextTurnAction);
         abilityButton.onClick.RemoveListener(abilityAction);
+        abilityConfirmButton.onClick.RemoveListener(confirmAbilityAction);
+        abilityCancelButton.onClick.RemoveListener(cancelAbilityAction);
     }
-    
+
+    #region Unit Hud
+
     public void RefreshUnitOutlines(IEnumerable<Unit> allUnits,int playerId)
     {
         foreach (var unit in allUnits)
@@ -102,4 +117,8 @@ public class PlayerUIManager : NetworkBehaviour
             unitHud.UpdateHud();
         }
     }
+
+    #endregion
+    
+    
 }

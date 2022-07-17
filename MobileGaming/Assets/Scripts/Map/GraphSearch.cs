@@ -1,3 +1,4 @@
+#nullable enable
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -87,10 +88,10 @@ public class GraphSearch
     {
         List<Hex> path = new () {current};
         
-        while (visitedHexesDict[current] != null)
+        while (visitedHexesDict[current!] != null)
         {
-            path.Add(visitedHexesDict[current]);
-            current = visitedHexesDict[current];
+            path.Add(visitedHexesDict[current]!);
+            current = visitedHexesDict[current]!;
         }
         path.Reverse();
         return path.Skip(1).ToList();
