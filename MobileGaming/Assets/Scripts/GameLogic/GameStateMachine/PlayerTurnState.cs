@@ -32,6 +32,7 @@ namespace GameStates
             if (currentPlayer.isAskingForAccessibleHexesForUnitMovement) OnAccessibleHexesForUnitMovementAsked();
             if (currentPlayer.isAskingForUnitMovement) OnUnitMovementAsked();
             if (currentPlayer.isAskingForAttackResolve) OnAttackResolveAsked();
+            if (currentPlayer.isAskingForAbilitySelectables) OnAbilitySelectableAsked();
 
         }
 
@@ -41,6 +42,14 @@ namespace GameStates
             
             var movingUnit = currentPlayer.unitMovementUnit;
             sm.ServerSideSetAccessibleHexesNew(movingUnit);
+        }
+
+        private void OnAbilitySelectableAsked()
+        {
+            currentPlayer.isAskingForAbilitySelectables = false;
+            
+            var movingUnit = currentPlayer.unitMovementUnit;
+            sm.ServerSideSetAbilitySelectableHexes(movingUnit);
         }
 
         private void OnUnitMovementAsked()
@@ -54,7 +63,7 @@ namespace GameStates
             if (attackingUnit != null && attackedUnit != null)
             {
                 movingUnit = attackingUnit;
-                if (Hex.DistanceBetween(attackingUnit.currentHex, attackedUnit.currentHex) <= attackedUnit.range)
+                if (Hex.DistanceBetween(attackingUnit.currentHex, attackedUnit.currentHex) <= attackedUnit.attackRange)
                 {
                     Debug.Log("Unit Doesn't have to move");
                     destinationHex = attackingUnit.currentHex;

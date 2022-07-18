@@ -56,8 +56,7 @@ public class PlayerSM : StateMachine
     [SyncVar(hook = nameof(OnAccessibleHexesReceivedValueChange))] public bool accessibleHexesReceived;
     [SyncVar] public bool isAskingForUnitMovement;
     [SyncVar] public bool isAskingForAttackResolve;
-    [SyncVar] public bool isAskingForAbilitySelectionWithHexes;
-    [SyncVar] public bool isAskingForAbilitySelectionWithUnits;
+    [SyncVar] public bool isAskingForAbilitySelectables;
     [SyncVar(hook = nameof(OnAbilitySelectablesReceivedValueChange))] public bool abilitySelectablesReceived;
     [SyncVar] public bool unitMovementAnimationDone;
     [SyncVar] public bool unitAttackAnimationDone;
@@ -137,25 +136,25 @@ public class PlayerSM : StateMachine
             var objectHex = objectHit.GetComponent<Hex>();
             if (objectHex != null)
             {
-                SendHexClicked(objectHex);
+                CmdSendHexClicked(objectHex);
                 return;
             }
             
             var objectUnit = objectHit.GetComponent<Unit>();
             if (objectUnit != null)
             {
-                SendUnitClicked(objectUnit);
+                CmdSendUnitClicked(objectUnit);
             }
             
             return;
         }
 
-        SendNothingClicked();
+        CmdSendNothingClicked();
     }
 
 
     [Command]
-    public void SendUnitClicked(Unit unit)
+    public void CmdSendUnitClicked(Unit unit)
     {
         Debug.Log($"{unit} got clicked");
         selectedUnit = unit;
@@ -163,7 +162,7 @@ public class PlayerSM : StateMachine
     }
     
     [Command]
-    public void SendHexClicked(Hex hex)
+    public void CmdSendHexClicked(Hex hex)
     {
         Debug.Log($"{hex} got clicked");
         selectedHex = hex;
@@ -171,7 +170,7 @@ public class PlayerSM : StateMachine
     }
     
     [Command]
-    public void SendNothingClicked()
+    public void CmdSendNothingClicked()
     {
         Debug.Log("Nothing got clicked");
         clickedNothing = true;
@@ -445,7 +444,7 @@ public class PlayerSM : StateMachine
         ChangeState(idleState);
         if (selectedUnit != null)
         {
-            if(selectedUnit.move > 0 || selectedUnit.attacksLeft > 0) SendUnitClicked(selectedUnit);
+            if(selectedUnit.move > 0 || selectedUnit.attacksLeft > 0) CmdSendUnitClicked(selectedUnit);
         }
     }
 
@@ -478,10 +477,9 @@ public class PlayerSM : StateMachine
     }
     
     [Command]
-    public void CmdGetAbilitySelectables(bool targetHexes)
+    public void CmdGetAbilitySelectables()
     {
-        isAskingForAbilitySelectionWithHexes = targetHexes;    
-        isAskingForAbilitySelectionWithUnits = !targetHexes;   
+        isAskingForAbilitySelectables = true;
         abilitySelectablesReceived = false;
     }
     
@@ -501,6 +499,19 @@ public class PlayerSM : StateMachine
             hex.ChangeHexColor(color);
         }
         
+    }
+    
+    public void SetAbilitySelectables(IEnumerable<Hex> hexes)
+    {
+        abilitySelectableHexes.Clear();
+        
+        foreach (var hex in hexes)
+        {
+            abilitySelectableHexes.Add(hex);
+        }
+        
+        abilitySelectablesReceived = true;
+        Debug.Log("Received Hexes");
     }
 
     #endregion

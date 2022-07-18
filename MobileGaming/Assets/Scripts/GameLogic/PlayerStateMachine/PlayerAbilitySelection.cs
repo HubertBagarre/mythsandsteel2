@@ -8,7 +8,7 @@ namespace PlayerStates
     public class PlayerAbilitySelection : BasePlayerState
     {
         private Unit abilityCastingUnit;
-        private bool receivedSelectablesForAbility;
+        private bool receivedSelectablesForAbilityTrigger;
         private int selectionsLeft;
         private ScriptableAbility scriptableAbility;
         private IAbilityCallBacks scriptableAbilityCallbacks;
@@ -52,13 +52,12 @@ namespace PlayerStates
             scriptableAbilityCallbacks = casted;
             
             selectionsLeft = scriptableAbility.abilityTargetCount;
-            
-            sm.isAskingForAbilitySelectionWithHexes = scriptableAbility.abilityTargetHexes;
-            sm.isAskingForAbilitySelectionWithUnits = !scriptableAbility.abilityTargetHexes;
-            
-            sm.DisplayAbilityConfirmPanel(true);
 
-            receivedSelectablesForAbility = false;
+            sm.isAskingForAbilitySelectables = true;
+
+            sm.DisplayAbilityConfirmPanel(true);
+            
+            receivedSelectablesForAbilityTrigger = false;
             
             foreach (var hex in sm.allHexes)
             {
@@ -67,7 +66,7 @@ namespace PlayerStates
 
             ClientSideSetAbilitySelectable(abilityCastingUnit);
             
-            sm.CmdGetAbilitySelectables(scriptableAbility.abilityTargetHexes);
+            sm.CmdGetAbilitySelectables();
         }
 
         private void ClientSideSetAbilitySelectable(Unit castingUnit)
@@ -76,8 +75,24 @@ namespace PlayerStates
             
             foreach (var hex in selectableHexes)
             {
-                hex.ChangeHexColor(Hex.HexColors.Selectable);
+                hex.ChangeHexColor(Hex.HexColors.Selected);
             }
+        }
+        
+        public override void UpdateLogic()
+        {
+            if (!sm.abilitySelectablesReceived) return;
+            if(!receivedSelectablesForAbilityTrigger) OnAbilitySelectablesReceived();
+            base.UpdateLogic();
+        }
+
+        private void OnAbilitySelectablesReceived()
+        {
+            receivedSelectablesForAbilityTrigger = true;
+            foreach (var hex in sm.abilitySelectableHexes)                                             
+            {                                                                                
+                hex.ChangeHexColor(Hex.HexColors.Selectable);                                  
+            }                                                                                
         }
 
         public override void Exit()

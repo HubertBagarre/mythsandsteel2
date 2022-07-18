@@ -286,6 +286,22 @@ public class GameSM : StateMachine
     
     #endregion
 
+    #region Ability Selectable
+
+    public void ServerSideSetAbilitySelectableHexes(Unit castingUnit)
+    {
+        var scriptableAbility = ObjectIDList.instance.abilities[castingUnit.abilityScriptableId];
+        if (scriptableAbility is IAbilityCallBacks abilityCallback)
+        {
+            var selectableHexes = abilityCallback.AbilitySelectables(castingUnit);                                 
+        
+            var player = players[castingUnit.playerId];
+            player.SetAbilitySelectables(selectableHexes);
+        }
+    }
+
+    #endregion
+
     #region Victory
     
     public bool CheckIfPlayerWon()

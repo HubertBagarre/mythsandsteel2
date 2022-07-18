@@ -42,7 +42,9 @@ namespace PlayerStates
                 sm.CmdTryToResolveAttack();
                 return;
             }
+            var movementUnit = sm.unitMovementUnit;
             sm.ChangeState(sm.idleState);
+            if((movementUnit.attacksLeft>0 && movementUnit.AreEnemyUnitsInRange()) || (movementUnit.move>0 && movementUnit.canUseAbility)) sm.CmdSendUnitClicked(movementUnit);
         }
 
         private void OnUnitAttackAnimationDone()
@@ -50,7 +52,9 @@ namespace PlayerStates
             sm.unitAttackAnimationDone = false;
             sm.CmdResetAttackAnimationDoneTrigger();
             
+            var movementUnit = sm.unitMovementUnit;
             sm.ChangeState(sm.idleState);
+            if((movementUnit.attacksLeft>0 && movementUnit.AreEnemyUnitsInRange()) || (movementUnit.move>0 && movementUnit.canUseAbility)) sm.CmdSendUnitClicked(movementUnit);
         }
 
         public override void Exit()

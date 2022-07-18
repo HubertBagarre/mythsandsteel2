@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Mirror;
 
@@ -37,7 +38,7 @@ public class Unit : NetworkBehaviour
     [SyncVar] public sbyte attacksPerTurn;
     [SyncVar] public sbyte attacksLeft;
     [SyncVar] public sbyte attackDamage;
-    [SyncVar] public sbyte range;
+    [SyncVar] public sbyte attackRange;
     [SyncVar] public sbyte move;
     [SyncVar] public bool hasBeenActivated;
     [SyncVar] public bool canUseAbility;
@@ -61,7 +62,7 @@ public class Unit : NetworkBehaviour
         attacksPerTurn = baseAtkPerTurn;
         attacksLeft = attacksPerTurn;
         attackDamage = baseAttackDamage;
-        range = baseRange;
+        attackRange = baseRange;
         move = baseMove;
         hasBeenActivated = false;
         canUseAbility = true;
@@ -147,6 +148,13 @@ public class Unit : NetworkBehaviour
         if (unitScriptable is IUnitCallBacks scriptableAdded) scriptableAdded.OnMagicalDamageTaken(this,damage);
     }
 
+
+    public bool AreEnemyUnitsInRange()
+    {
+        var enemyPlayer = playerId == 0 ? Convert.ToSByte(1) : Convert.ToSByte(0);
+        return currentHex.GetNeighborsInRange(attackRange).Any(hex => hex.HasUnitOfPlayer(enemyPlayer));
+    }
+
     #region Unit CallBacks
     
     public void OnUnitEnterAdjacentHex(Unit enteringUnit)
@@ -160,7 +168,6 @@ public class Unit : NetworkBehaviour
     }
     
     #endregion
-    
     
     public void Death()
     {

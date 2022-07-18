@@ -11,7 +11,7 @@ public class GraphSearch
     {
         var ignoreUnits = enemyUnits == null;
         var unit = (enemyUnits != null) ? startPoint.currentUnit : null;
-        var attackRange = (enemyUnits != null) ? unit.range : 0;
+        var attackRange = (enemyUnits != null) ? unit.attackRange : 0;
         var friendlyPlayer = (enemyUnits != null) ? unit.playerId : 0;
         var movingUnit = (withAttack) ? startPoint.currentUnit : null;
 

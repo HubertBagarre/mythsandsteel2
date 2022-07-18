@@ -53,7 +53,7 @@ namespace PlayerStates
             var unit = sm.selectedHex.currentUnit;
             if (unit != null)
             {
-                sm.SendUnitClicked(unit);
+                sm.CmdSendUnitClicked(unit);
             }
         }
 

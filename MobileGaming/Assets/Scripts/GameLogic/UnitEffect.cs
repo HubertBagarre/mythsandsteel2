@@ -44,7 +44,7 @@ public class UnitEffect : MonoBehaviour, ICancelable
                 //if (defUnit.magicDamage + modifier >= 0) defUnit.magicDamage += modifier;
                 break;
             case statEnum.range:
-                if (defUnit.range + modifier >= 0) defUnit.range += modifier;
+                if (defUnit.attackRange + modifier >= 0) defUnit.attackRange += modifier;
                 break;
             case statEnum.move:
                 if (defUnit.move + modifier >= 0) defUnit.move += modifier;
