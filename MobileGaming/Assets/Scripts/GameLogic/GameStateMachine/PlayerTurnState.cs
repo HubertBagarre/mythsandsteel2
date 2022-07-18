@@ -33,7 +33,7 @@ namespace GameStates
             if (currentPlayer.isAskingForUnitMovement) OnUnitMovementAsked();
             if (currentPlayer.isAskingForAttackResolve) OnAttackResolveAsked();
             if (currentPlayer.isAskingForAbilitySelectables) OnAbilitySelectableAsked();
-
+            if (currentPlayer.isAskingForAbilityResolve) OnAbilityResolveAsked();
         }
 
         private void OnAccessibleHexesForUnitMovementAsked()
@@ -43,15 +43,7 @@ namespace GameStates
             var movingUnit = currentPlayer.unitMovementUnit;
             sm.ServerSideSetAccessibleHexesNew(movingUnit);
         }
-
-        private void OnAbilitySelectableAsked()
-        {
-            currentPlayer.isAskingForAbilitySelectables = false;
-            
-            var movingUnit = currentPlayer.unitMovementUnit;
-            sm.ServerSideSetAbilitySelectableHexes(movingUnit);
-        }
-
+        
         private void OnUnitMovementAsked()
         {
             currentPlayer.isAskingForUnitMovement = false;
@@ -87,6 +79,20 @@ namespace GameStates
             currentPlayer.isAskingForAttackResolve = false;
 
             sm.ServerSideAttackResolve(currentPlayer.attackingUnit, currentPlayer.attackedUnit,currentPlayer);
+        }
+
+        private void OnAbilitySelectableAsked()
+        {
+            currentPlayer.isAskingForAbilitySelectables = false;
+            
+            sm.ServerSideSetAbilitySelectableHexes(currentPlayer.unitMovementUnit);
+        }
+        
+        private void OnAbilityResolveAsked()
+        {
+            currentPlayer.isAskingForAbilityResolve = false;
+            
+            sm.ServerSideAbilityResolve(currentPlayer.castingUnit, currentPlayer.selectedHexesForAbility, currentPlayer);
         }
 
         private void EndTurn()

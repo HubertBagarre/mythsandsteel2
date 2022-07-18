@@ -110,7 +110,7 @@ namespace PlayerStates
             if (sm.accessibleHexes.Contains(selectedHex) && selectedHex != startingHex && selectedHex.currentUnit == null)
             {
                 sm.SetUnitMovementHex(selectedHex);
-                sm.ChangeState(sm.unitMovingState);
+                sm.ChangeState(sm.unitInAnimationState);
             }
             else if (sm.attackableHexes.Contains(selectedHex))
             {
@@ -127,7 +127,7 @@ namespace PlayerStates
             sm.attackingUnit = movingUnit;
             sm.attackedUnit = hex.currentUnit;
             sm.CmdSetAttackingUnits(movingUnit,hex.currentUnit);
-            sm.ChangeState(sm.unitMovingState);
+            sm.ChangeState(sm.unitInAnimationState);
         }
 
         public override void Exit()

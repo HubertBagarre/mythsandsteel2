@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Mirror;
@@ -10,7 +11,7 @@ public class PlayerSM : StateMachine
     public PlayerMovementSelection movementSelectionState;
     public PlayerAbilitySelection abilitySelectionState;
     public PlayerInactiveState inactiveState;
-    public PlayerUnitMovingState unitMovingState;
+    public PlayerUnitInAnimationState unitInAnimationState;
 
     [Header("Network")] [SyncVar] public int playerId;
     [SyncVar(hook = nameof(OnCanInputValueChanged))] public bool canSendInfo;
@@ -29,6 +30,10 @@ public class PlayerSM : StateMachine
     [Header("Unit Ability")]
     public readonly SyncHashSet<Hex> abilitySelectableHexes = new();
     [SyncVar] public byte abilityIndexToUse;
+    [SyncVar] public Unit castingUnit;
+    [SyncVar] public bool isAskingForAbilityResolve;
+    public readonly SyncHashSet<Hex> selectedHexesForAbility = new();
+
 
     [Header("Unit Attack")]
     [SyncVar] public Unit attackingUnit;
@@ -58,6 +63,7 @@ public class PlayerSM : StateMachine
     [SyncVar] public bool isAskingForAttackResolve;
     [SyncVar] public bool isAskingForAbilitySelectables;
     [SyncVar(hook = nameof(OnAbilitySelectablesReceivedValueChange))] public bool abilitySelectablesReceived;
+    [SyncVar] public bool unitAbilityAnimationDone;
     [SyncVar] public bool unitMovementAnimationDone;
     [SyncVar] public bool unitAttackAnimationDone;
     [SyncVar] public bool turnIsOver;
@@ -67,7 +73,7 @@ public class PlayerSM : StateMachine
     
     [Header("Actions")]
     [SyncVar] public int maxActions;
-    [SyncVar(hook = nameof(OnActionsLeftValueChanged))] public int actionsLeft;
+    [SyncVar(hook = nameof(OnActionsLeftValueChanged))] public int unitsToActivate;
     [SyncVar] public int faith;
     [SyncVar] public int victoryPoints;
     
@@ -78,7 +84,7 @@ public class PlayerSM : StateMachine
         movementSelectionState = new PlayerMovementSelection(this);
         abilitySelectionState = new PlayerAbilitySelection(this);
         inactiveState = new PlayerInactiveState(this);
-        unitMovingState = new PlayerUnitMovingState(this);
+        unitInAnimationState = new PlayerUnitInAnimationState(this);
         
         inputManager = PlayerInputManager.instance;
     }
@@ -107,6 +113,9 @@ public class PlayerSM : StateMachine
         accessibleHexesReceived = false;
         isAskingForUnitMovement = false;
         isAskingForAttackResolve = false;
+        isAskingForAbilitySelectables = false;
+        abilitySelectablesReceived = false;
+        unitAbilityAnimationDone = false;
         unitMovementAnimationDone = false;
         turnIsOver = false;
     }
@@ -314,7 +323,7 @@ public class PlayerSM : StateMachine
     
     public void ServerMoveUnit(Unit unitToMove, Hex[] path)
     {
-        if(!unitToMove.hasBeenActivated) actionsLeft--;
+        if(!unitToMove.hasBeenActivated) unitsToActivate--;
         unitToMove.hasBeenActivated = true;
         StartCoroutine(MoveUnitRoutine(unitToMove, path));
     }
@@ -391,7 +400,7 @@ public class PlayerSM : StateMachine
 
     public void ServerAttackResolve(Unit attacking,Unit attacked)
     {
-        if(!attacking.hasBeenActivated) actionsLeft--;
+        if(!attacking.hasBeenActivated) unitsToActivate--;
         attacking.hasBeenActivated = true;
         attacking.move = 0;
         attacking.canUseAbility = false;
@@ -451,13 +460,27 @@ public class PlayerSM : StateMachine
     public void TryToLaunchAbility()
     {
         if(currentState != abilitySelectionState) return;
+        if(abilitySelectionState.selectionsLeft > 0 || abilitySelectionState.selectedHexes.Count == 0) return;
+        ChangeState(unitInAnimationState);
         CmdTryToUseAbility();
     }
 
     [Command]
+    public void CmdSelectHexForAbility(Hex hex)
+    {
+        if(!selectedHexesForAbility.Contains(hex)) selectedHexesForAbility.Add(hex);
+    }
+    
+    [Command]
+    public void CmdDeselectHexForAbility(Hex hex)
+    {
+        if(selectedHexesForAbility.Contains(hex)) selectedHexesForAbility.Remove(hex);
+    }
+    
+    [Command]
     private void CmdTryToUseAbility()
     {
-        Debug.Log("Ability");
+        isAskingForAbilityResolve = true;
     }
 
     public void DisplayAbilityButton(bool value)
@@ -471,8 +494,9 @@ public class PlayerSM : StateMachine
     }
     
     [Command]
-    public void CmdSetAbilityIndexToUse(byte index)
+    public void CmdSetAbilityIndexToUse(Unit unit,byte index)
     {
+        castingUnit = unit;
         abilityIndexToUse = index;
     }
     
@@ -489,18 +513,6 @@ public class PlayerSM : StateMachine
         abilitySelectablesReceived = false;
     }
     
-    public void OnAbilitySelectableReceived()
-    {
-        if(!isLocalPlayer) return;
-        
-        foreach (var hex in allHexes)
-        {
-            var color = abilitySelectableHexes.Contains(hex) ? Hex.HexColors.Selectable : Hex.HexColors.Unselectable;
-            hex.ChangeHexColor(color);
-        }
-        
-    }
-    
     public void SetAbilitySelectables(IEnumerable<Hex> hexes)
     {
         abilitySelectableHexes.Clear();
@@ -514,8 +526,54 @@ public class PlayerSM : StateMachine
     }
 
     #endregion
-
     
+    #region Unit Ability Resolve
+    
+    [Command]
+    public void CmdResetAbilityAnimationDoneTrigger()
+    {
+        unitAbilityAnimationDone = false;
+    }
+    
+    public void ServerAbilityResolve(Unit casting,IEnumerable<Hex> targets)
+    {
+        if(!casting.hasBeenActivated) unitsToActivate--;
+        casting.hasBeenActivated = true;
+        casting.move = 0;
+        casting.canUseAbility = false;
+        StartCoroutine(PlayAbilityAnimationRoutine(casting,casting.abilityScriptable as IAbilityCallBacks,targets));
+    }
+
+    [ClientRpc]
+    public void RpcAbilityResolve(Unit casting,Hex[] targets)
+    {
+        StartCoroutine(PlayAbilityAnimationRoutine(casting,casting.abilityScriptable as IAbilityCallBacks, targets));
+    }
+    
+    private IEnumerator PlayAbilityAnimationRoutine(Unit casting,IAbilityCallBacks ability,IEnumerable<Hex> targets)
+    {
+        Debug.Log("ABILITY ANIMATION ROUTINE");
+        
+        if(isServer) unitAbilityAnimationDone = false;
+        
+        yield return null;
+        
+        //TODO - Play Animation
+        
+        yield return new WaitForSeconds(0.5f);
+        
+        if (isServer)
+        {
+            ability.OnAbilityTargetingHexes(casting,targets,this);
+            castingUnit = null;
+            selectedHexesForAbility.Clear();
+            unitAbilityAnimationDone = true;
+        }
+    }
+    
+    #endregion
+
+
     private void TryToEndTurn()
     {
         if(currentState != idleState) return;
@@ -631,7 +689,7 @@ public class PlayerSM : StateMachine
         {
             inputManager.OnStartTouch += TryToSelectUnitOrTile;
             uiManager.AddButtonListeners(TryToEndTurn,TryToUseAbility,TryToLaunchAbility,ExitAbilitySelection);
-            uiManager.UpdateActionsLeft(actionsLeft);
+            uiManager.UpdateActionsLeft(unitsToActivate);
         }
         else
         {
@@ -654,9 +712,11 @@ public class PlayerSM : StateMachine
         uiManager.UpdateFaithCount(faith);
     }
 
-    public void UpdateAbilitySelectionLeft(string text)
+    public void UpdateAbilitySelectionLeft(int value,string moText)
     {
-        uiManager.UpdateAbilitySelectionText(text);
+        uiManager.UpdateAbilitySelectionText($"{value} {moText}");
+        
+        uiManager.EnableAbilityConfirmButton(value == 0);
     }
     
     [ClientRpc]

@@ -10,14 +10,9 @@ public class TestAbility : ScriptableAbility,IAbilityCallBacks
     {
         return castingUnit.currentHex.GetNeighborsInRange(abilityRange).Where(hex => hex.movementCost != sbyte.MaxValue && !hex.HasUnitOfPlayer(castingUnit.playerId));;
     }
-
-    public void OnAbilityTargetingUnits(Unit castingUnit, IEnumerable<Unit> targetedUnits, sbyte playerId)
+    
+    public void OnAbilityTargetingHexes(Unit castingUnit, IEnumerable<Hex> targetedHexes, PlayerSM player)
     {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnAbilityTargetingHexes(Unit castingUnit, IEnumerable<Hex> targetedHexes, sbyte playerId)
-    {
-        throw new System.NotImplementedException();
+        Debug.Log($"{castingUnit} (of layer {castingUnit.playerId}) is using {name} on {targetedHexes.Count()} target(s)");
     }
 }

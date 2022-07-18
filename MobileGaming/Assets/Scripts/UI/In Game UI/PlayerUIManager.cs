@@ -104,6 +104,11 @@ public class PlayerUIManager : NetworkBehaviour
     {
         abilitySelectionText.text = $"Select {moText}";
     }
+
+    public void EnableAbilityConfirmButton(bool value)
+    {
+        abilityConfirmButton.interactable = value;
+    }
     
     #region Unit Hud
 

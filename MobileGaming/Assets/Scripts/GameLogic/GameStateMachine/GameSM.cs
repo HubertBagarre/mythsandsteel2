@@ -218,7 +218,7 @@ public class GameSM : StateMachine
 
     public void ResetPlayerActions(PlayerSM playerSm)
     {
-        playerSm.actionsLeft = playerSm.maxActions;
+        playerSm.unitsToActivate = playerSm.maxActions;
 
         var hexGrid = HexGrid.instance;
         foreach (var unit in hexGrid.units.Where(unit => unit.playerId == currentPlayer))
@@ -299,6 +299,18 @@ public class GameSM : StateMachine
             player.entitiesToSelect = scriptableAbility.abilityTargetCount;
             player.SetAbilitySelectables(selectableHexes);
         }
+    }
+
+    #endregion
+
+    #region Ability Resolve
+
+    public void ServerSideAbilityResolve(Unit castingUnit, IEnumerable<Hex> targets, PlayerSM player)
+    {
+        var enumerable = targets as Hex[] ?? targets.ToArray();
+        player.ServerAbilityResolve(castingUnit,enumerable);
+        player.RpcAbilityResolve(castingUnit,enumerable);
+        RefreshUnitHuds();
     }
 
     #endregion

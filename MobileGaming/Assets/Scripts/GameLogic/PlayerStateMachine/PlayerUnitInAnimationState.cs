@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace PlayerStates
 {
-    public class PlayerUnitMovingState : BasePlayerState
+    public class PlayerUnitInAnimationState : BasePlayerState
     {
-        public PlayerUnitMovingState(PlayerSM stateMachine) : base(stateMachine)
+        public PlayerUnitInAnimationState(PlayerSM stateMachine) : base(stateMachine)
         {
             sm = stateMachine;
         }
@@ -19,6 +19,12 @@ namespace PlayerStates
             {
                 Debug.Log($"ATTACK MODE");
             }
+
+            if (sm.castingUnit != null)
+            {
+                Debug.Log("ABILITY MODE");
+                return;
+            }
             
             Debug.Log($"Going to move {sm.unitMovementUnit} to {sm.unitMovementHex}");
 
@@ -30,6 +36,7 @@ namespace PlayerStates
             base.UpdateLogic();
             if(sm.unitMovementAnimationDone) OnUnitMovementAnimationDone();
             if(sm.unitAttackAnimationDone) OnUnitAttackAnimationDone();
+            if (sm.unitAbilityAnimationDone) OnUnitAbilityAnimationDone();
             sm.UpdateUnitHud();
         }
         
@@ -51,6 +58,16 @@ namespace PlayerStates
         {
             sm.unitAttackAnimationDone = false;
             sm.CmdResetAttackAnimationDoneTrigger();
+            
+            var movementUnit = sm.unitMovementUnit;
+            sm.ChangeState(sm.idleState);
+            if((movementUnit.attacksLeft>0 && movementUnit.AreEnemyUnitsInRange()) || (movementUnit.move>0 && movementUnit.canUseAbility)) sm.CmdSendUnitClicked(movementUnit);
+        }
+        
+        private void OnUnitAbilityAnimationDone()
+        {
+            sm.unitAbilityAnimationDone = false;
+            sm.CmdResetAbilityAnimationDoneTrigger();
             
             var movementUnit = sm.unitMovementUnit;
             sm.ChangeState(sm.idleState);
