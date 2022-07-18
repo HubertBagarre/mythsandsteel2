@@ -25,6 +25,9 @@ public class PlayerSM : StateMachine
     public readonly SyncDictionary<Unit, Hex> attackableUnitDict = new();
     [SyncVar] public Unit unitMovementUnit;
     [SyncVar] public Hex unitMovementHex;
+    
+    [Header("Unit Ability")]
+    public readonly SyncHashSet<Hex> abilitySelectableHexes = new();
 
     [Header("Unit Attack")]
     [SyncVar] public Unit attackingUnit;
@@ -54,6 +57,7 @@ public class PlayerSM : StateMachine
     [SyncVar] public bool isAskingForAttackResolve;
     [SyncVar] public bool isAskingForAbilitySelectionWithHexes;
     [SyncVar] public bool isAskingForAbilitySelectionWithUnits;
+    [SyncVar(hook = nameof(OnAbilitySelectablesReceivedValueChange))] public bool abilitySelectablesReceived;
     [SyncVar] public bool unitMovementAnimationDone;
     [SyncVar] public bool unitAttackAnimationDone;
     [SyncVar] public bool turnIsOver;
@@ -114,7 +118,7 @@ public class PlayerSM : StateMachine
         currentState = newState;
         currentState.Enter();
         Debug.Log($"Entering {currentState}");
-        RpcChangeDebugText();
+        ChangeDebugText();
     }
 
     #region Raycast Gaming
@@ -257,7 +261,7 @@ public class PlayerSM : StateMachine
     }
 
     [Command]
-    public void ResetAccessibleHexesTrigger()
+    public void CmdResetAccessibleHexesTrigger()
     {
         accessibleHexesReceived = false;
     }
@@ -461,6 +465,24 @@ public class PlayerSM : StateMachine
     {
         uiManager.EnableAbilitySelection(value);
     }
+    
+    [Command]
+    public void CmdResetAbilitySelectableReceivedTrigger()
+    {
+        abilitySelectablesReceived = false;
+    }
+    
+    public void OnAbilitySelectableReceived()
+    {
+        if(!isLocalPlayer) return;
+        
+        foreach (var hex in allHexes)
+        {
+            var color = abilitySelectableHexes.Contains(hex) ? Hex.HexColors.Selectable : Hex.HexColors.Unselectable;
+            hex.ChangeHexColor(color);
+        }
+        
+    }
 
     #endregion
 
@@ -568,6 +590,11 @@ public class PlayerSM : StateMachine
         
     } 
     
+    private void OnAbilitySelectablesReceivedValueChange(bool prevValue,bool newValue)
+    {
+        
+    }
+    
     private void OnCanInputValueChanged(bool prevValue,bool newValue)
     {
         if(!isLocalPlayer) return;
@@ -587,10 +614,22 @@ public class PlayerSM : StateMachine
     #endregion
 
     #region Update UI
-    
-    public void RpcChangeDebugText()
+
+    private void ChangeDebugText()
     {
         uiManager.ChangeDebugText($"Player {playerId}, {currentState}");
+    }
+
+    public void UpdateFaithCount()
+    {
+        uiManager.UpdateFaithCount(faith);
+    }
+    
+    [ClientRpc]
+    public void RpcUpdateFaithCount()
+    {
+        if(!isLocalPlayer) return;
+        UpdateFaithCount();
     }
     
     [ClientRpc]

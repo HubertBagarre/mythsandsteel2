@@ -14,7 +14,7 @@ public class PlayerUIManager : NetworkBehaviour
     [Header("Text")]
     [SerializeField] private TextMeshProUGUI debugText;
     [SerializeField] private TextMeshProUGUI actionsLeftText;
-    [SerializeField] private TextMeshProUGUI faithLeftText;
+    [SerializeField] private TextMeshProUGUI faithCountText;
     
     [Header("Buttons")]
     [SerializeField] private Button nextTurnButton;
@@ -59,6 +59,11 @@ public class PlayerUIManager : NetworkBehaviour
     public void UpdateActionsLeft(int actionsLeft)
     {
         actionsLeftText.text = actionsLeft.ToString();
+    }
+    
+    public void UpdateFaithCount(int faithCount)
+    {
+        faithCountText.text = faithCount.ToString();
     }
 
     public void EnableNextTurnButton(bool value)

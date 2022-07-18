@@ -28,14 +28,14 @@ namespace PlayerStates
             sm.SetUnitMovementUnit(sm.selectedUnit);
             movingUnit = sm.unitMovementUnit;
             
-            if (sm.selectedUnit != null) if(sm.selectedUnit.hasAbility) sm.DisplayAbilityButton(true);
-            
             if (movingUnit == null)
             {
                 Debug.LogWarning("NO UNIT SELECTED, RETURNING TO IDLE");
                 sm.ChangeState(sm.idleState);
                 return;
             }
+            
+            if(movingUnit.hasAbility) sm.DisplayAbilityButton(true);
             
             receivedAccessibleHexesTriggered = false;
             
@@ -133,7 +133,7 @@ namespace PlayerStates
         public override void Exit()
         {
             sm.accessibleHexesReceived = false;
-            sm.ResetAccessibleHexesTrigger();
+            sm.CmdResetAccessibleHexesTrigger();
             foreach (var hex in sm.allHexes)
             {
                 hex.ChangeHexColor(Hex.HexColors.Normal);
