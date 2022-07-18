@@ -2079,6 +2079,7 @@ MonoBehaviour:
   canSendInfo: 0
   unitMovementUnit: {fileID: 0}
   unitMovementHex: {fileID: 0}
+  abilityIndexToUse: 0
   attackingUnit: {fileID: 0}
   attackedUnit: {fileID: 0}
   entitiesToSelect: 0
@@ -2095,8 +2096,8 @@ MonoBehaviour:
   accessibleHexesReceived: 0
   isAskingForUnitMovement: 0
   isAskingForAttackResolve: 0
-  isAskingForAbilitySelectionWithHexes: 0
-  isAskingForAbilitySelectionWithUnits: 0
+  isAskingForAbilitySelectables: 0
+  abilitySelectablesReceived: 0
   unitMovementAnimationDone: 0
   unitAttackAnimationDone: 0
   turnIsOver: 0
@@ -2121,7 +2122,8 @@ MonoBehaviour:
   canvas: {fileID: 550449216894022927}
   debugText: {fileID: 4446024842820702547}
   actionsLeftText: {fileID: 3285862482596198323}
-  faithLeftText: {fileID: 4249499800478336883}
+  faithCountText: {fileID: 4249499800478336883}
+  abilitySelectionText: {fileID: 1958069496378880377}
   nextTurnButton: {fileID: 2857102830461403761}
   abilityButton: {fileID: 6686363987340604797}
   abilityConfirmButton: {fileID: 1596353689079473367}

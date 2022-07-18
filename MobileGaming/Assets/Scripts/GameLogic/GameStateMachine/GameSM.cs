@@ -296,6 +296,7 @@ public class GameSM : StateMachine
             var selectableHexes = abilityCallback.AbilitySelectables(castingUnit);                                 
         
             var player = players[castingUnit.playerId];
+            player.entitiesToSelect = scriptableAbility.abilityTargetCount;
             player.SetAbilitySelectables(selectableHexes);
         }
     }

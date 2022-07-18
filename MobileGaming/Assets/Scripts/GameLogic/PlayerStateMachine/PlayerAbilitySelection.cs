@@ -73,6 +73,9 @@ namespace PlayerStates
         {
             var selectableHexes = scriptableAbilityCallbacks.AbilitySelectables(castingUnit);
             
+            sm.entitiesToSelect = scriptableAbility.abilityTargetCount;
+            UpdateAbilitySelectionText();
+            
             foreach (var hex in selectableHexes)
             {
                 hex.ChangeHexColor(Hex.HexColors.Selected);
@@ -89,10 +92,22 @@ namespace PlayerStates
         private void OnAbilitySelectablesReceived()
         {
             receivedSelectablesForAbilityTrigger = true;
+
+            selectionsLeft = sm.entitiesToSelect;
+
+            UpdateAbilitySelectionText();
+            
             foreach (var hex in sm.abilitySelectableHexes)                                             
             {                                                                                
                 hex.ChangeHexColor(Hex.HexColors.Selectable);                                  
-            }                                                                                
+            }                     
+        }
+
+        private void UpdateAbilitySelectionText()
+        {
+            var moText = scriptableAbility.abilityTargetHexes ? "Tile" : "Unit";
+            if (selectionsLeft > 1) moText += "s";
+            sm.UpdateAbilitySelectionLeft($"{selectionsLeft} {moText}");
         }
 
         public override void Exit()

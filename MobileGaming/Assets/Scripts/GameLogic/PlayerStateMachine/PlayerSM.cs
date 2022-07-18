@@ -509,7 +509,6 @@ public class PlayerSM : StateMachine
         {
             abilitySelectableHexes.Add(hex);
         }
-        
         abilitySelectablesReceived = true;
         Debug.Log("Received Hexes");
     }
@@ -653,6 +652,11 @@ public class PlayerSM : StateMachine
     public void UpdateFaithCount()
     {
         uiManager.UpdateFaithCount(faith);
+    }
+
+    public void UpdateAbilitySelectionLeft(string text)
+    {
+        uiManager.UpdateAbilitySelectionText(text);
     }
     
     [ClientRpc]

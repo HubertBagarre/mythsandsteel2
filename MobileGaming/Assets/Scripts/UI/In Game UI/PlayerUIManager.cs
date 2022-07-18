@@ -15,6 +15,7 @@ public class PlayerUIManager : NetworkBehaviour
     [SerializeField] private TextMeshProUGUI debugText;
     [SerializeField] private TextMeshProUGUI actionsLeftText;
     [SerializeField] private TextMeshProUGUI faithCountText;
+    [SerializeField] private TextMeshProUGUI abilitySelectionText;
     
     [Header("Buttons")]
     [SerializeField] private Button nextTurnButton;
@@ -98,7 +99,12 @@ public class PlayerUIManager : NetworkBehaviour
         abilityConfirmButton.onClick.RemoveListener(confirmAbilityAction);
         abilityCancelButton.onClick.RemoveListener(cancelAbilityAction);
     }
-
+    
+    public void UpdateAbilitySelectionText(string moText)
+    {
+        abilitySelectionText.text = $"Select {moText}";
+    }
+    
     #region Unit Hud
 
     public void RefreshUnitOutlines(IEnumerable<Unit> allUnits,int playerId)
@@ -129,6 +135,4 @@ public class PlayerUIManager : NetworkBehaviour
     }
 
     #endregion
-    
-    
 }
