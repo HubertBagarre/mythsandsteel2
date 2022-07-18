@@ -26,14 +26,8 @@ public class Unit : NetworkBehaviour
     [SyncVar] public sbyte baseMagicDamage;
     [SyncVar] public sbyte baseRange;
     [SyncVar] public sbyte baseMove;
-
-    [Header("Ability")]
-    [SyncVar] public bool hasAbility;
-    [SyncVar] public bool abilityTargetHexes;
-    [SyncVar] public byte abilityTargetCount;
-    [SyncVar] public byte abilityRange;
+    public bool hasAbility => abilityScriptable != null;
     
-
     [Header("Current Stats")]
     [SyncVar] public sbyte maxHp;
     [SyncVar] public sbyte currentHp;
@@ -53,12 +47,10 @@ public class Unit : NetworkBehaviour
     public Outline outlineScript;
 
     [Header("Scriptables")]
-    [SyncVar] public byte unitScriptableId;
+    [SyncVar(hook = nameof(OnScriptableUnitIdChange))] public byte unitScriptableId;
     public ScriptableUnit unitScriptable;
-    public ScriptableAbility attackAbility;
+    [SyncVar(hook = nameof(OnScriptableAbilityIdChange))] public byte abilityScriptableId;
     public ScriptableAbility abilityScriptable;
-    
-
     
     public void ResetUnitStats()
     {
@@ -96,11 +88,9 @@ public class Unit : NetworkBehaviour
         baseRange = unitScriptable.baseRange;
         baseMove = unitScriptable.baseMove;
 
-        hasAbility = unitScriptable.hasAbility;
-        abilityTargetHexes = unitScriptable.abilityTargetHexes;
-        abilityTargetCount = unitScriptable.abilityTargetCount;
-        abilityRange = unitScriptable.abilityRange;
-        
+        abilityScriptableId = unitScriptable.abilityScriptableId;
+        abilityScriptable = ObjectIDList.instance.abilities[abilityScriptableId];
+
         ResetUnitStats();
     }
     
@@ -195,6 +185,16 @@ public class Unit : NetworkBehaviour
         if(newHex == null) return;
         if(previousHex != null) previousHex.OnUnitExit(this);
         newHex.OnUnitEnter(this);
+    }
+
+    private void OnScriptableUnitIdChange(byte prevId,byte newId)
+    {
+        unitScriptable = ObjectIDList.instance.units[newId];
+    }
+    
+    private void OnScriptableAbilityIdChange(byte prevId,byte newId)
+    {
+        abilityScriptable = ObjectIDList.instance.abilities[newId];
     }
 
     #endregion

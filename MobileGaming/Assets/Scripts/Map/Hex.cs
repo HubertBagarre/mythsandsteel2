@@ -72,6 +72,12 @@ public class Hex : NetworkBehaviour
         return bfsResult.hexesInRange;
     }
 
+    public bool HasUnitOfPlayer(sbyte player)
+    {
+        if (currentUnit == null) return false;
+        return currentUnit.playerId == player;
+    }
+
     public void ApplyTileServer(int tileID)
     {
         ApplyTile(tileID);

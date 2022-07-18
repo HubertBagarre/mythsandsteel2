@@ -28,6 +28,7 @@ public class PlayerSM : StateMachine
     
     [Header("Unit Ability")]
     public readonly SyncHashSet<Hex> abilitySelectableHexes = new();
+    [SyncVar] public byte abilityIndexToUse;
 
     [Header("Unit Attack")]
     [SyncVar] public Unit attackingUnit;
@@ -229,7 +230,7 @@ public class PlayerSM : StateMachine
     #region Unit Accessible Hexes For Movement
     
     [Command]
-    public void GetAccessibleHexesForUnitMovement()
+    public void CmdGetAccessibleHexesForUnitMovement()
     {
         isAskingForAccessibleHexesForUnitMovement = true;
         accessibleHexesReceived = false;
@@ -442,6 +443,10 @@ public class PlayerSM : StateMachine
     {
         if(currentState != abilitySelectionState) return;
         ChangeState(idleState);
+        if (selectedUnit != null)
+        {
+            if(selectedUnit.move > 0 || selectedUnit.attacksLeft > 0) SendUnitClicked(selectedUnit);
+        }
     }
 
     public void TryToLaunchAbility()
@@ -464,6 +469,20 @@ public class PlayerSM : StateMachine
     public void DisplayAbilityConfirmPanel(bool value)
     {
         uiManager.EnableAbilitySelection(value);
+    }
+    
+    [Command]
+    public void CmdSetAbilityIndexToUse(byte index)
+    {
+        abilityIndexToUse = index;
+    }
+    
+    [Command]
+    public void CmdGetAbilitySelectables(bool targetHexes)
+    {
+        isAskingForAbilitySelectionWithHexes = targetHexes;    
+        isAskingForAbilitySelectionWithUnits = !targetHexes;   
+        abilitySelectablesReceived = false;
     }
     
     [Command]

@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bd13bff01f728c46987d84eec33b25b, type: 3}
   m_Name: Karbantos
   m_EditorClassIdentifier: 
-  unitName: Karbantos
+  unitName: Lilu-Angal
   faction: ff
-  className: ta mer
+  className: Infantry
   baseMaxHp: 12
   basePhysicDef: 0
   baseMagicDef: 0
@@ -22,13 +22,10 @@ MonoBehaviour:
   baseDamage: 6
   baseRange: 2
   baseMove: 3
-  hasAbility: 1
-  abilityTargetHexes: 0
-  abilityTargetCount: 1
-  abilityRange: 3
-  idle: {fileID: 0}
-  movement: {fileID: 0}
-  attack: {fileID: 0}
-  ability: {fileID: 0}
-  takeDamage: {fileID: 0}
-  death: {fileID: 0}
+  abilityScriptableId: 1
+  idleAnimation: {fileID: 0}
+  movementAnimation: {fileID: 0}
+  attackAnimation: {fileID: 0}
+  abilityAnimation: {fileID: 0}
+  takeDamageAnimation: {fileID: 0}
+  deathAnimation: {fileID: 0}

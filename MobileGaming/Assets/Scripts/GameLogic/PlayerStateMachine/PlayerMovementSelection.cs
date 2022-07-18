@@ -35,7 +35,7 @@ namespace PlayerStates
                 return;
             }
             
-            if(movingUnit.hasAbility) sm.DisplayAbilityButton(true);
+            if(movingUnit.hasAbility && movingUnit.canUseAbility) sm.DisplayAbilityButton(true);
             
             receivedAccessibleHexesTriggered = false;
             
@@ -46,19 +46,19 @@ namespace PlayerStates
 
             ClientSideSetAccessibleHexesNew(movingUnit);
             
-            sm.GetAccessibleHexesForUnitMovement();
+            sm.CmdGetAccessibleHexesForUnitMovement();
         }
         
         private void ClientSideSetAccessibleHexesNew(Unit unitToGetAccessibleHexes)
         {
             var enemyUnits = sm.allUnits.Where(unit => unit.playerId != unitToGetAccessibleHexes.playerId);
             var bfsResult = GraphSearch.BFSGetRange(unitToGetAccessibleHexes,enemyUnits,unitToGetAccessibleHexes.attacksLeft > 0);
-            var returnHexes = bfsResult.hexesInRange;
+            var returnHexes = bfsResult.hexesInRange.Where(hex => !hex.HasUnitOfPlayer(0) && !hex.HasUnitOfPlayer(1));
             var attackableUnits = bfsResult.attackableUnits;
         
             foreach (var hex in returnHexes)
             {
-                hex.ChangeHexColor(Hex.HexColors.Selected);
+                hex.ChangeHexColor(Hex.HexColors.Selectable);
             }
 
             foreach (var unit in attackableUnits)

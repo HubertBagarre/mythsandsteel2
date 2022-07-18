@@ -9,7 +9,10 @@ namespace PlayerStates
     {
         private Unit abilityCastingUnit;
         private bool receivedSelectablesForAbility;
-        
+        private int selectionsLeft;
+        private ScriptableAbility scriptableAbility;
+        private IAbilityCallBacks scriptableAbilityCallbacks;
+
         public PlayerAbilitySelection(PlayerSM stateMachine) : base(stateMachine)
         {
             sm = stateMachine;
@@ -20,7 +23,7 @@ namespace PlayerStates
             base.Enter();
 
             abilityCastingUnit = sm.selectedUnit;
-                
+
             if (abilityCastingUnit == null)
             {
                 Debug.LogWarning("NO UNIT SELECTED, RETURNING TO IDLE");
@@ -35,9 +38,23 @@ namespace PlayerStates
                 return;
             }
             
-            sm.isAskingForAbilitySelectionWithHexes = abilityCastingUnit.abilityTargetHexes;
-            sm.isAskingForAbilitySelectionWithUnits = !abilityCastingUnit.abilityTargetHexes;
+            sm.abilityIndexToUse = abilityCastingUnit.abilityScriptableId;        
+            sm.CmdSetAbilityIndexToUse(abilityCastingUnit.abilityScriptableId);
+            scriptableAbility = ObjectIDList.instance.abilities[sm.abilityIndexToUse];
             
+            if(scriptableAbility is not IAbilityCallBacks casted)
+            {
+                Debug.LogWarning("SELECTED UNIT ABILITY AS NO INTERFACE, RETURNING TO IDLE");
+                sm.ChangeState(sm.idleState);
+                return;
+            }
+            
+            scriptableAbilityCallbacks = casted;
+            
+            selectionsLeft = scriptableAbility.abilityTargetCount;
+            
+            sm.isAskingForAbilitySelectionWithHexes = scriptableAbility.abilityTargetHexes;
+            sm.isAskingForAbilitySelectionWithUnits = !scriptableAbility.abilityTargetHexes;
             
             sm.DisplayAbilityConfirmPanel(true);
 
@@ -50,15 +67,17 @@ namespace PlayerStates
 
             ClientSideSetAbilitySelectable(abilityCastingUnit);
             
-            sm.GetAccessibleHexesForUnitMovement();
+            sm.CmdGetAbilitySelectables(scriptableAbility.abilityTargetHexes);
         }
 
-        private void ClientSideSetAbilitySelectable(Unit unitToGetAbilitySelectables)
+        private void ClientSideSetAbilitySelectable(Unit castingUnit)
         {
-            //fonction on ScriptableAbility, put everything ability related in scriptableAbility, add scriptableAbilities to objectsID
+            var selectableHexes = scriptableAbilityCallbacks.AbilitySelectables(castingUnit);
             
-            var enemyUnits = sm.allUnits.Where(unit => unit.playerId != unitToGetAbilitySelectables.playerId);
-            
+            foreach (var hex in selectableHexes)
+            {
+                hex.ChangeHexColor(Hex.HexColors.Selectable);
+            }
         }
 
         public override void Exit()
@@ -66,7 +85,7 @@ namespace PlayerStates
             base.Exit();
             
             sm.abilitySelectablesReceived = false;
-            sm.CmdResetAccessibleHexesTrigger();
+            sm.CmdResetAbilitySelectableReceivedTrigger();
             
             sm.DisplayAbilityConfirmPanel(false);
             sm.DisplayAbilityButton(false);

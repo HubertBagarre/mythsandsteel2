@@ -7,6 +7,8 @@ public class ObjectIDList : MonoBehaviour
 {
     public List<ScriptableUnit> units;
     public List<ScriptableTile> tiles;
+    public List<ScriptableAbility> abilities;
+    
 
     public static ObjectIDList instance;
     
