@@ -110,6 +110,18 @@ namespace PlayerStates
             sm.UpdateAbilitySelectionLeft($"{selectionsLeft} {moText}");
         }
 
+        protected override void OnHexClicked()
+        {
+            base.OnHexClicked();
+            
+        }
+
+        protected override void OnUnitClicked()
+        {
+            base.OnUnitClicked();
+            
+        }
+
         public override void Exit()
         {
             base.Exit();
