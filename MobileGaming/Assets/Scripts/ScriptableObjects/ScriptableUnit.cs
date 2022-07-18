@@ -20,8 +20,10 @@ public class ScriptableUnit : ScriptableObject
     public sbyte baseMove;
 
     [Header("Abilities")]
-    public ScriptableAbility abilityScriptable;
-    public ScriptableAbility damageModifier;
+    public bool hasAbility;
+    public bool abilityTargetHexes;
+    public byte abilityTargetCount;
+    public byte abilityRange;
 
     [Header("Animations")]
     public Animation idle;

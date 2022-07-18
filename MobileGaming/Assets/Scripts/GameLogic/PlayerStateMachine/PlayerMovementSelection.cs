@@ -28,7 +28,7 @@ namespace PlayerStates
             sm.SetUnitMovementUnit(sm.selectedUnit);
             movingUnit = sm.unitMovementUnit;
             
-            sm.DisplayAbilityButton(true);
+            if (sm.selectedUnit != null) if(sm.selectedUnit.hasAbility) sm.DisplayAbilityButton(true);
             
             if (movingUnit == null)
             {
@@ -83,7 +83,7 @@ namespace PlayerStates
         protected override void OnNothingClicked()
         {
             base.OnNothingClicked();
-            sm.ChangeState(sm.idleState);
+            sm.LateExitMovementSelection();
         }
 
         protected override void OnUnitClicked()

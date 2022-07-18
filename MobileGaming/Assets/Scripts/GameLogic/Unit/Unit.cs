@@ -3,31 +3,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
-using NaughtyAttributes;
 
 public class Unit : NetworkBehaviour
 {
     [Header("Identification")]
     public string unitName;
     [SyncVar] public sbyte playerId;
-    //[SyncVar] public sbyte hexGridIndex;
-    
+
     [Header("Position")]
     [SyncVar] public sbyte hexCol;
     [SyncVar] public sbyte hexRow;
     [SyncVar(hook = nameof(OnHexChange))] public Hex currentHex;
 
     [Header("Base Stats")]
-    [SyncVar,ReadOnly] public string faction;
-    [SyncVar,ReadOnly] public string className;
-    [SyncVar,ReadOnly] public sbyte baseMaxHp;
-    [SyncVar,ReadOnly] public sbyte basePhysicDef;
-    [SyncVar,ReadOnly] public sbyte baseMagicDef;
-    [SyncVar,ReadOnly] public sbyte baseAtkPerTurn;
-    [SyncVar,ReadOnly] public sbyte baseAttackDamage;
-    [SyncVar,ReadOnly] public sbyte baseMagicDamage;
-    [SyncVar,ReadOnly] public sbyte baseRange;
-    [SyncVar,ReadOnly] public sbyte baseMove;
+    [SyncVar] public string faction;
+    [SyncVar] public string className;
+    [SyncVar] public sbyte baseMaxHp;
+    [SyncVar] public sbyte basePhysicDef;
+    [SyncVar] public sbyte baseMagicDef;
+    [SyncVar] public sbyte baseAtkPerTurn;
+    [SyncVar] public sbyte baseAttackDamage;
+    [SyncVar] public sbyte baseMagicDamage;
+    [SyncVar] public sbyte baseRange;
+    [SyncVar] public sbyte baseMove;
+
+    [Header("Ability")]
+    [SyncVar] public bool hasAbility;
+    [SyncVar] public bool abilityTargetHexes;
+    [SyncVar] public byte abilityTargetCount;
+    [SyncVar] public byte abilityRange;
+    
 
     [Header("Current Stats")]
     [SyncVar] public sbyte maxHp;
@@ -46,8 +51,9 @@ public class Unit : NetworkBehaviour
     [Header("Components")]
     public NetworkAnimator animator;
     public Outline outlineScript;
-    
+
     [Header("Scriptables")]
+    [SyncVar] public byte unitScriptableId;
     public ScriptableUnit unitScriptable;
     public ScriptableAbility attackAbility;
     public ScriptableAbility abilityScriptable;
@@ -69,8 +75,13 @@ public class Unit : NetworkBehaviour
         canUseAbility = true;
     }
 
-    public void LinkUnitScriptable(ScriptableUnit newUnitScriptable)
+    public void LinkUnitScriptable(byte id)
     {
+        if (id > ObjectIDList.instance.units.Count) id = 0;
+        unitScriptableId = id;
+        
+        Debug.Log($"Applying unit {unitScriptableId} ({ObjectIDList.instance.units[unitScriptableId].name})");
+        var newUnitScriptable = ObjectIDList.instance.units[unitScriptableId];
         unitScriptable = newUnitScriptable;
 
         unitName = unitScriptable.unitName;
@@ -84,6 +95,11 @@ public class Unit : NetworkBehaviour
         baseMagicDamage = 0;
         baseRange = unitScriptable.baseRange;
         baseMove = unitScriptable.baseMove;
+
+        hasAbility = unitScriptable.hasAbility;
+        abilityTargetHexes = unitScriptable.abilityTargetHexes;
+        abilityTargetCount = unitScriptable.abilityTargetCount;
+        abilityRange = unitScriptable.abilityRange;
         
         ResetUnitStats();
     }

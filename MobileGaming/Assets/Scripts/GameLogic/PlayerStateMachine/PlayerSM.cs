@@ -274,6 +274,17 @@ public class PlayerSM : StateMachine
         }
         
     }
+
+    public void LateExitMovementSelection()
+    {
+        StartCoroutine(ExitMovementSelectionRoutine());
+    }
+
+    private IEnumerator ExitMovementSelectionRoutine()
+    {
+        yield return new WaitForSeconds(0.1f);
+        if(currentState == movementSelectionState) ChangeState(idleState);
+    }
     
     #endregion
 
@@ -416,8 +427,11 @@ public class PlayerSM : StateMachine
 
     private void TryToUseAbility()
     {
-        if(currentState != idleState || currentState != movementSelectionState) return;
-        ChangeState(abilitySelectionState);
+        if (currentState == idleState || currentState == movementSelectionState)
+        {
+            ChangeState(abilitySelectionState);
+        }
+        
     }
 
     public void ExitAbilitySelection()

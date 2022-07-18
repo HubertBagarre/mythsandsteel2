@@ -12,9 +12,9 @@ namespace PlayerStates
         public override void Enter()
         {
             base.Enter();
-            
+
             sm.DisplayAbilityButton(false);
-            
+
             sm.UpdateUnitHud();
 
             sm.CmdCheckVictoryConditions();

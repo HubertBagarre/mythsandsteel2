@@ -46,7 +46,7 @@ public class NetworkSpawner
         }
     }
 
-    public static void SpawnUnit(Unit unit,Vector2 position, sbyte player)
+    public static void SpawnUnit(byte unitId,Vector2 position, sbyte player)
     {
         var unitObject = Object.Instantiate(((NewNetworkRoomManager) NetworkManager.singleton).unitPrefab,
             Vector3.zero, Quaternion.identity);
@@ -55,7 +55,8 @@ public class NetworkSpawner
         spawnedUnit.hexRow = Convert.ToSByte(position.x);
         spawnedUnit.hexCol = Convert.ToSByte(position.y);
         spawnedUnit.playerId = player;
-        spawnedUnit.LinkUnitScriptable(spawnedUnit.unitScriptable);
+        spawnedUnit.unitScriptableId = unitId;
+        spawnedUnit.LinkUnitScriptable(spawnedUnit.unitScriptableId);
         HexGrid.instance.units.Add(spawnedUnit);
         NetworkServer.Spawn(unitObject);
     }
@@ -69,7 +70,8 @@ public class NetworkSpawner
         spawnedUnit.hexRow = Convert.ToSByte(position.x);
         spawnedUnit.hexCol = Convert.ToSByte(position.y);
         spawnedUnit.playerId = player;
-        spawnedUnit.LinkUnitScriptable(spawnedUnit.unitScriptable);
+        spawnedUnit.unitScriptableId = 1;
+        spawnedUnit.LinkUnitScriptable(spawnedUnit.unitScriptableId);
         HexGrid.instance.units.Add(spawnedUnit);
         NetworkServer.Spawn(unitObject);
     }
