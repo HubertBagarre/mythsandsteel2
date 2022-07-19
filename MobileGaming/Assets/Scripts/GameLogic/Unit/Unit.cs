@@ -40,6 +40,7 @@ public class Unit : NetworkBehaviour
     [SyncVar] public sbyte attackDamage;
     [SyncVar] public sbyte attackRange;
     [SyncVar] public sbyte move;
+    [SyncVar] public sbyte currentAbilityCost;
     [SyncVar] public bool hasBeenActivated;
     [SyncVar] public bool canUseAbility;
 
@@ -91,6 +92,7 @@ public class Unit : NetworkBehaviour
 
         abilityScriptableId = unitScriptable.abilityScriptableId;
         abilityScriptable = ObjectIDList.instance.abilities[abilityScriptableId];
+        currentAbilityCost = Convert.ToSByte((abilityScriptableId == 0) ? 0 : abilityScriptable.baseCost);
 
         ResetUnitStats();
     }

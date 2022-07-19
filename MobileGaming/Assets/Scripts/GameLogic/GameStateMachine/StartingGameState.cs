@@ -16,6 +16,11 @@ namespace GameStates
         public override void Enter()
         {
             sm.StartGenerationRoutine();
+            
+            foreach (var player in sm.players)
+            {
+                player.faith = 0;
+            }
         }
 
         public override void UpdateLogic()

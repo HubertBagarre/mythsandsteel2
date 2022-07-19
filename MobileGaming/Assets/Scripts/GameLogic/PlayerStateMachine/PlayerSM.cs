@@ -49,8 +49,8 @@ public class PlayerSM : StateMachine
     [SyncVar] public Unit selectedUnit;
     [SyncVar] public Hex selectedHex;
 
-    [Header("Inputs")] private PlayerInputManager inputManager;
-    
+    [Header("Inputs")]
+    private PlayerInputManager inputManager;
     [SerializeField] private LayerMask layersToHit;
     
     [Header("Trigger Bools")]
@@ -67,14 +67,13 @@ public class PlayerSM : StateMachine
     [SyncVar] public bool unitMovementAnimationDone;
     [SyncVar] public bool unitAttackAnimationDone;
     [SyncVar] public bool turnIsOver;
-    
-    
+
     private Camera cam;
     
     [Header("Actions")]
     [SyncVar] public int maxActions;
     [SyncVar(hook = nameof(OnActionsLeftValueChanged))] public int unitsToActivate;
-    [SyncVar] public int faith;
+    [SyncVar(hook = nameof(OnFaithValueChanged))] public int faith;
     [SyncVar] public int victoryPoints;
     
     
@@ -573,6 +572,12 @@ public class PlayerSM : StateMachine
     
     #endregion
 
+    #region Faith Gestion
+
+    
+    
+
+    #endregion
 
     private void TryToEndTurn()
     {
@@ -670,6 +675,11 @@ public class PlayerSM : StateMachine
     private void OnActionsLeftValueChanged(int prevValue, int newValue)
     {
         uiManager.UpdateActionsLeft(newValue);
+    }
+
+    private void OnFaithValueChanged(int prevValue, int newValue)
+    {
+        UpdateFaithCount();
     }
 
     private void OnAccessibleHexesReceivedValueChange(bool prevValue,bool newValue)

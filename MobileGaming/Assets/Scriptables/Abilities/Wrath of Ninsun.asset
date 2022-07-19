@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd80023863930dc4b81dadfa5fb32303, type: 3}
   m_Name: Wrath of Ninsun
   m_EditorClassIdentifier: 
+  baseCost: 5
   abilityTargetHexes: 1
   abilityTargetCount: 2
   abilityRange: 3

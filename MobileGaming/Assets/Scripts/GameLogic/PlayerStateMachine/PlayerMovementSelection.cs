@@ -34,8 +34,12 @@ namespace PlayerStates
                 sm.ChangeState(sm.idleState);
                 return;
             }
-            
-            if(movingUnit.hasAbility && movingUnit.canUseAbility) sm.DisplayAbilityButton(true);
+
+            if (movingUnit.hasAbility && movingUnit.canUseAbility)
+            {
+                Debug.Log($"{sm.selectedUnit.abilityScriptable.name} costs {sm.selectedUnit.currentAbilityCost} faith. You have {sm.faith}");
+                if(sm.selectedUnit.currentAbilityCost <= sm.faith) sm.DisplayAbilityButton(true);
+            }
             
             receivedAccessibleHexesTriggered = false;
             
