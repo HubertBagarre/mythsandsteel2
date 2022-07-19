@@ -19,7 +19,7 @@ namespace GameStates
             
             foreach (var player in sm.players)
             {
-                player.faith = 0;
+                player.faith = 99;
             }
         }
 

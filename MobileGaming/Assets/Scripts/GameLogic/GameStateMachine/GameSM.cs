@@ -310,6 +310,7 @@ public class GameSM : StateMachine
         var enumerable = targets as Hex[] ?? targets.ToArray();
         if (castingUnit.currentAbilityCost <= player.faith)
         {
+            player.faith -= castingUnit.currentAbilityCost;
             player.ServerAbilityResolve(castingUnit,enumerable);
             player.RpcAbilityResolve(castingUnit,enumerable);
         }
