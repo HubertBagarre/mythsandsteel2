@@ -22,7 +22,7 @@ namespace PlayerStates
         {
             base.Enter();
             
-            sm.UpdateUnitHud();
+            sm.UIUpdateUnitHud();
             
             sm.unitMovementUnit = sm.selectedUnit;
             sm.SetUnitMovementUnit(sm.selectedUnit);
@@ -143,7 +143,7 @@ namespace PlayerStates
                 hex.ChangeHexColor(Hex.HexColors.Normal);
             }
             
-            sm.UpdateUnitHud();
+            sm.UIUpdateUnitHud();
         }
     }
 

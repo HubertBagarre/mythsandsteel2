@@ -113,7 +113,7 @@ namespace PlayerStates
         {
             var moText = scriptableAbility.abilityTargetHexes ? "Tile" : "Unit";
             if (selectionsLeft > 1) moText += "s";
-            sm.UpdateAbilitySelectionLeft(selectionsLeft,moText);
+            sm.UIUpdateAbilitySelectionLeft(selectionsLeft,moText);
         }
 
         private void SelectHexForAbility(Hex hex)

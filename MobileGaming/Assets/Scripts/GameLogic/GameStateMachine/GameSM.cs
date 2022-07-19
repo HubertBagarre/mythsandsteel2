@@ -308,8 +308,17 @@ public class GameSM : StateMachine
     public void ServerSideAbilityResolve(Unit castingUnit, IEnumerable<Hex> targets, PlayerSM player)
     {
         var enumerable = targets as Hex[] ?? targets.ToArray();
-        player.ServerAbilityResolve(castingUnit,enumerable);
-        player.RpcAbilityResolve(castingUnit,enumerable);
+        if (castingUnit.currentAbilityCost <= player.faith)
+        {
+            player.ServerAbilityResolve(castingUnit,enumerable);
+            player.RpcAbilityResolve(castingUnit,enumerable);
+        }
+        else
+        {
+            Debug.Log($"Player {player.playerId} tried to cast an ability that costs {castingUnit.currentAbilityCost}, but he only has {player.faith}");
+            player.unitAbilityAnimationDone = true;
+            player.castingUnit = null;
+        }
         RefreshUnitHuds();
     }
 
@@ -340,7 +349,7 @@ public class GameSM : StateMachine
     {
         foreach (var player in players)
         {
-            player.RpcEndGame(winner);
+            player.RpcOnEndGame(winner);
         }
     }
 
@@ -350,7 +359,7 @@ public class GameSM : StateMachine
     {
         foreach (var player in players)
         {
-            player.RpcUpdateUnitHud();
+            player.RpcUIUpdateUnitHud();
         }
     }
     

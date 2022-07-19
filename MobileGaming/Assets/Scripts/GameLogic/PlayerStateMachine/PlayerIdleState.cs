@@ -15,7 +15,9 @@ namespace PlayerStates
 
             sm.DisplayAbilityButton(false);
 
-            sm.UpdateUnitHud();
+            sm.UIUpdateUnitHud();
+            
+            sm.UIUpdateFaithCount();
 
             sm.CmdCheckVictoryConditions();
 
@@ -34,7 +36,7 @@ namespace PlayerStates
         public override void UpdateLogic()
         {
             base.UpdateLogic();
-            sm.UpdateUnitHud();
+            sm.UIUpdateUnitHud();
         }
 
         protected override void OnUnitClicked()
@@ -80,7 +82,7 @@ namespace PlayerStates
 
         public override void Exit()
         {
-            sm.UpdateUnitHud();
+            sm.UIUpdateUnitHud();
         }
     }
 }

@@ -51,7 +51,7 @@ namespace GameStates
         {
             foreach (var player in sm.players)
             {
-                player.RpcSetupUnitHuds();
+                player.RpcUISetupUnitHuds();
             }
         }
     }

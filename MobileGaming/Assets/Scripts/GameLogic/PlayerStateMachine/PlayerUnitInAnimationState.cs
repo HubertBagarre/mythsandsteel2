@@ -37,7 +37,7 @@ namespace PlayerStates
             if(sm.unitMovementAnimationDone) OnUnitMovementAnimationDone();
             if(sm.unitAttackAnimationDone) OnUnitAttackAnimationDone();
             if (sm.unitAbilityAnimationDone) OnUnitAbilityAnimationDone();
-            sm.UpdateUnitHud();
+            sm.UIUpdateUnitHud();
         }
         
         private void OnUnitMovementAnimationDone()

@@ -126,7 +126,7 @@ public class PlayerSM : StateMachine
         currentState = newState;
         currentState.Enter();
         Debug.Log($"Entering {currentState}");
-        ChangeDebugText();
+        UIChangeDebugText();
     }
 
     #region Raycast Gaming
@@ -679,7 +679,7 @@ public class PlayerSM : StateMachine
 
     private void OnFaithValueChanged(int prevValue, int newValue)
     {
-        UpdateFaithCount();
+        UIUpdateFaithCount();
     }
 
     private void OnAccessibleHexesReceivedValueChange(bool prevValue,bool newValue)
@@ -712,17 +712,17 @@ public class PlayerSM : StateMachine
 
     #region Update UI
 
-    private void ChangeDebugText()
+    private void UIChangeDebugText()
     {
         uiManager.ChangeDebugText($"Player {playerId}, {currentState}");
     }
 
-    public void UpdateFaithCount()
+    public void UIUpdateFaithCount()
     {
         uiManager.UpdateFaithCount(faith);
     }
 
-    public void UpdateAbilitySelectionLeft(int value,string moText)
+    public void UIUpdateAbilitySelectionLeft(int value,string moText)
     {
         uiManager.UpdateAbilitySelectionText($"{value} {moText}");
         
@@ -730,26 +730,19 @@ public class PlayerSM : StateMachine
     }
     
     [ClientRpc]
-    public void RpcUpdateFaithCount()
-    {
-        if(!isLocalPlayer) return;
-        UpdateFaithCount();
-    }
-    
-    [ClientRpc]
-    public void RpcSetupUnitHuds()
+    public void RpcUISetupUnitHuds()
     {
         uiManager.GenerateUnitHuds(allUnits);
     }
     
     [ClientRpc]
-    public void RpcUpdateUnitHud()
+    public void RpcUIUpdateUnitHud()
     {
         uiManager.UpdateUnitHud();
         if(isLocalPlayer) uiManager.RefreshUnitOutlines(allUnits,playerId);
     }
 
-    public void UpdateUnitHud()
+    public void UIUpdateUnitHud()
     {
         uiManager.UpdateUnitHud();
     }
@@ -757,7 +750,7 @@ public class PlayerSM : StateMachine
     #endregion
 
     [ClientRpc]
-    public void RpcEndGame(int winner)
+    public void RpcOnEndGame(int winner)
     {
         if(!isLocalPlayer) return;
         var moreText = winner == playerId ? "It's you !" : "It's not you !";
