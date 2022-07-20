@@ -235,10 +235,8 @@ public class GameSM : StateMachine
 
     public void ServerSideSetAccessibleHexesNew(Unit unitToGetAccessibleHexes)
     {
-        Debug.Log("Setting Accessible Hexes");
-
         var enemyUnits = HexGrid.instance.units.Where(unit => unit.playerId != unitToGetAccessibleHexes.playerId);
-        var bfsResult = GraphSearch.BFSGetRange(unitToGetAccessibleHexes,enemyUnits,unitToGetAccessibleHexes.attacksLeft > 0);
+        var bfsResult = GraphSearch.BFSGetRange(unitToGetAccessibleHexes,enemyUnits,unitToGetAccessibleHexes.attacksLeft > 0  && unitToGetAccessibleHexes.canUseAbility);
         var accessibleHexes = bfsResult.hexesInRange.Where(hex => !hex.HasUnitOfPlayer(0) && !hex.HasUnitOfPlayer(1));
         var attackableDict = bfsResult.attackableUnitsDict;
         var attackableUnits = bfsResult.attackableUnits;
@@ -310,15 +308,13 @@ public class GameSM : StateMachine
     public void ServerSideAbilityResolve(Unit castingUnit, IEnumerable<Hex> targets, PlayerSM player)
     {
         var enumerable = targets as Hex[] ?? targets.ToArray();
-        if (castingUnit.currentAbilityCost <= player.faith)
+        if (player.ConsumeFaith(castingUnit.currentAbilityCost))
         {
-            player.faith -= castingUnit.currentAbilityCost;
             player.ServerAbilityResolve(castingUnit,enumerable);
             player.RpcAbilityResolve(castingUnit,enumerable);
         }
         else
         {
-            Debug.Log($"Player {player.playerId} tried to cast an ability that costs {castingUnit.currentAbilityCost}, but he only has {player.faith}");
             player.unitAbilityAnimationDone = true;
             player.castingUnit = null;
         }

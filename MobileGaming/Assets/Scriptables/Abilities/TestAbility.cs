@@ -43,11 +43,14 @@ public class TestAbility : ScriptableAbility,IAbilityCallBacks
         
         void RemoveStorms(PlayerSM playerSm)
         {
+            Debug.Log("Removing Storm");
             if(GameSM.instance.currentPlayer != castingPlayerId) return;
             foreach (var pair in previousScriptables)
             {
                 pair.Key.ApplyTileServer(pair.Value);
             }
+            
+            CallbackManager.OnPlayerTurnStart -= RemoveStorms;
         }
     }
 }

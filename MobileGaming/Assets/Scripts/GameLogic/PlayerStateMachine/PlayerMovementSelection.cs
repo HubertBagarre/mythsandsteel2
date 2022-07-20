@@ -56,7 +56,7 @@ namespace PlayerStates
         private void ClientSideSetAccessibleHexesNew(Unit unitToGetAccessibleHexes)
         {
             var enemyUnits = sm.allUnits.Where(unit => unit.playerId != unitToGetAccessibleHexes.playerId);
-            var bfsResult = GraphSearch.BFSGetRange(unitToGetAccessibleHexes,enemyUnits,unitToGetAccessibleHexes.attacksLeft > 0);
+            var bfsResult = GraphSearch.BFSGetRange(unitToGetAccessibleHexes,enemyUnits,unitToGetAccessibleHexes.attacksLeft > 0 && unitToGetAccessibleHexes.canUseAbility);
             var returnHexes = bfsResult.hexesInRange.Where(hex => !hex.HasUnitOfPlayer(0) && !hex.HasUnitOfPlayer(1));
             var attackableUnits = bfsResult.attackableUnits;
         
