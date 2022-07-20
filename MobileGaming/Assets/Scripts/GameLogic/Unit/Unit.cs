@@ -74,7 +74,6 @@ public class Unit : NetworkBehaviour
         if (id > ObjectIDList.instance.units.Count) id = 0;
         unitScriptableId = id;
         
-        Debug.Log($"Applying unit {unitScriptableId} ({ObjectIDList.instance.units[unitScriptableId].name})");
         var newUnitScriptable = ObjectIDList.instance.units[unitScriptableId];
         unitScriptable = newUnitScriptable;
 

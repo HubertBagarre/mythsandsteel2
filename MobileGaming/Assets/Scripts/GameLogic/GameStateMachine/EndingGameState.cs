@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using CallbackManagement;
 using UnityEngine;
 
 namespace GameStates
@@ -28,6 +29,8 @@ namespace GameStates
             sm.players[1] = null;
             
             sm.ResetHexGrid();
+
+            CallbackManager.InitEvents();
         }
     }
 }

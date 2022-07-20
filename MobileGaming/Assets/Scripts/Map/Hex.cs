@@ -86,9 +86,14 @@ public class Hex : NetworkBehaviour
 
     private void ApplyTile(int tileID)
     {
+        var newTile = ObjectIDList.instance.tiles[tileID];
         currentTileID = tileID;
-        var newTile = ObjectIDList.instance.tiles[currentTileID];
         tile = newTile;
+        
+        //Update tile stats
+        movementCost = tile.movementCost;
+        
+        //Change Hex model
         if(modelParent.childCount >= 1) Destroy(modelParent.GetChild(0).gameObject);
         if(tile.model == null)
         {
@@ -100,7 +105,6 @@ public class Hex : NetworkBehaviour
         modelRenderer = model.GetComponent<Renderer>();
         normalMat = modelRenderer.material;
         model.transform.localPosition = Vector3.zero;
-        movementCost = tile.movementCost;
     }
 
     [ClientRpc]

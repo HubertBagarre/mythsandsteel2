@@ -16,7 +16,6 @@ public class UnitHud : MonoBehaviour
         offset = (Vector3)pos;
         assignedUnit = unit;
         cam = c;
-        Debug.Log(cam);
     }
     
     public void UpdateHud()

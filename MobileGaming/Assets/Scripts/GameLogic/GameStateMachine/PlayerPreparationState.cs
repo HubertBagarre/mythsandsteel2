@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using CallbackManagement;
 using UnityEngine;
 
 namespace GameStates
@@ -15,16 +16,14 @@ namespace GameStates
         
         public override void Enter()
         {
-            sm.RefreshUnitHuds();
-            
             if (sm.CheckIfPlayerWon())
             {
-                
                 sm.ChangeState(sm.endingState);
                 return;
             }
             
-            sm.ResetPlayerActions(sm.players[sm.currentPlayer]);
+            CallbackManager.AnyPlayerTurnStart();
+            CallbackManager.PlayerTurnStart(sm.players[sm.currentPlayer]);
             
             sm.ChangeState(sm.playerTurnState);
         }

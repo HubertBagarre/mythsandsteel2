@@ -7,6 +7,7 @@ using GameStates;
 using Mirror;
 using TMPro;
 using Random = UnityEngine.Random;
+using CallbackManagement;
 
 public class GameSM : StateMachine
 {
@@ -27,7 +28,7 @@ public class GameSM : StateMachine
     public int currentPlayer;
     public PlayerSM[] players = new PlayerSM[2];
     public int winner;
-    
+
     [Header("Trash Flags")]
     public bool isMapGenerated;
     public bool unitsPlaced;
@@ -226,6 +227,7 @@ public class GameSM : StateMachine
             unit.hasBeenActivated = false;
             unit.move = unit.baseMove;
             unit.attacksLeft = unit.attacksPerTurn;
+            unit.canUseAbility = true;
         }
     }
 

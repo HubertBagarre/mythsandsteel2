@@ -248,6 +248,7 @@ GameObject:
   - component: {fileID: 4498166596259381531}
   - component: {fileID: 4498166596259381533}
   - component: {fileID: 4498166596259381532}
+  - component: {fileID: 6865544222108157371}
   m_Layer: 0
   m_Name: GameSM
   m_TagString: Untagged
@@ -305,6 +306,27 @@ MonoBehaviour:
   debugText: {fileID: 4498166594727001728}
   debugText2: {fileID: 4498166596430764640}
   currentPlayer: 0
+  players:
+  - {fileID: 0}
+  - {fileID: 0}
+  winner: 0
+  callbackManager: {fileID: 6865544222108157371}
+  isMapGenerated: 0
+  unitsPlaced: 0
+  player0UnitsPlaced: 0
+  player1UnitsPlaced: 0
+--- !u!114 &6865544222108157371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4498166596259381530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fcb46ed79210b046bf8ac3e5107849f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4498166596430764655
 GameObject:
   m_ObjectHideFlags: 0

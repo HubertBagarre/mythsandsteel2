@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using CallbackManagement;
 using UnityEngine;
 
 namespace GameStates
@@ -21,6 +22,11 @@ namespace GameStates
             {
                 player.faith = 99;
             }
+            
+            //Setting Callbacks
+            CallbackManager.InitEvents();
+            CallbackManager.OnAnyPlayerTurnStart += sm.RefreshUnitHuds;
+            CallbackManager.OnPlayerTurnStart += sm.ResetPlayerActions;
         }
 
         public override void UpdateLogic()
