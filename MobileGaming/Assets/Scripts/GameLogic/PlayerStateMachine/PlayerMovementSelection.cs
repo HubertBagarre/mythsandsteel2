@@ -38,7 +38,7 @@ namespace PlayerStates
             if (movingUnit.hasAbility && movingUnit.canUseAbility)
             {
                 Debug.Log($"{sm.selectedUnit.abilityScriptable.name} costs {sm.selectedUnit.currentAbilityCost} faith. You have {sm.faith}");
-                if(sm.selectedUnit.currentAbilityCost <= sm.faith) sm.DisplayAbilityButton(true);
+                sm.DisplayAbilityButton(true,(sm.selectedUnit.currentAbilityCost <= sm.faith));
             }
             
             receivedAccessibleHexesTriggered = false;

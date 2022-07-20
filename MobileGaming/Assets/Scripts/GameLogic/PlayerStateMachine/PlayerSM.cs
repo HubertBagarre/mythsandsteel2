@@ -482,9 +482,9 @@ public class PlayerSM : StateMachine
         isAskingForAbilityResolve = true;
     }
 
-    public void DisplayAbilityButton(bool value)
+    public void DisplayAbilityButton(bool value,bool interactable = true)
     {
-        uiManager.EnableAbilityButton(value);
+        uiManager.EnableAbilityButton(value,interactable);
     }
 
     public void DisplayAbilityConfirmPanel(bool value)
