@@ -236,7 +236,7 @@ public class GameSM : StateMachine
     public void ServerSideSetAccessibleHexesNew(Unit unitToGetAccessibleHexes)
     {
         var enemyUnits = HexGrid.instance.units.Where(unit => unit.playerId != unitToGetAccessibleHexes.playerId);
-        var bfsResult = GraphSearch.BFSGetRange(unitToGetAccessibleHexes,enemyUnits,unitToGetAccessibleHexes.attacksLeft > 0  && unitToGetAccessibleHexes.canUseAbility);
+        var bfsResult = GraphSearch.BFSGetRange(unitToGetAccessibleHexes,enemyUnits,unitToGetAccessibleHexes.attacksLeft > 0);
         var accessibleHexes = bfsResult.hexesInRange.Where(hex => !hex.HasUnitOfPlayer(0) && !hex.HasUnitOfPlayer(1));
         var attackableDict = bfsResult.attackableUnitsDict;
         var attackableUnits = bfsResult.attackableUnits;

@@ -116,45 +116,17 @@ public class Unit : NetworkBehaviour
     
     public void AttackUnit(Unit attackedUnit)
     {
-        Debug.Log($"{this} is attacking {attackedUnit} !!");
-
-        sbyte moreDamage = 0;
-        if (unitScriptable is IUnitCallBacks scriptableAdded) moreDamage = scriptableAdded.OnAttackTriggered(this, attackedUnit);
-
-        attackedUnit.TakeDamage(attackDamage, 0, this);
-
+        unitScriptable.AttackUnit(this,attackedUnit);
     }
 
     public void TakeDamage(sbyte physicalDamage,sbyte magicalDamage, Unit sourceUnit = null)
     {
-        if (sourceUnit == null) sourceUnit = this;
-        
-        physicalDamage -= physicDef;
-        if (physicalDamage < 0) physicalDamage = 0;
-        magicalDamage -= magicDef;
-        if (magicalDamage < 0) magicalDamage = 0;
-        
-        Debug.Log($"Took {physicalDamage} physical Damage and {magicalDamage} magical Damage from {sourceUnit}!!");
-        
-        
-        currentHp -= Convert.ToSByte(physicalDamage + magicalDamage) ;
-        
-        
-        
-        if (currentHp <= 0)
-        {
-            KillUnit((physicalDamage>0),(magicalDamage>0),sourceUnit);
-        }
+        unitScriptable.TakeDamage(this,physicalDamage,magicalDamage,sourceUnit);
     }
 
     public void KillUnit(bool physicalDeath,bool magicalDeath,Unit killer)
     {
-        currentHex.currentUnit = null;
-        currentHex = null;
-        gameObject.SetActive(false);
-        RpcSetUnitActive(false);
-        
-        if (unitScriptable is IUnitCallBacks scriptableAdded) scriptableAdded.OnDeath(this);
+        unitScriptable.KillUnit(this,physicalDeath,magicalDeath,killer);
     }
     
     public bool AreEnemyUnitsInRange()
@@ -163,22 +135,8 @@ public class Unit : NetworkBehaviour
         return currentHex.GetNeighborsInRange(attackRange).Any(hex => hex.HasUnitOfPlayer(enemyPlayer));
     }
 
-    #region Unit CallBacks
-    
-    public void OnUnitEnterAdjacentHex(Unit enteringUnit)
-    {
-        if (unitScriptable is IUnitCallBacks scriptableAdded) scriptableAdded.OnUnitEnterAdjacentHex(this,enteringUnit);
-    }
-
-    public void OnUnitExitAdjacentHex(Unit exitingUnit)
-    {
-        if (unitScriptable is IUnitCallBacks scriptableAdded) scriptableAdded.OnUnitExitAdjacentHex(this,exitingUnit);
-    }
-    
-    #endregion
-    
     [ClientRpc]
-    private void RpcSetUnitActive(bool value)
+    public void RpcSetUnitActive(bool value)
     {
         gameObject.SetActive(value);
     }

@@ -540,6 +540,7 @@ public class PlayerSM : StateMachine
         if(!casting.hasBeenActivated) unitsToActivate--;
         casting.hasBeenActivated = true;
         casting.move = 0;
+        casting.attacksLeft = 0;
         casting.canUseAbility = false;
         StartCoroutine(PlayAbilityAnimationRoutine(casting,casting.abilityScriptable as IAbilityCallBacks,targets));
     }
