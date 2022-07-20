@@ -74,6 +74,7 @@ public class PlayerSM : StateMachine
     [SyncVar] public int maxActions;
     [SyncVar(hook = nameof(OnActionsLeftValueChanged))] public int unitsToActivate;
     [SyncVar(hook = nameof(OnFaithValueChanged))] public int faith;
+    [SyncVar] public int faithModifier;
     [SyncVar] public int victoryPoints;
     
     
@@ -574,7 +575,13 @@ public class PlayerSM : StateMachine
 
     #region Faith Gestion
 
-    
+    public bool ConsumeFaith(int value)
+    {
+        value += faithModifier;
+        if (value > faith) return false;
+        faith -= value;
+        return true;
+    }
     
 
     #endregion

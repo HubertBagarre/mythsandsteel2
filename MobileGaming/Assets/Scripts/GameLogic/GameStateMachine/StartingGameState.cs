@@ -21,6 +21,7 @@ namespace GameStates
             foreach (var player in sm.players)
             {
                 player.faith = 99;
+                player.faithModifier = 0;
             }
             
             //Setting Callbacks

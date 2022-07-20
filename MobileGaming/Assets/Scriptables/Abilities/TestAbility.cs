@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,19 @@ public class TestAbility : ScriptableAbility,IAbilityCallBacks
         var castingPlayerId = player.playerId;
         var previousScriptables = new Dictionary<Hex, int>();
         foreach (var hex in targetedHexes)
+        {
+            if (hex.HasUnitOfPlayer(Convert.ToSByte(player.playerId == 0 ? 1 : 0)))
+            {
+                if (player.ConsumeFaith(3))
+                {
+                    hex.currentUnit.TakeDamage(0,6,castingUnit);
+                }
+            }
+            
+            if (hex.currentUnit == null ) SummonStorm(hex);
+        }
+
+        void SummonStorm(Hex hex)
         {
             previousScriptables.Add(hex,hex.currentTileID);
             hex.ApplyTileServer(3);

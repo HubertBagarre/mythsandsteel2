@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Mirror;
+using UnityEditor;
 
 public class Unit : NetworkBehaviour
 {
@@ -115,41 +116,47 @@ public class Unit : NetworkBehaviour
     
     public void AttackUnit(Unit attackedUnit)
     {
-        Debug.Log($"Attacking {attackedUnit} !!");
+        Debug.Log($"{this} is attacking {attackedUnit} !!");
 
         sbyte moreDamage = 0;
         if (unitScriptable is IUnitCallBacks scriptableAdded) moreDamage = scriptableAdded.OnAttackTriggered(this, attackedUnit);
 
-        attackedUnit.TakePhysicalDamage(Convert.ToSByte(attackDamage + moreDamage));
-        
+        attackedUnit.TakeDamage(attackDamage, 0, this);
+
     }
 
-    public void TakeDamage(sbyte damage)
+    public void TakeDamage(sbyte physicalDamage,sbyte magicalDamage, Unit sourceUnit = null)
     {
-        Debug.Log($"Took {damage} !!");
-        currentHp -= damage;
+        if (sourceUnit == null) sourceUnit = this;
+        
+        physicalDamage -= physicDef;
+        if (physicalDamage < 0) physicalDamage = 0;
+        magicalDamage -= magicDef;
+        if (magicalDamage < 0) magicalDamage = 0;
+        
+        Debug.Log($"Took {physicalDamage} physical Damage and {magicalDamage} magical Damage from {sourceUnit}!!");
+        
+        
+        currentHp -= Convert.ToSByte(physicalDamage + magicalDamage) ;
+        
+        
+        
         if (currentHp <= 0)
         {
-            Death();
+            KillUnit((physicalDamage>0),(magicalDamage>0),sourceUnit);
         }
-        if (unitScriptable is IUnitCallBacks scriptableAdded) scriptableAdded.OnDamageTaken(this,damage);
     }
 
-    public void TakePhysicalDamage(sbyte damage)
+    public void KillUnit(bool physicalDeath,bool magicalDeath,Unit killer)
     {
-        damage -= physicDef;
-        TakeDamage(damage);
-        if (unitScriptable is IUnitCallBacks scriptableAdded) scriptableAdded.OnPhysicalDamageTaken(this,damage);
+        currentHex.currentUnit = null;
+        currentHex = null;
+        gameObject.SetActive(false);
+        RpcSetUnitActive(false);
+        
+        if (unitScriptable is IUnitCallBacks scriptableAdded) scriptableAdded.OnDeath(this);
     }
-
-    public void TakeMagicalDamage(sbyte damage)
-    {
-        damage -= magicDef;
-        TakeDamage(damage);
-        if (unitScriptable is IUnitCallBacks scriptableAdded) scriptableAdded.OnMagicalDamageTaken(this,damage);
-    }
-
-
+    
     public bool AreEnemyUnitsInRange()
     {
         var enemyPlayer = playerId == 0 ? Convert.ToSByte(1) : Convert.ToSByte(0);
@@ -170,16 +177,6 @@ public class Unit : NetworkBehaviour
     
     #endregion
     
-    public void Death()
-    {
-        currentHex.currentUnit = null;
-        currentHex = null;
-        gameObject.SetActive(false);
-        RpcSetUnitActive(false);
-        if (unitScriptable is IUnitCallBacks scriptableAdded) scriptableAdded.OnDeath(this);
-    }
-    
-
     [ClientRpc]
     private void RpcSetUnitActive(bool value)
     {

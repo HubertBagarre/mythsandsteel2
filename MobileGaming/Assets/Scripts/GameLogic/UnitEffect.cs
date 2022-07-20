@@ -13,12 +13,11 @@ public class UnitEffect : MonoBehaviour, ICancelable
     {
         totalDamage = 0;
         physicDamageDone = Convert.ToSByte(atkUnit.attackDamage - defUnit.physicDef);
-        //magicDamageDone = Convert.ToSByte(atkUnit.magicDamage - defUnit.magicDef);
 
         if (physicDamageDone >= 0) totalDamage += physicDamageDone;
         if (magicDamageDone >= 0) totalDamage += magicDamageDone;
 
-        defUnit.TakeDamage(totalDamage);
+        //defUnit.TakeDamage(totalDamage);
     }
 
     public enum statEnum {physicDef, magicDef, atkPerTurn, physicDamage, magicDamage, range, move, actualHp
@@ -50,7 +49,7 @@ public class UnitEffect : MonoBehaviour, ICancelable
                 if (defUnit.move + modifier >= 0) defUnit.move += modifier;
                 break;
             case statEnum.actualHp:
-                defUnit.TakeDamage(modifier);
+                //defUnit.TakeDamage(modifier);
                 break;
         }
     }

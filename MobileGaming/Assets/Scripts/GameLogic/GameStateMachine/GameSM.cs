@@ -80,7 +80,7 @@ public class GameSM : StateMachine
 
         player0UnitsPlaced = false;
         player1UnitsPlaced = false;
-
+        
         currentPlayer = -1;
         winner = -1;
     }
