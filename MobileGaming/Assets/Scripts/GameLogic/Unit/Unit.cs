@@ -11,6 +11,7 @@ public class Unit : NetworkBehaviour
     [Header("Identification")]
     public string unitName;
     [SyncVar] public sbyte playerId;
+    [SyncVar] public ScriptableUnit.Classes className;
 
     [Header("Position")]
     [SyncVar] public sbyte hexCol;
@@ -19,7 +20,6 @@ public class Unit : NetworkBehaviour
 
     [Header("Base Stats")]
     [SyncVar] public string faction;
-    [SyncVar] public string className;
     [SyncVar] public sbyte baseMaxHp;
     [SyncVar] public sbyte basePhysicDef;
     [SyncVar] public sbyte baseMagicDef;
@@ -133,6 +133,20 @@ public class Unit : NetworkBehaviour
     {
         var enemyPlayer = playerId == 0 ? Convert.ToSByte(1) : Convert.ToSByte(0);
         return currentHex.GetNeighborsInRange(attackRange).Any(hex => hex.HasUnitOfPlayer(enemyPlayer));
+    }
+    
+    public bool IsAlignBetweenEnemies()
+    {
+        var enemyPlayer = Convert.ToSByte(playerId == 0 ? 1 : (0));
+        for (var i = 0; i < 3; i++)
+        {
+            var hex1 = currentHex.neighbours[i];
+            var hex2 = currentHex.neighbours[i + 3];
+            if (hex1 == null || hex2 == null) continue;
+            if (hex1.HasUnitOfPlayer(enemyPlayer) && hex2.HasUnitOfPlayer(enemyPlayer))
+                return true;
+        }
+        return false;
     }
 
     [ClientRpc]

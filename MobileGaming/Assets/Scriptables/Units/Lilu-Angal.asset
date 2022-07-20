@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6bd13bff01f728c46987d84eec33b25b, type: 3}
-  m_Name: Karbantos
+  m_Name: Lilu-Angal
   m_EditorClassIdentifier: 
   unitName: Lilu-Angal
-  faction: ff
-  className: Infantry
-  baseMaxHp: 12
-  basePhysicDef: 0
+  faction: 
+  className: 1
+  baseMaxHp: 17
+  basePhysicDef: 2
   baseMagicDef: 0
-  baseAtkPerTurn: 2
-  baseDamage: 6
-  baseRange: 2
+  baseAtkPerTurn: 1
+  baseDamage: 3
+  baseRange: 1
   baseMove: 3
   abilityScriptableId: 1
   idleAnimation: {fileID: 0}

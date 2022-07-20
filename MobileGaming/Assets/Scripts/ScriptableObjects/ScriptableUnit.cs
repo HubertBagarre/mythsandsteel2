@@ -6,10 +6,17 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Scriptables/Unit")]
 public class ScriptableUnit : ScriptableObject
 {
+    public enum Classes
+    {
+        Cavalry,
+        Infantry,
+        AntiCavalry,
+    };
+    
     [Header("Info")]
     public string unitName;
     public string faction;
-    public string className;
+    public Classes className;
 
     [Header("Stats")]
     public sbyte baseMaxHp;
