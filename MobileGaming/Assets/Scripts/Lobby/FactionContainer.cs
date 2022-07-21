@@ -20,7 +20,6 @@ public class FactionContainer : NetworkBehaviour
     [Command]
     public void CmdSetFaction(int index)
     {
-        Debug.Log($"Hello from {netId}");
         factionIndex = index;
     }
 }

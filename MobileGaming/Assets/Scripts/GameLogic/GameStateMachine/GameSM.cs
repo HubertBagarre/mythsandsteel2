@@ -103,7 +103,7 @@ public class GameSM : StateMachine
     }
 
     #region StartingGame
-
+    
     [Server]
     public void SelectRandomPlayer()
     {

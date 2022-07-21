@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Mirror;
 
@@ -76,8 +78,10 @@ public class NewNetworkRoomManager : NetworkRoomManager
     /// <param name="sceneName">Name of the new scene.</param>
     public override void OnRoomServerSceneChanged(string sceneName) {
     {
-        if (sceneName == RoomScene && GameSM.instance == null)
-            NetworkSpawner.SpawnGameStateMachine();
+        if (sceneName == RoomScene)
+        {
+            if(GameSM.instance == null) NetworkSpawner.SpawnGameStateMachine();
+        } 
         if (sceneName == GameplayScene)
             NetworkSpawner.SpawnGrid();
     } }
@@ -129,6 +133,7 @@ public class NewNetworkRoomManager : NetworkRoomManager
         var gameSm = GameSM.instance;
         var playerSm = gamePlayer.GetComponent<PlayerSM>();
         playerSm.playerId = roomPlayer.GetComponent<NetworkRoomPlayer>().index;
+        playerSm.factionId = roomPlayer.GetComponent<FactionContainer>().factionIndex;
         gameSm.players[playerSm.playerId] = playerSm;
         return true;
     }
