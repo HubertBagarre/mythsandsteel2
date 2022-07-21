@@ -70,7 +70,7 @@ public class NetworkSpawner
         spawnedUnit.hexRow = Convert.ToSByte(position.x);
         spawnedUnit.hexCol = Convert.ToSByte(position.y);
         spawnedUnit.playerId = player;
-        spawnedUnit.unitScriptableId = 1;
+        spawnedUnit.unitScriptableId = 3;
         spawnedUnit.LinkUnitScriptable(spawnedUnit.unitScriptableId);
         HexGrid.instance.units.Add(spawnedUnit);
         NetworkServer.Spawn(unitObject);

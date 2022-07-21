@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28b563158b83776479e678604dd57baf, type: 3}
+  m_Name: Karbantos
+  m_EditorClassIdentifier: 
+  unitName: Karbantos
+  faction: 
+  className: 0
+  baseMaxHp: 18
+  basePhysicDef: 0
+  baseMagicDef: 1
+  baseAtkPerTurn: 1
+  baseDamage: 4
+  baseRange: 1
+  baseMove: 4
+  abilityScriptableId: 0
+  idleAnimation: {fileID: 0}
+  movementAnimation: {fileID: 0}
+  attackAnimation: {fileID: 0}
+  abilityAnimation: {fileID: 0}
+  takeDamageAnimation: {fileID: 0}
+  deathAnimation: {fileID: 0}

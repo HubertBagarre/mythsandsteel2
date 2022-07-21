@@ -46,7 +46,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   units:
   - {fileID: 11400000, guid: fde8563e0f6fa594e80a0e3a84ec3d4b, type: 2}
+  - {fileID: 11400000, guid: 05d117d006b58624f90846867c761fa3, type: 2}
   - {fileID: 11400000, guid: 694593e0431d41845accc36c844c7d6d, type: 2}
+  - {fileID: 11400000, guid: 17b855f54208c50458b8e0ea9f67ed4c, type: 2}
   tiles:
   - {fileID: 0}
   - {fileID: 11400000, guid: d9d86c35fb3eca14c9fb7432ffb6d580, type: 2}

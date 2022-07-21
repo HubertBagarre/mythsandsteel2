@@ -12,6 +12,7 @@ public class Unit : NetworkBehaviour
     public string unitName;
     [SyncVar] public sbyte playerId;
     [SyncVar] public ScriptableUnit.Classes className;
+    public PlayerSM player => GameSM.instance?.players[playerId];
 
     [Header("Position")]
     [SyncVar] public sbyte hexCol;
@@ -128,6 +129,42 @@ public class Unit : NetworkBehaviour
     {
         unitScriptable.KillUnit(this,physicalDeath,magicalDeath,killer);
     }
+
+    public void KnockBackUnit(Unit unit, int direction)
+    {
+        var targetHex = unit.currentHex.neighbours[direction];
+        if (targetHex == null)
+        {
+            unit.TakeDamage(0,3,this);
+            return;
+        }
+        
+        if (targetHex.currentUnit != null || targetHex.movementCost == sbyte.MaxValue)
+        {
+            unit.TakeDamage(0,3,this);
+            return;
+        }
+
+        ServerSideKnockBackAnim(unit,targetHex);
+        RpcClientSideKnockBackAnim(unit,targetHex);
+    }
+
+    private void ServerSideKnockBackAnim(Unit unit, Hex hex)
+    {
+        unit.currentHex.OnUnitExit(unit);
+            
+        hex.OnUnitEnter(unit);
+        
+        //TODO - Play Animation
+        unit.transform.position = hex.transform.position + Vector3.up * 2f;
+    }
+    
+    [ClientRpc]
+    private void RpcClientSideKnockBackAnim(Unit unit, Hex hex)
+    {
+        //TODO - Play Animation
+        unit.transform.position = hex.transform.position + Vector3.up * 2f;
+    }
     
     public bool AreEnemyUnitsInRange()
     {
@@ -147,6 +184,16 @@ public class Unit : NetworkBehaviour
                 return true;
         }
         return false;
+    }
+
+    public IEnumerable<Unit> AdjacentUnits()
+    {
+        return (from hex in currentHex.neighbours where hex.currentUnit != null select hex.currentUnit).ToArray();
+    }
+
+    public int NumberOfAdjacentEnemyUnits()
+    {
+        return AdjacentUnits().Count(unit => unit.playerId != playerId);
     }
 
     [ClientRpc]

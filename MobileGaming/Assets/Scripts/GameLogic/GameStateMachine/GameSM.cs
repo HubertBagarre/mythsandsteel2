@@ -241,7 +241,7 @@ public class GameSM : StateMachine
         var attackableDict = bfsResult.attackableUnitsDict;
         var attackableUnits = bfsResult.attackableUnits;
         
-        var player = players[unitToGetAccessibleHexes.playerId];
+        var player = unitToGetAccessibleHexes.player;
         player.SetAccessibleHexes(accessibleHexes,attackableUnits,attackableDict);
     }
     
@@ -295,7 +295,7 @@ public class GameSM : StateMachine
         {
             var selectableHexes = abilityCallback.AbilitySelectables(castingUnit);                                 
         
-            var player = players[castingUnit.playerId];
+            var player = castingUnit.player;
             player.entitiesToSelect = scriptableAbility.abilityTargetCount;
             player.SetAbilitySelectables(selectableHexes);
         }

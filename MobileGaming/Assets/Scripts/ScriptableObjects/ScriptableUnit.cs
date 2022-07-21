@@ -38,11 +38,11 @@ public class ScriptableUnit : ScriptableObject
     public Animation takeDamageAnimation;
     public Animation deathAnimation;
     
-    public virtual void AttackUnit(Unit attackingUnit, Unit attackedUnit)
+    public virtual void AttackUnit(Unit karbantosUnit, Unit attackedUnit)
     {
-        Debug.Log($"{attackingUnit} is attacking {attackedUnit} !!");
+        Debug.Log($"{karbantosUnit} is attacking {attackedUnit} !!");
 
-        attackedUnit.TakeDamage(attackingUnit.attackDamage, 0, attackingUnit);
+        attackedUnit.TakeDamage(karbantosUnit.attackDamage, 0, karbantosUnit);
     }
 
     public virtual void TakeDamage(Unit targetUnit, sbyte physicalDamage,sbyte magicalDamage, Unit sourceUnit = null)
