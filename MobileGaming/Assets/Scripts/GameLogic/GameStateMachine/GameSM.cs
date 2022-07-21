@@ -161,7 +161,7 @@ public class GameSM : StateMachine
     {
         for (int i = 0; i < positions.Length; i++)
         {
-            NetworkSpawner.SpawnUnit(positions[i],Convert.ToSByte(player));
+            NetworkSpawner.SpawnUnit(1,positions[i],Convert.ToSByte(player));
         }
     }
 

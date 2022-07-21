@@ -61,21 +61,6 @@ public class NetworkSpawner
         NetworkServer.Spawn(unitObject);
     }
     
-    public static void SpawnUnit(Vector2 position, sbyte player)
-    {
-        var unitObject = Object.Instantiate(((NewNetworkRoomManager) NetworkManager.singleton).unitPrefab,
-            Vector3.zero, Quaternion.identity);
-        unitObject.name = $"Unit {position.x},{position.y}";
-        var spawnedUnit = unitObject.GetComponent<Unit>();
-        spawnedUnit.hexRow = Convert.ToSByte(position.x);
-        spawnedUnit.hexCol = Convert.ToSByte(position.y);
-        spawnedUnit.playerId = player;
-        spawnedUnit.unitScriptableId = 3;
-        spawnedUnit.LinkUnitScriptable(spawnedUnit.unitScriptableId);
-        HexGrid.instance.units.Add(spawnedUnit);
-        NetworkServer.Spawn(unitObject);
-    }
-
     public static void SpawnUnits()
     {
         if (!NetworkServer.active) return;
