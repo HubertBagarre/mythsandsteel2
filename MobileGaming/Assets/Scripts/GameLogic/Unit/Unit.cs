@@ -69,6 +69,7 @@ public class Unit : NetworkBehaviour
         move = baseMove;
         hasBeenActivated = false;
         canUseAbility = true;
+        unitScriptable.SetupEvents(this);
     }
 
     public void LinkUnitScriptable(byte id)

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CallbackManagement;
 using Mirror;
 using UnityEngine;
 
@@ -71,6 +72,11 @@ public class Hex : NetworkBehaviour
         var bfsResult = GraphSearch.BFSGetRange(this,range,null);
         return bfsResult.hexesInRange;
     }
+    
+    public IEnumerable<Unit> AdjacentUnits()
+    {
+        return neighbours.Count == 0 ? new Unit[]{} : (from hex in neighbours where hex.currentUnit != null select hex.currentUnit).ToArray();
+    }
 
     public bool HasUnitOfPlayer(sbyte player)
     {
@@ -130,8 +136,11 @@ public class Hex : NetworkBehaviour
     public void OnUnitEnter(Unit unit)
     {
         unit.currentHex = this;
+        currentUnit = unit;
         unit.hexCol = col;
         unit.hexRow = row;
+        
+        CallbackManager.UnitHexEnter(unit,this);
     }
     
     public void DecreaseUnitMovement(Unit unit)
@@ -141,7 +150,9 @@ public class Hex : NetworkBehaviour
 
     public void OnUnitExit(Unit unit)
     {
+        if (currentUnit == unit) currentUnit = null;
         
+        CallbackManager.UnitHexExit(unit,this);
     }
     
 }

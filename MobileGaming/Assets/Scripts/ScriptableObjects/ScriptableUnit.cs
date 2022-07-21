@@ -38,11 +38,13 @@ public class ScriptableUnit : ScriptableObject
     public Animation takeDamageAnimation;
     public Animation deathAnimation;
     
-    public virtual void AttackUnit(Unit karbantosUnit, Unit attackedUnit)
+    public virtual void SetupEvents(Unit affectedUnit) { }
+    
+    public virtual void AttackUnit(Unit attackingUnit, Unit attackedUnit)
     {
-        Debug.Log($"{karbantosUnit} is attacking {attackedUnit} !!");
+        Debug.Log($"{attackingUnit} is attacking {attackedUnit} !!");
 
-        attackedUnit.TakeDamage(karbantosUnit.attackDamage, 0, karbantosUnit);
+        attackedUnit.TakeDamage(attackingUnit.attackDamage, 0, attackingUnit);
     }
 
     public virtual void TakeDamage(Unit targetUnit, sbyte physicalDamage,sbyte magicalDamage, Unit sourceUnit = null)
@@ -68,7 +70,7 @@ public class ScriptableUnit : ScriptableObject
     {
         Debug.Log($"{killedUnit} was killed by {killer} !! Physical Death : {physicalDeath}, Magical Death : {magicalDeath}");
         
-        killedUnit.currentHex.currentUnit = null;
+        killedUnit.currentHex.OnUnitExit(killedUnit);
         killedUnit.currentHex = null;
         killedUnit.gameObject.SetActive(false);
         killedUnit.RpcSetUnitActive(false);

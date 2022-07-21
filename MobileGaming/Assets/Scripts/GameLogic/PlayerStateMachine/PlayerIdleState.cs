@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using UnityEngine;
 
 namespace PlayerStates
@@ -51,7 +53,7 @@ namespace PlayerStates
         protected override void OnHexClicked()
         {
             base.OnHexClicked();
-
+            
             var unit = sm.selectedHex.currentUnit;
             if (unit != null)
             {
