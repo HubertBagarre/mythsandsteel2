@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class FactionSelector : MonoBehaviour
 {
@@ -14,13 +13,11 @@ public class FactionSelector : MonoBehaviour
     
     [SerializeField] private Transform layoutTransform;
     [SerializeField] private FactionButton factionButtonPrefab;
-    
-    public static int selectedFaction;
 
     private void Start()
     {
         InstantiateButtons();
-        
+
         factionButtons[0].OnClick();
     }
 
@@ -46,7 +43,6 @@ public class FactionSelector : MonoBehaviour
 
     public void SelectFaction(int factionIndex)
     {
-        selectedFaction = factionIndex;
         var faction = ObjectIDList.instance.factions[factionIndex];
         factionTitleText.text = faction.name;
 

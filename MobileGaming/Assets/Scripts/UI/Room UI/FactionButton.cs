@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +17,7 @@ public class FactionButton : MonoBehaviour
     {
         button.interactable = false;
         selector.SelectFaction(factionIndex);
+        FactionContainer.onFactionChose?.Invoke(factionIndex);
     }
 
 

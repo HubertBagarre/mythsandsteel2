@@ -13,6 +13,16 @@ public class PlayerSM : StateMachine
     public PlayerInactiveState inactiveState;
     public PlayerUnitInAnimationState unitInAnimationState;
 
+    [Header("Actions")]
+    [SyncVar] public int maxActions;
+    [SyncVar] public int factionId;
+    [SyncVar(hook = nameof(OnActionsLeftValueChanged))] public int unitsToActivate;
+    [SyncVar(hook = nameof(OnFaithValueChanged))] public int faith;
+    [SyncVar] public int faithModifier;
+    [SyncVar] public int victoryPoints;
+    
+    private Camera cam;
+    
     [Header("Network")] [SyncVar] public int playerId;
     [SyncVar(hook = nameof(OnCanInputValueChanged))] public bool canSendInfo;
 
@@ -33,8 +43,7 @@ public class PlayerSM : StateMachine
     [SyncVar] public Unit castingUnit;
     [SyncVar] public bool isAskingForAbilityResolve;
     public readonly SyncHashSet<Hex> selectedHexesForAbility = new();
-
-
+    
     [Header("Unit Attack")]
     [SyncVar] public Unit attackingUnit;
     [SyncVar] public Unit attackedUnit;
@@ -67,16 +76,6 @@ public class PlayerSM : StateMachine
     [SyncVar] public bool unitMovementAnimationDone;
     [SyncVar] public bool unitAttackAnimationDone;
     [SyncVar] public bool turnIsOver;
-
-    private Camera cam;
-    
-    [Header("Actions")]
-    [SyncVar] public int maxActions;
-    [SyncVar(hook = nameof(OnActionsLeftValueChanged))] public int unitsToActivate;
-    [SyncVar(hook = nameof(OnFaithValueChanged))] public int faith;
-    [SyncVar] public int faithModifier;
-    [SyncVar] public int victoryPoints;
-    
     
     private void Awake()
     {
