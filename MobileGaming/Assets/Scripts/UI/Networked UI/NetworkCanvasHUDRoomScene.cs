@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class NetworkCanvasHUDRoomScene : MonoBehaviour
 {
+    [Header("Selectors")]
+    [SerializeField] private FactionSelector factionSelector;
+    
     [SerializeField] private Button leaveButton, readyButton;
     [SerializeField] private TextMeshProUGUI buttonReadyText;
     private bool readyButtonState;
@@ -31,17 +34,14 @@ public class NetworkCanvasHUDRoomScene : MonoBehaviour
 
     private void ButtonStop()
     {
-        // stop host if host mode
         if (NetworkServer.active && NetworkClient.isConnected)
         {
             NetworkManager.singleton.StopHost();
         }
-        // stop client if client-only
         else if (NetworkClient.isConnected)
         {
             NetworkManager.singleton.StopClient();
         }
-        // stop server if server-only
         else if (NetworkServer.active)
         {
             NetworkManager.singleton.StopServer();
@@ -50,6 +50,8 @@ public class NetworkCanvasHUDRoomScene : MonoBehaviour
 
     private void ButtonReady()
     {
+        
+
         readyButtonState = !readyButtonState;
         buttonReadyText.text = readyButtonState ? "Not Ready" : "Ready";
         

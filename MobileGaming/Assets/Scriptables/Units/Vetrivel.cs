@@ -14,19 +14,15 @@ public class Vetrivel : ScriptableUnit
         
         void UpdateAdjacentVetrivelsPhysicalDef(Unit unit,Hex hex)
         {
-            Debug.Log($"They are {hex.AdjacentUnits().Count()} adjacent units to {hex}");
             foreach (var adjacentUnit in hex.AdjacentUnits())
             {
-                Debug.Log($"{adjacentUnit}, is of type {adjacentUnit.unitScriptable.GetType()}. Is Vetrivel : {adjacentUnit.unitScriptable is Vetrivel} Isn't dead : {!adjacentUnit.isDead} ");
                 if (adjacentUnit.unitScriptable is Vetrivel && !adjacentUnit.isDead)
                 {
-                    Debug.Log($"Number of enemy unit adjacent to {adjacentUnit} : {adjacentUnit.NumberOfAdjacentEnemyUnits()}");
                     adjacentUnit.physicDef = Convert.ToSByte(adjacentUnit.basePhysicDef + adjacentUnit.NumberOfAdjacentEnemyUnits());
                 }
             }
             if (unit.unitScriptable is Vetrivel && !unit.isDead)
             {
-                Debug.Log($"Number of enemy unit adjacent to {unit} : {unit.NumberOfAdjacentEnemyUnits()}");
                 unit.physicDef = Convert.ToSByte(unit.basePhysicDef + unit.NumberOfAdjacentEnemyUnits());
             }
         }

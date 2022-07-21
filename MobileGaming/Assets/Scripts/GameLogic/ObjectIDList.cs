@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class ObjectIDList : MonoBehaviour
 {
+    public List<ScriptableFaction> factions;
+    
     public List<ScriptableUnit> units;
     public List<ScriptableTile> tiles;
     public List<ScriptableAbility> abilities;
