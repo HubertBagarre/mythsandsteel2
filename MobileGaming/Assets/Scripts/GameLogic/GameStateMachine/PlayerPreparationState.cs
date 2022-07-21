@@ -23,7 +23,9 @@ namespace GameStates
             }
             
             CallbackManager.AnyPlayerTurnStart();
-            CallbackManager.PlayerTurnStart(sm.players[sm.currentPlayer]);
+            
+            Debug.Log($"Calling player start for player {sm.players[sm.currentPlayerId].playerId}");
+            CallbackManager.PlayerTurnStart(sm.players[sm.currentPlayerId]);
             
             sm.ChangeState(sm.playerTurnState);
         }

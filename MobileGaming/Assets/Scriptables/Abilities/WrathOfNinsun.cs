@@ -37,7 +37,7 @@ public class WrathOfNinsun : ScriptableAbility,IAbilityCallBacks
         void SummonStorm(Hex hex)
         {
             previousScriptables.Add(hex,hex.currentTileID);
-            hex.ApplyTileServer(3);
+            hex.ApplyTileServer(4);
         }
         
         CallbackManager.OnPlayerTurnStart += RemoveStorms;
@@ -45,7 +45,7 @@ public class WrathOfNinsun : ScriptableAbility,IAbilityCallBacks
         void RemoveStorms(PlayerSM playerSm)
         {
             Debug.Log("Removing Storm");
-            if(GameSM.instance.currentPlayer != castingPlayerId) return;
+            if(GameSM.instance.currentPlayerId != castingPlayerId) return;
             foreach (var pair in previousScriptables)
             {
                 pair.Key.ApplyTileServer(pair.Value);

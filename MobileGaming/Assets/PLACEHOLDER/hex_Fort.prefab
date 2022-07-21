@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7820883684757699762}
   - component: {fileID: 5435188409065900152}
   m_Layer: 0
-  m_Name: hex_Unwalkable
+  m_Name: hex_Fort
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 696437754694ea647b5efeaaf52e6634, type: 2}
+  - {fileID: 2100000, guid: ba032bfa8a52ef443902ae93b336a60e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

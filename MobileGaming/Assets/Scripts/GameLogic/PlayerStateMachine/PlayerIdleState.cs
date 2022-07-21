@@ -20,6 +20,7 @@ namespace PlayerStates
             sm.UIUpdateUnitHud();
             
             sm.UIUpdateFaithCount();
+            sm.UIUpdateVictoryPointCount();
 
             sm.CmdCheckVictoryConditions();
 

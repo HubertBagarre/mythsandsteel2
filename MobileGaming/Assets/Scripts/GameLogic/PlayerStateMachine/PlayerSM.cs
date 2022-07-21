@@ -19,7 +19,7 @@ public class PlayerSM : StateMachine
     [SyncVar(hook = nameof(OnActionsLeftValueChanged))] public int unitsToActivate;
     [SyncVar(hook = nameof(OnFaithValueChanged))] public int faith;
     [SyncVar] public int faithModifier;
-    [SyncVar] public int victoryPoints;
+    [SyncVar(hook = nameof(OnVictoryPointValueChanged))] public int victoryPoints;
     
     private Camera cam;
     
@@ -86,6 +86,14 @@ public class PlayerSM : StateMachine
         unitInAnimationState = new PlayerUnitInAnimationState(this);
         
         inputManager = PlayerInputManager.instance;
+    }
+
+    public void InitiateVariables()
+    {
+        maxActions = 3;
+        faith = 99;
+        faithModifier = 0;
+        victoryPoints = 0;
     }
 
     protected override BaseState GetInitialState()
@@ -185,7 +193,6 @@ public class PlayerSM : StateMachine
     }
     
     #endregion
-    
     
     public void SetUnitsAndHexesArrays(IEnumerable<Unit> units, IEnumerable<Hex> hexes)
     {
@@ -688,6 +695,11 @@ public class PlayerSM : StateMachine
     {
         UIUpdateFaithCount();
     }
+    
+    private void OnVictoryPointValueChanged(int prevValue, int newValue)
+    {
+        UIUpdateVictoryPointCount();
+    }
 
     private void OnAccessibleHexesReceivedValueChange(bool prevValue,bool newValue)
     {
@@ -727,6 +739,11 @@ public class PlayerSM : StateMachine
     public void UIUpdateFaithCount()
     {
         uiManager.UpdateFaithCount(faith);
+    }
+    
+    public void UIUpdateVictoryPointCount()
+    {
+        uiManager.UpdateVictoryPoint(victoryPoints);
     }
 
     public void UIUpdateAbilitySelectionLeft(int value,string moText)

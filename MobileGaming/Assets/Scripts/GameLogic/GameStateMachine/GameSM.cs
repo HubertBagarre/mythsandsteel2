@@ -25,7 +25,7 @@ public class GameSM : StateMachine
     public TextMeshProUGUI debugText2;
 
     [Header("Game Info")]
-    public int currentPlayer;
+    public int currentPlayerId;
     public PlayerSM[] players = new PlayerSM[2];
     public int winner;
 
@@ -81,7 +81,7 @@ public class GameSM : StateMachine
         player0UnitsPlaced = false;
         player1UnitsPlaced = false;
         
-        currentPlayer = -1;
+        currentPlayerId = -1;
         winner = -1;
     }
     
@@ -209,8 +209,8 @@ public class GameSM : StateMachine
     
     public void ChangePlayer(int player)
     {
-        currentPlayer = player;
-        debugText2.text = $"Current player : {currentPlayer}";
+        currentPlayerId = player;
+        debugText2.text = $"Current player : {currentPlayerId}";
         foreach (var playe in players)
         {
             playe.DisplayIfItsYourTurn(player);
@@ -222,7 +222,7 @@ public class GameSM : StateMachine
         playerSm.unitsToActivate = playerSm.maxActions;
 
         var hexGrid = HexGrid.instance;
-        foreach (var unit in hexGrid.units.Where(unit => unit.playerId == currentPlayer))
+        foreach (var unit in hexGrid.units.Where(unit => unit.playerId == currentPlayerId))
         {
             unit.hasBeenActivated = false;
             unit.move = unit.baseMove;
@@ -324,12 +324,38 @@ public class GameSM : StateMachine
     #endregion
 
     #region Victory
+
+    public void GainVictoryPointIfAlliedUnitIsOnFort(PlayerSM playerSm)
+    {
+        if(currentPlayerId != playerSm.playerId) return;
+        Debug.Log($"Checking Victory points for Player {playerSm.playerId}");
+        var noEnemyUnitsOnFort = true;
+        var gainedAtLeastOnePoint = false;
+        Debug.Log($"Found {playerSm.allUnits.Where(unit => !unit.isDead).Where(unit => unit.currentHex.currentTileID == 3).ToList().Count} alive units on Fort Tiles");
+        foreach (var unit in playerSm.allUnits.Where(unit => !unit.isDead).Where(unit => unit.currentHex.currentTileID == 3))
+        {
+            Debug.Log($"The player of the unit is {unit.player} ({unit.player.playerId}), checking for player {playerSm.playerId}");
+            if(unit.player == playerSm)
+            {
+                Debug.Log("Its an ally, Increasing Victory");
+                playerSm.victoryPoints++;
+                gainedAtLeastOnePoint = true;
+            }
+            else
+            {
+                Debug.Log("Its an enemy, no Bonus Point");
+                noEnemyUnitsOnFort = false;
+            }
+        }
+        
+        if(noEnemyUnitsOnFort && gainedAtLeastOnePoint) playerSm.victoryPoints++;
+    }
     
     public bool CheckIfPlayerWon()
     {
         foreach (var player in players)
         {
-            if (VictoryByElimination(player))
+            if (VictoryByElimination(player) || VictoryByVictoryPoints(player))
             {
                 winner = player.playerId;
                 return true;
@@ -342,6 +368,11 @@ public class GameSM : StateMachine
     public bool VictoryByElimination(PlayerSM player)
     {
         return player.allUnits.All(unit => unit.playerId == player.playerId || unit.isDead);
+    }
+    
+    public bool VictoryByVictoryPoints(PlayerSM player)
+    {
+        return player.victoryPoints >= 10;
     }
 
     public void DisconnectPlayers()

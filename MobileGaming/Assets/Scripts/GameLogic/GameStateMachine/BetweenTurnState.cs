@@ -19,6 +19,6 @@ public class BetweenTurnState : BaseState
 
     private void ChangePlayer()
     {
-        sm.ChangePlayer(sm.currentPlayer == 1 ? 0 : 1);
+        sm.ChangePlayer(sm.currentPlayerId == 1 ? 0 : 1);
     }
 }

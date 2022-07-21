@@ -37,7 +37,8 @@ public class NetworkSpawner
                 hex.col = x;
                 hex.row = y;
                 hex.currentTileID = 1;
-                if((x==4&&y==8)||(x==5&&y==8)||(x==6&&y==8)||(x==4&&y==7)||(x==4&&y==0)||(x==5&&y==0)||(x==6&&y==0)||(x==5&&y==1)) hex.currentTileID = 2;
+                if((x==6&&y==8)||(x==4&&y==7)||(x==4&&y==0)||(x==5&&y==1) || (x==5&&y==4)) hex.currentTileID = 2;
+                if((x==4&&y==3)||(x==4&&y==4)||(x==4&&y==5)||(x==5&&y==3)||(x==6&&y==4)||(x==5&&y==5)) hex.currentTileID = 3;
                 Hex.OddrToCube(hex);
                 Hex.JoinHexGrid(hex);
                 NetworkServer.Spawn(hexGameObject);

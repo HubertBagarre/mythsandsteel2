@@ -15,6 +15,7 @@ public class PlayerUIManager : NetworkBehaviour
     [SerializeField] private TextMeshProUGUI debugText;
     [SerializeField] private TextMeshProUGUI actionsLeftText;
     [SerializeField] private TextMeshProUGUI faithCountText;
+    [SerializeField] private TextMeshProUGUI victoryPointText;
     [SerializeField] private TextMeshProUGUI abilitySelectionText;
     
     [Header("Buttons")]
@@ -65,6 +66,11 @@ public class PlayerUIManager : NetworkBehaviour
     public void UpdateFaithCount(int faithCount)
     {
         faithCountText.text = faithCount.ToString();
+    }
+    
+    public void UpdateVictoryPoint(int victoryPoint)
+    {
+        victoryPointText.text = victoryPoint.ToString();
     }
 
     public void EnableNextTurnButton(bool value)

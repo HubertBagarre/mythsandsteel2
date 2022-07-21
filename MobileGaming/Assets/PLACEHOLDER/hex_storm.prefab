@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7820883684757699762}
   - component: {fileID: 5435188409065900152}
   m_Layer: 0
-  m_Name: hex_storm
+  m_Name: hex_Storm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

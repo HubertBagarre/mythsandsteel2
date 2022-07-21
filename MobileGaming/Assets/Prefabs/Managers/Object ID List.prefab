@@ -58,6 +58,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 11400000, guid: d9d86c35fb3eca14c9fb7432ffb6d580, type: 2}
   - {fileID: 11400000, guid: 1d3b3370925303f4480226f8925e67b9, type: 2}
+  - {fileID: 11400000, guid: 64767569830052a44947dbd5d63b57e2, type: 2}
   - {fileID: 11400000, guid: 722ad07902acf944fbf3bae3ecf54c40, type: 2}
   abilities:
   - {fileID: 0}

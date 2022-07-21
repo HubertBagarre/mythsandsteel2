@@ -56,6 +56,7 @@ public class Unit : NetworkBehaviour
     [SyncVar(hook = nameof(OnScriptableAbilityIdChange))] public byte abilityScriptableId;
     public ScriptableAbility abilityScriptable;
     
+
     public void ResetUnitStats()
     {
         maxHp = baseMaxHp;

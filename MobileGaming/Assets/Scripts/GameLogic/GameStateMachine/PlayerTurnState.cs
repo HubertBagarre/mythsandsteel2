@@ -19,9 +19,9 @@ namespace GameStates
         {
             sm.RefreshUnitHuds();
             
-            currentPlayer = sm.players[sm.currentPlayer];
+            currentPlayer = sm.players[sm.currentPlayerId];
             
-            sm.AllowPlayerSend(sm.currentPlayer);
+            sm.AllowPlayerSend(sm.currentPlayerId);
             
             if(sm.CheckIfPlayerWon()) sm.ChangeState(sm.endingState);
         }
