@@ -156,7 +156,7 @@ public class GameSM : StateMachine
         player1UnitsPlaced = true;
     }
     
-    private static void PlacePlayerUnits(Unit[] units, Vector2Int[] positions,int player)
+    private static void PlacePlayerUnits(int[] units, Vector2Int[] positions,int player)
     {
         for (int i = 0; i < positions.Length; i++)
         {
@@ -171,31 +171,13 @@ public class GameSM : StateMachine
 
     private IEnumerator UnitPlacementRoutine()
     {
-        var positions1 = new List<Vector2Int>()
+        foreach (var player in players)
         {
-            new Vector2Int(0,3),
-            new Vector2Int(2,3),
-            new Vector2Int(4,3),
-            new Vector2Int(6,3),
-            new Vector2Int(8,3),
-        };
+            ObjectIDList.GetUnitPlacementScriptable(player.unitPlacementPresetId).SpawnUnits(player.playerId);
+        }
         
-        var positions0 = new List<Vector2Int>()
-        {
-            new Vector2Int(0,7),
-            new Vector2Int(2,7),
-            new Vector2Int(4,7),
-            new Vector2Int(6,7),
-            new Vector2Int(8,7),
-        };
-
         yield return null;
         
-        PlacePlayerUnits(null,positions1.ToArray(),1);
-        PlacePlayerUnits(null,positions0.ToArray(),0);
-
-        yield return new WaitForSeconds(1f);
-
         foreach (var player in players)
         {
             HexGrid.instance.SetPlayerLists(player);
@@ -336,8 +318,9 @@ public class GameSM : StateMachine
             Debug.Log($"The player of the unit is {unit.player} ({unit.player.playerId}), checking for player {playerSm.playerId}");
             if(unit.player == playerSm)
             {
-                Debug.Log("Its an ally, Increasing Victory");
+                Debug.Log("Its an ally, Increasing Victory and giving 1 faith");
                 playerSm.victoryPoints++;
+                playerSm.faith++;
                 gainedAtLeastOnePoint = true;
             }
             else

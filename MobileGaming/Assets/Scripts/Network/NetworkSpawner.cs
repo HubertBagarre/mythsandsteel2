@@ -39,7 +39,7 @@ public class NetworkSpawner
                 hex.currentTileID = 1;
                 if((x==6&&y==8)||(x==4&&y==7)||(x==4&&y==0)||(x==5&&y==1) || (x==5&&y==4)) hex.currentTileID = 2;
                 if((x==4&&y==3)||(x==4&&y==4)||(x==4&&y==5)||(x==5&&y==3)||(x==6&&y==4)||(x==5&&y==5)) hex.currentTileID = 3;
-                Hex.OddrToCube(hex);
+                hex.ApplyCoordToCubeCoords();
                 Hex.JoinHexGrid(hex);
                 NetworkServer.Spawn(hexGameObject);
 
@@ -53,36 +53,13 @@ public class NetworkSpawner
             Vector3.zero, Quaternion.identity);
         unitObject.name = $"Unit {position.x},{position.y}";
         var spawnedUnit = unitObject.GetComponent<Unit>();
-        spawnedUnit.hexRow = Convert.ToSByte(position.x);
-        spawnedUnit.hexCol = Convert.ToSByte(position.y);
+        spawnedUnit.hexCol = Convert.ToSByte(position.x);
+        spawnedUnit.hexRow = Convert.ToSByte(position.y);
         spawnedUnit.playerId = player;
         spawnedUnit.unitScriptableId = unitId;
         spawnedUnit.LinkUnitScriptable(spawnedUnit.unitScriptableId);
         HexGrid.instance.units.Add(spawnedUnit);
         NetworkServer.Spawn(unitObject);
     }
-    
-    public static void SpawnUnits()
-    {
-        if (!NetworkServer.active) return;
 
-        for (int x = 0; x < 10; x+=2)
-        {
-            for (int y = 0; y < 11; y+=10)
-            {
-                var unitObject = Object.Instantiate(((NewNetworkRoomManager) NetworkManager.singleton).unitPrefab,
-                    Vector3.zero, Quaternion.identity);
-                unitObject.name = $"Unit {x},{y}";
-                var unit = unitObject.GetComponent<Unit>();
-                unit.hexRow = Convert.ToSByte(x);
-                unit.hexCol = Convert.ToSByte(y);
-                unit.playerId = y > 0 ? Convert.ToSByte(0) : Convert.ToSByte(1);
-                unit.baseMove = 3;
-                unit.move = 3;
-                NetworkServer.Spawn(unitObject);
-            }
-        }
-        
-    }
-    
 }

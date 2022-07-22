@@ -133,7 +133,9 @@ public class NewNetworkRoomManager : NetworkRoomManager
         var gameSm = GameSM.instance;
         var playerSm = gamePlayer.GetComponent<PlayerSM>();
         playerSm.playerId = roomPlayer.GetComponent<NetworkRoomPlayer>().index;
-        playerSm.factionId = roomPlayer.GetComponent<LobbyInfoContainer>().factionIndex;
+        var lobbyContainer = roomPlayer.GetComponent<LobbyInfoContainer>();
+        playerSm.factionId = lobbyContainer.factionIndex;
+        playerSm.unitPlacementPresetId = lobbyContainer.unitPlacementIndex;
         gameSm.players[playerSm.playerId] = playerSm;
         return true;
     }

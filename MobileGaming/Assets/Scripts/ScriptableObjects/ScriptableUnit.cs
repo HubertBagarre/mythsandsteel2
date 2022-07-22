@@ -29,6 +29,7 @@ public class ScriptableUnit : ScriptableObject
     public byte abilityScriptableId;
 
     [Header("Animations")]
+    public GameObject modelPrefab;
     public Animation idleAnimation;
     public Animation movementAnimation;
     public Animation attackAnimation;

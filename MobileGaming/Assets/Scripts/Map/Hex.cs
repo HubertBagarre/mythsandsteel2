@@ -38,12 +38,56 @@ public class Hex : NetworkBehaviour
     [SerializeField] private Material selectedMat;
     
     
-    public static void OddrToCube(Hex hex)
+    public void ApplyCoordToCubeCoords()
     {
-        hex.q = Convert.ToSByte(hex.col - (hex.row - (hex.row & 1)) / 2);
-        hex.r = hex.row;
-        hex.s = Convert.ToSByte(-hex.q - hex.r);
+        var values = OddrCoordToCube(new Vector2Int(col, row));
+
+        q = Convert.ToSByte(values.x);
+        r = Convert.ToSByte(values.y);
+        s = Convert.ToSByte(values.z);
     }
+
+    #region Maths
+    
+    public static Vector3Int OddrCoordToCube(Vector2Int coord)
+    {
+        // col = coord.x
+        // row = coord.y
+
+        var valueQ = (coord.x - (coord.y - (coord.y & 1)) / 2);
+        var valueR = coord.y;
+        var valueS = -valueQ - valueR;
+
+        return new Vector3Int(valueQ, valueR, valueS);
+    }
+    
+    public static Vector2Int OddrCubeToCoord(Vector3Int cube)
+    {
+        // q = cube.x
+        // r = cube.y
+        // s = cube.z
+
+        var valueCol = cube.x + (cube.y - (cube.y & 1)) / 2;
+        var valueRow = cube.y;
+
+        return new Vector2Int(valueCol, valueRow);
+    }
+
+    public static Vector3Int SubstractCubeCoords(Vector3Int hex1, Vector3Int hex2)
+    {
+        return new Vector3Int(hex1.x - hex2.x, hex1.y - hex2.y, hex1.z - hex2.z);
+    }
+
+    public static Vector3Int ReflectHexCoord(Vector3Int hex,Vector3Int center)
+    {
+        //Subract Center, Reflect, Add Center
+
+        var substractedHex = SubstractCubeCoords(hex, center);
+        var reflectedHex = substractedHex * -1;
+        return SubstractCubeCoords(reflectedHex, -center);
+    }
+    
+    #endregion
 
     public static void JoinHexGrid(Hex hex)
     {
@@ -53,18 +97,6 @@ public class Hex : NetworkBehaviour
     public static float DistanceBetween(Hex a, Hex b)
     {
         return (Mathf.Abs(a.q - b.q) + Mathf.Abs(a.r - b.r) + Mathf.Abs(a.s - b.s))/2f;
-    }
-
-    public static IEnumerable<sbyte> GetCostToNeighbours(Hex a)
-    {
-        var returnArray = new[]
-            {sbyte.MaxValue, sbyte.MaxValue, sbyte.MaxValue, sbyte.MaxValue, sbyte.MaxValue, sbyte.MaxValue};
-        for (var i = 0; i < 6; i++)
-        {
-            if (a.neighbours[i] != null) returnArray[i] = a.neighbours[i].movementCost;
-        }
-
-        return returnArray;
     }
 
     public IEnumerable<Hex> GetNeighborsInRange(int range)

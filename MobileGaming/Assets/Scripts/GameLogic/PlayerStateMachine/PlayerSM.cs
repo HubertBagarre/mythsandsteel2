@@ -23,6 +23,7 @@ public class PlayerSM : StateMachine
     [SyncVar(hook = nameof(OnVictoryPointValueChanged))] public int victoryPoints;
     
     private Camera cam;
+    public int unitPlacementPresetId;
     
     [Header("Network")] [SyncVar] public int playerId;
     [SyncVar(hook = nameof(OnCanInputValueChanged))] public bool canSendInfo;
