@@ -47,13 +47,18 @@ public class Unit : NetworkBehaviour
     [Header("Components")]
     public NetworkAnimator animator;
     public Outline outlineScript;
+    public Transform modelParent;
 
     [Header("Scriptables")]
     [SyncVar(hook = nameof(OnScriptableUnitIdChange))] public byte unitScriptableId;
     public ScriptableUnit unitScriptable;
     [SyncVar(hook = nameof(OnScriptableAbilityIdChange))] public byte abilityScriptableId;
     public ScriptableAbility abilityScriptable;
-    
+
+    private void Start()
+    {
+        outlineScript = UnitModelManager.UpdateUnitModel(this).GetComponent<Outline>();
+    }
 
     public void ResetUnitStats()
     {
@@ -92,9 +97,23 @@ public class Unit : NetworkBehaviour
         abilityScriptable = ObjectIDList.GetAbilityScriptable(abilityScriptableId);
         currentAbilityCost = Convert.ToSByte((abilityScriptableId == 0) ? 0 : abilityScriptable.baseCost);
 
+        ReplaceModel();
+        
         ResetUnitStats();
     }
-    
+
+    private void ReplaceModel()
+    {
+        outlineScript = UnitModelManager.UpdateUnitModel(this).GetComponent<Outline>();
+        RpcReplaceModel();
+    }
+
+    [ClientRpc]
+    private void RpcReplaceModel()
+    {
+        outlineScript = UnitModelManager.UpdateUnitModel(this).GetComponent<Outline>();
+    }
+
     public void ChangeTransformPosition(Vector3 newPos)
     {
         ServerChangePosition(newPos);

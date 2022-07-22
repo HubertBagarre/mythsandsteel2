@@ -61,5 +61,4 @@ public class NetworkSpawner
         HexGrid.instance.units.Add(spawnedUnit);
         NetworkServer.Spawn(unitObject);
     }
-
 }

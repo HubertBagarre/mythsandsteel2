@@ -188,11 +188,11 @@ MonoBehaviour:
   syncInterval: 0.1
   unitName: 
   playerId: 0
+  className: 0
   hexCol: 0
   hexRow: 0
   currentHex: {fileID: 0}
   faction: 
-  className: 
   baseMaxHp: 0
   basePhysicDef: 0
   baseMagicDef: 0
@@ -208,14 +208,17 @@ MonoBehaviour:
   attacksPerTurn: 0
   attacksLeft: 0
   attackDamage: 0
-  range: 0
+  attackRange: 0
   move: 0
+  currentAbilityCost: 0
   hasBeenActivated: 0
   canUseAbility: 0
   animator: {fileID: 0}
-  outlineScript: {fileID: 7322122498380247939}
+  outlineScript: {fileID: 0}
+  modelParent: {fileID: 3394377649723518272}
+  unitScriptableId: 0
   unitScriptable: {fileID: 11400000, guid: fde8563e0f6fa594e80a0e3a84ec3d4b, type: 2}
-  attackAbility: {fileID: 0}
+  abilityScriptableId: 0
   abilityScriptable: {fileID: 0}
 --- !u!136 &8842474755492759944
 CapsuleCollider:
@@ -271,9 +274,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3394377649723518272}
-  - component: {fileID: 7322122498380247939}
   m_Layer: 0
-  m_Name: Main
+  m_Name: Model Parent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -295,24 +297,6 @@ Transform:
   m_Father: {fileID: 3394377649539923441}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7322122498380247939
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3394377649723518273}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 1, g: 1, b: 1, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1 &8979399314226941210
 GameObject:
   m_ObjectHideFlags: 0

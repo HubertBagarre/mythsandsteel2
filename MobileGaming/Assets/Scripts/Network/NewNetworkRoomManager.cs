@@ -26,8 +26,8 @@ public class NewNetworkRoomManager : NetworkRoomManager
     public GameObject hexGridPrefab;
     public GameObject hexPrefab;
     public GameObject gameStateMachinePrefab;
-    
-    
+
+
     #region Server Callbacks
 
     /// <summary>

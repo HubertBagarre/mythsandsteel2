@@ -23,6 +23,7 @@ MonoBehaviour:
   baseRange: 1
   baseMove: 4
   abilityScriptableId: 0
+  modelPrefab: {fileID: 6252630077982886232, guid: 4e1eee82b05865248a8cdc55820880c3, type: 3}
   idleAnimation: {fileID: 0}
   movementAnimation: {fileID: 0}
   attackAnimation: {fileID: 0}
