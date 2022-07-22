@@ -75,7 +75,7 @@ public class Hex : NetworkBehaviour
     
     public IEnumerable<Unit> AdjacentUnits()
     {
-        return neighbours.Count == 0 ? new Unit[]{} : (from hex in neighbours where hex.currentUnit != null select hex.currentUnit).ToArray();
+        return neighbours.Count == 0 ? new Unit[]{} : (from hex in neighbours where hex != null where hex.currentUnit != null select hex.currentUnit).ToArray();
     }
 
     public bool HasUnitOfPlayer(sbyte player)

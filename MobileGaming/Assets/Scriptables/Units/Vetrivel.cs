@@ -14,6 +14,8 @@ public class Vetrivel : ScriptableUnit
         
         void UpdateAdjacentVetrivelsPhysicalDef(Unit unit,Hex hex)
         {
+            Debug.Log($"Hex is {hex}");
+
             foreach (var adjacentUnit in hex.AdjacentUnits())
             {
                 if (adjacentUnit.unitScriptable is Vetrivel && !adjacentUnit.isDead)

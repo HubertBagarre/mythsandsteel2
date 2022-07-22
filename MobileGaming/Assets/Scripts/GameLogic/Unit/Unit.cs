@@ -190,7 +190,8 @@ public class Unit : NetworkBehaviour
 
     public IEnumerable<Unit> AdjacentUnits()
     {
-        return (from hex in currentHex.neighbours where hex.currentUnit != null select hex.currentUnit).ToArray();
+        if (currentHex == null) return new List<Unit>();
+        return (from hex in currentHex.neighbours where hex != null where hex.currentUnit != null select hex.currentUnit).ToArray();
     }
 
     public int NumberOfAdjacentEnemyUnits()
