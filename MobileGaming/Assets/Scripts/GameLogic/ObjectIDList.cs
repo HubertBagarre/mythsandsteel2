@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class ObjectIDList : MonoBehaviour
 {
-    public List<ScriptableFaction> factions { get; private set; } = new List<ScriptableFaction>();
-    public  List<ScriptableUnit> units { get; private set; } = new List<ScriptableUnit>();
-    public  List<ScriptableTile> tiles { get; private set; } = new List<ScriptableTile>();
-    public  List<ScriptableAbility> abilities { get; private set; } = new List<ScriptableAbility>();
+    [field: SerializeField] public List<ScriptableFaction> factions { get; private set; } = new List<ScriptableFaction>();
+    [field: SerializeField] public  List<ScriptableUnit> units { get; private set; } = new List<ScriptableUnit>();
+    [field: SerializeField] public  List<ScriptableTile> tiles { get; private set; } = new List<ScriptableTile>();
+    [field: SerializeField] public  List<ScriptableAbility> abilities { get; private set; } = new List<ScriptableAbility>();
     
     public static ObjectIDList instance;
     

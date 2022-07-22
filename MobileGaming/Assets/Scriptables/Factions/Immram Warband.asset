@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 974d49e478a179a4aa5b68628c2f3093, type: 3}
+  m_Name: Immram Warband
+  m_EditorClassIdentifier: 
+  beliefAbilityDescription: "Lorsqu'une unit\xE9 ennemie est \xE9limin\xE9e +4 Foi.
+    Si l'Unit\xE9 a \xE9t\xE9 achev\xE9e avec des D\xE9g\xE2ts Magiques, +4 Foi suppl\xE9mentaire.
+    Si l'Unit\xE9 \xE9tait sur une case Fort, +4 Foi suppl\xE9mentaire."
+  culturalAbilityDescription: "Lorsqu'une Unit\xE9 alli\xE9e attaque une Unit\xE9,
+    si l'Unit\xE9 attaqu\xE9e \xE0 d\xE9j\xE0 \xE9tait attaqu\xE9e pendant ce tour
+    par une Unit\xE9 alli\xE9e, l'attaque inflige +3 D\xE9g\xE2ts Magiques, puis
+    l'Unit\xE9 attaquante et l'Unit\xE9 alli\xE9e qui a attaqu\xE9 l'Unit\xE9 attaqu\xE9e
+    pr\xE9cedemment ont +1 Mouvement jusqu'\xE0 la fin de votre prochain tour. Ce
+    bonus peut se cumuler jusqu'\xE0 3 fois sur une m\xEAme unit\xE9."

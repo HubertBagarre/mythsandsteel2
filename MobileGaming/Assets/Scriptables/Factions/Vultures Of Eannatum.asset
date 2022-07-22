@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63e058bc9f21b0f4d9d994fd60a94867, type: 3}
+  m_Name: Vultures Of Eannatum
+  m_EditorClassIdentifier: 
+  beliefAbilityDescription: "Au d\xE9but votre tour, +3 Foi. Pour chaque type d'Unit\xE9
+    alli\xE9e diff\xE9rent sur une case Fort, +3 Foi.\n\nA la fin de votre tour,
+    pour chaque Unit\xE9 alli\xE9e sur une case Fort, +1 Foi."
+  culturalAbilityDescription: "Au d\xE9but de votre tour, si une Unit\xE9 ennemie
+    est adjacente \xE0 une case Impassable ou \xE0 la bordure de la carte, pour chaque
+    Unit\xE9 alli\xE9e adjacente, elle subit 3 D\xE9g\xE2ts Physiques."

@@ -44,22 +44,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aba2d48f369d4004fb56bb7c67a7a89e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  factions:
-  - {fileID: 11400000, guid: 7045d599c2b0a5840971f306e0da0911, type: 2}
-  - {fileID: 11400000, guid: 7045d599c2b0a5840971f306e0da0911, type: 2}
-  - {fileID: 11400000, guid: 7045d599c2b0a5840971f306e0da0911, type: 2}
-  - {fileID: 11400000, guid: 92b3ae2bded887e43978386187ff6ede, type: 2}
-  units:
+  <factions>k__BackingField:
+  - {fileID: 11400000, guid: 30468b4c2464921438890274ddbc13f6, type: 2}
+  - {fileID: 11400000, guid: bd564dc44f6c48640ae23ad50e09643d, type: 2}
+  - {fileID: 11400000, guid: 47b08fe5c2ff91947a2b030a9b605d0b, type: 2}
+  - {fileID: 11400000, guid: 642b68da9fc362747923724fad19cd49, type: 2}
+  <units>k__BackingField:
   - {fileID: 11400000, guid: fde8563e0f6fa594e80a0e3a84ec3d4b, type: 2}
   - {fileID: 11400000, guid: 05d117d006b58624f90846867c761fa3, type: 2}
   - {fileID: 11400000, guid: 694593e0431d41845accc36c844c7d6d, type: 2}
   - {fileID: 11400000, guid: 17b855f54208c50458b8e0ea9f67ed4c, type: 2}
-  tiles:
+  <tiles>k__BackingField:
   - {fileID: 0}
   - {fileID: 11400000, guid: d9d86c35fb3eca14c9fb7432ffb6d580, type: 2}
   - {fileID: 11400000, guid: 1d3b3370925303f4480226f8925e67b9, type: 2}
   - {fileID: 11400000, guid: 64767569830052a44947dbd5d63b57e2, type: 2}
   - {fileID: 11400000, guid: 722ad07902acf944fbf3bae3ecf54c40, type: 2}
-  abilities:
+  <abilities>k__BackingField:
   - {fileID: 0}
   - {fileID: 11400000, guid: d95af2bc33fac40489f8b0b5bffe4291, type: 2}
