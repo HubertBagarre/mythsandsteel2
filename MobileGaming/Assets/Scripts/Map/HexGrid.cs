@@ -119,7 +119,7 @@ public class HexGrid : NetworkBehaviour
         Debug.Log("Centering Cam");
         foreach (var player in GameSM.instance.players)
         {
-            player.RpcMoveCamera(new Vector3(10, 0, -3.5f),new Vector3(0, 34, -15.35f));
+            player.RpcMoveCamera(new Vector3(10, 0, -6.92f),new Vector3(0, 34, -8.7f));
         }
     }
 

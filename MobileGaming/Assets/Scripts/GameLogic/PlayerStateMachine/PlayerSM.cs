@@ -214,20 +214,25 @@ public class PlayerSM : StateMachine
     }
     
     #region Camera Management
-    private void MoveCamera(Vector3 anchorPos,Vector3 camPos)
+    private void MoveCamera(Vector3 anchorPos,Vector3 camPos,bool flipped)
     {
-        var camAnchor = cam.transform.parent;
+        var camTransform = cam.transform;
+        var camAnchorRotation = camTransform.parent;
+        var camAnchor = camAnchorRotation.parent;
         camAnchor.localPosition = anchorPos;
         camAnchor.localRotation = Quaternion.identity;
-        camAnchor.GetChild(0).localPosition = camPos;
-        camAnchor.GetChild(0).localRotation = Quaternion.Euler(new Vector3(70,0,0));
+        camAnchorRotation.localPosition = Vector3.zero;
+        camAnchorRotation.localRotation = Quaternion.identity;
+        camTransform.localPosition = camPos;
+        camTransform.localRotation = Quaternion.Euler(new Vector3(75,0,0));
+        if(flipped) camAnchor.localRotation = Quaternion.Euler(new Vector3(0,180,0));
     }
 
     [ClientRpc]
     public void RpcMoveCamera(Vector3 anchorPos,Vector3 camPos)
     {
         if(!isLocalPlayer) return;
-        MoveCamera(anchorPos,camPos);
+        MoveCamera(anchorPos,camPos,playerId == 0);
     }
 
     #endregion
