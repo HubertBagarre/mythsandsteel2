@@ -75,10 +75,7 @@ public class Unit : NetworkBehaviour
 
     public void LinkUnitScriptable(byte id)
     {
-        if (id > ObjectIDList.instance.units.Count) id = 0;
-        unitScriptableId = id;
-        
-        var newUnitScriptable = ObjectIDList.instance.units[unitScriptableId];
+        var newUnitScriptable = ObjectIDList.GetUnitScriptable(unitScriptableId);
         unitScriptable = newUnitScriptable;
 
         unitName = unitScriptable.unitName;
@@ -94,7 +91,7 @@ public class Unit : NetworkBehaviour
         baseMove = unitScriptable.baseMove;
 
         abilityScriptableId = unitScriptable.abilityScriptableId;
-        abilityScriptable = ObjectIDList.instance.abilities[abilityScriptableId];
+        abilityScriptable = ObjectIDList.GetAbilityScriptable(abilityScriptableId);
         currentAbilityCost = Convert.ToSByte((abilityScriptableId == 0) ? 0 : abilityScriptable.baseCost);
 
         ResetUnitStats();
@@ -216,12 +213,12 @@ public class Unit : NetworkBehaviour
 
     private void OnScriptableUnitIdChange(byte prevId,byte newId)
     {
-        unitScriptable = ObjectIDList.instance.units[newId];
+        unitScriptable = ObjectIDList.GetUnitScriptable(newId);
     }
     
     private void OnScriptableAbilityIdChange(byte prevId,byte newId)
     {
-        abilityScriptable = ObjectIDList.instance.abilities[newId];
+        abilityScriptable = ObjectIDList.GetAbilityScriptable(newId);
     }
 
     #endregion

@@ -290,7 +290,7 @@ public class GameSM : StateMachine
 
     public void ServerSideSetAbilitySelectableHexes(Unit castingUnit)
     {
-        var scriptableAbility = ObjectIDList.instance.abilities[castingUnit.abilityScriptableId];
+        var scriptableAbility = ObjectIDList.GetAbilityScriptable(castingUnit.abilityScriptableId);
         if (scriptableAbility is IAbilityCallBacks abilityCallback)
         {
             var selectableHexes = abilityCallback.AbilitySelectables(castingUnit);                                 

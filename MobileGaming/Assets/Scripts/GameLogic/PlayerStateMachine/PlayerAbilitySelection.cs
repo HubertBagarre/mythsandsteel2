@@ -45,7 +45,7 @@ namespace PlayerStates
             sm.castingUnit = abilityCastingUnit;
             sm.abilityIndexToUse = abilityCastingUnit.abilityScriptableId;        
             sm.CmdSetAbilityIndexToUse(abilityCastingUnit,abilityCastingUnit.abilityScriptableId);
-            scriptableAbility = ObjectIDList.instance.abilities[sm.abilityIndexToUse];
+            scriptableAbility = ObjectIDList.GetAbilityScriptable(sm.abilityIndexToUse);
             
             if(scriptableAbility is not IAbilityCallBacks casted)
             {

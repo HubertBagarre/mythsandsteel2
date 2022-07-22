@@ -92,7 +92,7 @@ public class Hex : NetworkBehaviour
 
     private void ApplyTile(int tileID)
     {
-        var newTile = ObjectIDList.instance.tiles[tileID];
+        var newTile = ObjectIDList.GetTileScriptable(tileID);
         currentTileID = tileID;
         tile = newTile;
         

@@ -43,7 +43,7 @@ public class FactionSelector : MonoBehaviour
 
     public void SelectFaction(int factionIndex)
     {
-        var faction = ObjectIDList.instance.factions[factionIndex];
+        var faction = ObjectIDList.GetFactionScriptable(factionIndex);
         factionTitleText.text = faction.name;
 
         factionDescriptionText.text =
