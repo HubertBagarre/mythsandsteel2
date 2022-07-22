@@ -63,3 +63,9 @@ MonoBehaviour:
   <abilities>k__BackingField:
   - {fileID: 0}
   - {fileID: 11400000, guid: d95af2bc33fac40489f8b0b5bffe4291, type: 2}
+  <unitPlacements>k__BackingField:
+  - {fileID: 11400000, guid: ce01a522d3777f74e86751eca757e97c, type: 2}
+  - {fileID: 11400000, guid: abfbd1dc06ef3424f81847dd081ef684, type: 2}
+  - {fileID: 11400000, guid: 5fd26befd06e1d84ba2bb49b09a92509, type: 2}
+  - {fileID: 11400000, guid: 5b791ef87925f0c44bbbf796ec076ae0, type: 2}
+  - {fileID: 11400000, guid: e30d8c34d48c50741b9198178fc38146, type: 2}

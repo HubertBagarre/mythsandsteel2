@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class FactionButton : MonoBehaviour
 {
     public int factionIndex;
-    public FactionSelector selector;
+    public FactionAndPlacementSelector selector;
     public Button button;
 
     private void Start()
@@ -17,8 +17,6 @@ public class FactionButton : MonoBehaviour
     {
         button.interactable = false;
         selector.SelectFaction(factionIndex);
-        FactionContainer.onFactionChose?.Invoke(factionIndex);
+        LobbyInfoContainer.onFactionChose?.Invoke(factionIndex);
     }
-
-
 }

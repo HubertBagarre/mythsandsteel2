@@ -3910,7 +3910,7 @@ MonoBehaviour:
   - {fileID: 2428383785314004292, guid: 370ed154edb4c174a9c92bda94c878da, type: 3}
   - {fileID: 2528794637835303008, guid: 836f21ee943f15246b5ed830d862ceb3, type: 3}
   - {fileID: 4498166596259381530, guid: a2b97815fac77c24c9812c4dd7e17239, type: 3}
-  showRoomGUI: 1
+  showRoomGUI: 0
   minPlayers: 2
   roomPlayerPrefab: {fileID: 68502856925070404, guid: e787c8c397be2ef42a4aae6449492390, type: 3}
   RoomScene: Assets/Scenes/Shipped Scenes/RoomScene.unity
@@ -3929,7 +3929,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1870446293}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6442dc8070ceb41f094e44de0bf87274, type: 3}
   m_Name: 
