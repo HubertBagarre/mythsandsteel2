@@ -32,6 +32,7 @@ public class PlayerUIManager : NetworkBehaviour
     [SerializeField] private GameObject abilityGameObject;
     [SerializeField] private GameObject abilitySelectionGameObject;
     [SerializeField] private GameObject allyUnitPortraitGameObject;
+    [SerializeField] private GameObject unitRespawnMenuGameObject;
     
     [Header("Other")]
     [SerializeField] private Color allyOutlineColor;
@@ -91,20 +92,22 @@ public class PlayerUIManager : NetworkBehaviour
         abilityGameObject.SetActive(!value);
     }
 
-    public void AddButtonListeners(UnityAction nextTurnAction,UnityAction abilityAction,UnityAction confirmAbilityAction,UnityAction cancelAbilityAction)
+    public void AddButtonListeners(UnityAction nextTurnAction,UnityAction abilityAction,UnityAction confirmAbilityAction,UnityAction cancelAbilityAction,UnityAction faithButtonAction)
     {
         nextTurnButton.onClick.AddListener(nextTurnAction);
         abilityButton.onClick.AddListener(abilityAction);
         abilityConfirmButton.onClick.AddListener(confirmAbilityAction);
         abilityCancelButton.onClick.AddListener(cancelAbilityAction);
+        faithButton.onClick.AddListener(faithButtonAction);
     }
 
-    public void RemoveButtonListeners(UnityAction nextTurnAction,UnityAction abilityAction,UnityAction confirmAbilityAction,UnityAction cancelAbilityAction)
+    public void RemoveButtonListeners(UnityAction nextTurnAction,UnityAction abilityAction,UnityAction confirmAbilityAction,UnityAction cancelAbilityAction,UnityAction faithButtonAction)
     {
         nextTurnButton.onClick.RemoveListener(nextTurnAction);
         abilityButton.onClick.RemoveListener(abilityAction);
         abilityConfirmButton.onClick.RemoveListener(confirmAbilityAction);
         abilityCancelButton.onClick.RemoveListener(cancelAbilityAction);
+        faithButton.onClick.RemoveListener(faithButtonAction);
     }
     
     public void UpdateAbilitySelectionText(string moText)
@@ -115,6 +118,11 @@ public class PlayerUIManager : NetworkBehaviour
     public void EnableAbilityConfirmButton(bool value)
     {
         abilityConfirmButton.interactable = value;
+    }
+
+    public void ToggleUnitRespawnMenu()
+    {
+        unitRespawnMenuGameObject.SetActive(!unitRespawnMenuGameObject.activeSelf);
     }
     
     #region Unit Hud

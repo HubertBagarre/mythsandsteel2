@@ -727,13 +727,13 @@ public class PlayerSM : StateMachine
         if (newValue)
         {
             inputManager.OnStartTouch += TryToSelectUnitOrTile;
-            uiManager.AddButtonListeners(TryToEndTurn,TryToUseAbility,TryToLaunchAbility,ExitAbilitySelection);
+            uiManager.AddButtonListeners(TryToEndTurn,TryToUseAbility,TryToLaunchAbility,ExitAbilitySelection,UIToggleRespawnMenu);
             uiManager.UpdateActionsLeft(unitsToActivate);
         }
         else
         {
             inputManager.OnStartTouch -= TryToSelectUnitOrTile;
-            uiManager.RemoveButtonListeners(TryToEndTurn,TryToUseAbility,TryToLaunchAbility,ExitAbilitySelection);
+            uiManager.RemoveButtonListeners(TryToEndTurn,TryToUseAbility,TryToLaunchAbility,ExitAbilitySelection,UIToggleRespawnMenu);
         }
     }
 
@@ -779,6 +779,11 @@ public class PlayerSM : StateMachine
     public void UIUpdateUnitHud()
     {
         uiManager.UpdateUnitHud();
+    }
+
+    public void UIToggleRespawnMenu()
+    {
+        uiManager.ToggleUnitRespawnMenu();
     }
 
     #endregion

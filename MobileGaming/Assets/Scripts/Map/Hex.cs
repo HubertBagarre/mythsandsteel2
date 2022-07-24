@@ -16,6 +16,7 @@ public class Hex : NetworkBehaviour
     [SyncVar(hook = nameof(OnCurrentTileIdValueChanged))] public int currentTileID;
     [SyncVar(hook = nameof(OnCollectibleIdValueChanged))] public int currentCollectibleId;
     public bool hasCollectible => currentCollectibleId != 0;
+    [SyncVar] public int respawnableUnitTeam = -1;
     
     [Header("Offset Coordinates (odd-r)")]
     [SyncVar] public sbyte col;
