@@ -37,9 +37,11 @@ public class NetworkSpawner
                 hex.col = x;
                 hex.row = y;
                 hex.currentTileID = 1;
+                
                 if((x==6&&y==8)||(x==4&&y==7)||(x==4&&y==0)||(x==5&&y==1) || (x==5&&y==4)) hex.currentTileID = 2;
                 if((x==4&&y==3)||(x==4&&y==4)||(x==4&&y==5)||(x==5&&y==3)||(x==6&&y==4)||(x==5&&y==5)) hex.currentTileID = 3;
-                if ((x == 2 && y == 3) || (x == 3 && y == 4) || (x == 2 && y == 5) || (x == 7 && y == 3) || (x == 7 && y == 5) || (x == 7 && y == 4)) hex.currentCollectibleId = 1;
+                if((x==2&&y==3)||(x ==3&&y==4)||(x==2&&y==5)||(x==7&&y==3)||(x==7&&y==5)||(x==7&&y==4)) hex.currentCollectibleId = 1;
+                if((x==3&&y==0)||(x ==7&&y==0)||(x==3&&y==8)||(x==7&&y==8)||(x==5&&y==2)||(x==5&&y==6)) hex.currentCollectibleId = 2;
                 
                 hex.ApplyCoordToCubeCoords();
                 Hex.JoinHexGrid(hex);
