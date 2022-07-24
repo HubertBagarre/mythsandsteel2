@@ -11,6 +11,8 @@ public class ObjectIDList : MonoBehaviour
     [field: SerializeField] public  List<ScriptableAbility> abilities { get; private set; } = new ();
     [field: SerializeField] public  List<ScriptableUnitPlacement> unitPlacements { get; private set; } = new ();
     
+    [field: SerializeField] public  List<ScriptableCollectible> collectibles { get; private set; } = new ();
+    
     public static ObjectIDList instance;
     
     private void Awake()
@@ -54,5 +56,11 @@ public class ObjectIDList : MonoBehaviour
     {
         if (index < 0 || index >= instance.unitPlacements.Count) index = 0;
         return instance.unitPlacements[index];
+    }
+    
+    public static ScriptableCollectible GetCollectibleScriptable(int index)
+    {
+        if (index < 0 || index >= instance.collectibles.Count) index = 0;
+        return instance.collectibles[index];
     }
 }

@@ -69,3 +69,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5fd26befd06e1d84ba2bb49b09a92509, type: 2}
   - {fileID: 11400000, guid: 5b791ef87925f0c44bbbf796ec076ae0, type: 2}
   - {fileID: 11400000, guid: e30d8c34d48c50741b9198178fc38146, type: 2}
+  <collectibles>k__BackingField:
+  - {fileID: 0}
+  - {fileID: 11400000, guid: cf9d4b0c642371240be8d4c1c8d2c6ae, type: 2}
+  - {fileID: 11400000, guid: 170af65399456ba449851e44df1348e0, type: 2}

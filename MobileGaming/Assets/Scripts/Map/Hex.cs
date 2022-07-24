@@ -15,6 +15,9 @@ public class Hex : NetworkBehaviour
     [SyncVar] public Unit currentUnit;
     [SyncVar] public int currentTileID;
     public ScriptableTile tile;
+
+    [SyncVar] public int currentCollectibleId;
+    public bool hasCollectible => currentCollectibleId != 0;
     
     [Header("Offset Coordinates (odd-r)")]
     [SyncVar] public sbyte col;
@@ -171,6 +174,13 @@ public class Hex : NetworkBehaviour
         currentUnit = unit;
         unit.hexCol = col;
         unit.hexRow = row;
+
+        if (hasCollectible)
+        {
+            var collectibleId = currentCollectibleId;
+            currentCollectibleId = 0;
+            ObjectIDList.GetCollectibleScriptable(collectibleId).OnPickedUp(unit,this);
+        }
         
         CallbackManager.UnitHexEnter(unit,this);
     }
