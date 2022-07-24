@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52818c559bd045e41b2756ad2083c969, type: 3}
   m_Name: Faith +2
   m_EditorClassIdentifier: 
+  collectibleModelPrefab: {fileID: 6645706502423911277, guid: 9923febf354b6b64b990bdc396de550d, type: 3}
   faithGained: 2

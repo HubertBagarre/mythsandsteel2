@@ -13,10 +13,8 @@ public class Hex : NetworkBehaviour
     [Header("Gaming")]
     [SyncVar] public sbyte movementCost = 1;
     [SyncVar] public Unit currentUnit;
-    [SyncVar] public int currentTileID;
-    public ScriptableTile tile;
-
-    [SyncVar] public int currentCollectibleId;
+    [SyncVar(hook = nameof(OnCurrentTileIdValueChanged))] public int currentTileID;
+    [SyncVar(hook = nameof(OnCollectibleIdValueChanged))] public int currentCollectibleId;
     public bool hasCollectible => currentCollectibleId != 0;
     
     [Header("Offset Coordinates (odd-r)")]
@@ -31,8 +29,10 @@ public class Hex : NetworkBehaviour
 
     public readonly SyncList<Hex> neighbours = new ();
 
-    [Header("Tile Application")] [SerializeField]
-    private Transform modelParent;
+    [Header("Tile Application")]
+    public Transform modelParent;
+    public bool shouldBeRendered => currentTileID != 0;
+    public Transform modelPropsParent;
     private Renderer modelRenderer;
     private Material normalMat;
     [SerializeField] private Material selectableMat;
@@ -129,20 +129,20 @@ public class Hex : NetworkBehaviour
     {
         var newTile = ObjectIDList.GetTileScriptable(tileID);
         currentTileID = tileID;
-        tile = newTile;
+
+        //Change Hex model
+        var model =  ModelSpawner.UpdateHexModel(this);
+        ModelSpawner.UpdateHexCollectible(this);
         
         //Update tile stats
-        movementCost = tile.movementCost;
-        
-        //Change Hex model
-        if(modelParent.childCount >= 1) Destroy(modelParent.GetChild(0).gameObject);
-        if(tile.model == null)
+        movementCost = newTile.movementCost;
+        if(newTile.model == null)
         {
             movementCost = sbyte.MaxValue;
             return;
         }
-
-        var model = Instantiate(tile.model, modelParent);
+        
+        //Update variables
         modelRenderer = model.GetComponent<Renderer>();
         normalMat = modelRenderer.material;
         model.transform.localPosition = Vector3.zero;
@@ -180,6 +180,7 @@ public class Hex : NetworkBehaviour
             var collectibleId = currentCollectibleId;
             currentCollectibleId = 0;
             ObjectIDList.GetCollectibleScriptable(collectibleId).OnPickedUp(unit,this);
+            ModelSpawner.UpdateHexCollectible(this);
         }
         
         CallbackManager.UnitHexEnter(unit,this);
@@ -195,6 +196,18 @@ public class Hex : NetworkBehaviour
         if (currentUnit == unit) currentUnit = null;
         
         CallbackManager.UnitHexExit(unit,this);
+        
+        ModelSpawner.UpdateHexCollectible(this);
+    }
+
+    private void OnCollectibleIdValueChanged(int prevValue, int newValue)
+    {
+        ModelSpawner.UpdateHexCollectible(this);
+    }
+    
+    private void OnCurrentTileIdValueChanged(int prevValue, int newValue)
+    {
+        ModelSpawner.UpdateHexModel(this);
     }
     
 }

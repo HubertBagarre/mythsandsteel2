@@ -57,7 +57,7 @@ public class Unit : NetworkBehaviour
 
     private void Start()
     {
-        outlineScript = UnitModelManager.UpdateUnitModel(this).GetComponent<Outline>();
+        outlineScript = ModelSpawner.UpdateUnitModel(this).GetComponent<Outline>();
     }
 
     public void ResetUnitStats()
@@ -104,14 +104,14 @@ public class Unit : NetworkBehaviour
 
     private void ReplaceModel()
     {
-        outlineScript = UnitModelManager.UpdateUnitModel(this).GetComponent<Outline>();
+        outlineScript = ModelSpawner.UpdateUnitModel(this).GetComponent<Outline>();
         RpcReplaceModel();
     }
 
     [ClientRpc]
     private void RpcReplaceModel()
     {
-        outlineScript = UnitModelManager.UpdateUnitModel(this).GetComponent<Outline>();
+        outlineScript = ModelSpawner.UpdateUnitModel(this).GetComponent<Outline>();
     }
 
     public void ChangeTransformPosition(Vector3 newPos)
