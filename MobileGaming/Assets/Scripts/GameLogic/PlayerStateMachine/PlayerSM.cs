@@ -767,6 +767,7 @@ public class PlayerSM : StateMachine
     public void RpcUISetupUnitHuds()
     {
         uiManager.GenerateUnitHuds(allUnits);
+        uiManager.InitializeRespawnButtons(allUnits);
     }
     
     [ClientRpc]
@@ -784,6 +785,7 @@ public class PlayerSM : StateMachine
     public void UIToggleRespawnMenu()
     {
         uiManager.ToggleUnitRespawnMenu();
+        uiManager.ActivateRespawnButtons(playerId);
     }
 
     #endregion

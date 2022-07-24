@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Mirror;
 using TMPro;
 using UnityEngine;
@@ -32,13 +33,18 @@ public class PlayerUIManager : NetworkBehaviour
     [SerializeField] private GameObject abilityGameObject;
     [SerializeField] private GameObject abilitySelectionGameObject;
     [SerializeField] private GameObject allyUnitPortraitGameObject;
-    [SerializeField] private GameObject unitRespawnMenuGameObject;
     
+    [Header("Unit Respawn")]
+    [SerializeField] private GameObject unitRespawnMenuGameObject;
+    [SerializeField] private Transform unitRespawnParent;
+    [SerializeField] private RespawnUnitButton respawnUnitButtonPrefab;
+    private readonly List<RespawnUnitButton> respawnUnitButtons = new ();
+
     [Header("Other")]
     [SerializeField] private Color allyOutlineColor;
     [SerializeField] private Color enemyOutlineColor;
 
-    [Header("Moving Things")]
+    [Header("Unit Hud")]
     [SerializeField] private Vector2 unitHudOffset;
     private Dictionary<Unit, UnitHud> unitHudDict = new();
 
@@ -123,6 +129,26 @@ public class PlayerUIManager : NetworkBehaviour
     public void ToggleUnitRespawnMenu()
     {
         unitRespawnMenuGameObject.SetActive(!unitRespawnMenuGameObject.activeSelf);
+    }
+
+    public void InitializeRespawnButtons(IEnumerable<Unit> units)
+    {
+        respawnUnitButtons.Clear();
+        foreach (var unit in units)
+        {
+            var respawnUnitButton = Instantiate(respawnUnitButtonPrefab, unitRespawnParent);
+            respawnUnitButton.associatedUnit = unit;
+            respawnUnitButton.gameObject.SetActive(false);
+            respawnUnitButtons.Add(respawnUnitButton);
+        }
+    }
+
+    public void ActivateRespawnButtons(int playerId)
+    {
+        foreach (var button in respawnUnitButtons)
+        {
+            button.gameObject.SetActive(button.associatedUnit.isDead && button.associatedUnit.playerId == playerId);
+        }
     }
     
     #region Unit Hud

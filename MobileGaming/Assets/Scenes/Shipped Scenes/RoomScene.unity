@@ -249,42 +249,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Object ID List
       objectReference: {fileID: 0}
-    - target: {fileID: 2631557585087269198, guid: ee77df4660f07864387e809008876d1a, type: 3}
-      propertyPath: <unitPlacements>k__BackingField.Array.size
-      value: 13
-      objectReference: {fileID: 0}
-    - target: {fileID: 2631557585087269198, guid: ee77df4660f07864387e809008876d1a, type: 3}
-      propertyPath: <unitPlacements>k__BackingField.Array.data[5]
-      value: 
-      objectReference: {fileID: 11400000, guid: e30d8c34d48c50741b9198178fc38146, type: 2}
-    - target: {fileID: 2631557585087269198, guid: ee77df4660f07864387e809008876d1a, type: 3}
-      propertyPath: <unitPlacements>k__BackingField.Array.data[6]
-      value: 
-      objectReference: {fileID: 11400000, guid: e30d8c34d48c50741b9198178fc38146, type: 2}
-    - target: {fileID: 2631557585087269198, guid: ee77df4660f07864387e809008876d1a, type: 3}
-      propertyPath: <unitPlacements>k__BackingField.Array.data[7]
-      value: 
-      objectReference: {fileID: 11400000, guid: e30d8c34d48c50741b9198178fc38146, type: 2}
-    - target: {fileID: 2631557585087269198, guid: ee77df4660f07864387e809008876d1a, type: 3}
-      propertyPath: <unitPlacements>k__BackingField.Array.data[8]
-      value: 
-      objectReference: {fileID: 11400000, guid: e30d8c34d48c50741b9198178fc38146, type: 2}
-    - target: {fileID: 2631557585087269198, guid: ee77df4660f07864387e809008876d1a, type: 3}
-      propertyPath: <unitPlacements>k__BackingField.Array.data[9]
-      value: 
-      objectReference: {fileID: 11400000, guid: e30d8c34d48c50741b9198178fc38146, type: 2}
-    - target: {fileID: 2631557585087269198, guid: ee77df4660f07864387e809008876d1a, type: 3}
-      propertyPath: <unitPlacements>k__BackingField.Array.data[10]
-      value: 
-      objectReference: {fileID: 11400000, guid: e30d8c34d48c50741b9198178fc38146, type: 2}
-    - target: {fileID: 2631557585087269198, guid: ee77df4660f07864387e809008876d1a, type: 3}
-      propertyPath: <unitPlacements>k__BackingField.Array.data[11]
-      value: 
-      objectReference: {fileID: 11400000, guid: e30d8c34d48c50741b9198178fc38146, type: 2}
-    - target: {fileID: 2631557585087269198, guid: ee77df4660f07864387e809008876d1a, type: 3}
-      propertyPath: <unitPlacements>k__BackingField.Array.data[12]
-      value: 
-      objectReference: {fileID: 11400000, guid: e30d8c34d48c50741b9198178fc38146, type: 2}
     - target: {fileID: 2631557585087269199, guid: ee77df4660f07864387e809008876d1a, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -678,19 +642,7 @@ PrefabInstance:
       value: Lobby Canvas
       objectReference: {fileID: 0}
     - target: {fileID: 9005173769982892212, guid: a8a7b759fe59b2e4b8a7cadb96f69749, type: 3}
-      propertyPath: m_Pivot.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9005173769982892212, guid: a8a7b759fe59b2e4b8a7cadb96f69749, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9005173769982892212, guid: a8a7b759fe59b2e4b8a7cadb96f69749, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9005173769982892212, guid: a8a7b759fe59b2e4b8a7cadb96f69749, type: 3}
-      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9005173771347998295, guid: a8a7b759fe59b2e4b8a7cadb96f69749, type: 3}
