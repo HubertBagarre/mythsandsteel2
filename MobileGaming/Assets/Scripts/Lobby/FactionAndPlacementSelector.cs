@@ -47,6 +47,8 @@ public class FactionAndPlacementSelector : MonoBehaviour
             item.button.onClick.AddListener(EnableAllUnitPlacementButtons);
             unitPlacementButtons.Add(item);
         }
+        
+        unitPlacementLayoutTransform.localPosition = Vector3.zero;
     }
 
     private void EnableAllFactionButtons()
