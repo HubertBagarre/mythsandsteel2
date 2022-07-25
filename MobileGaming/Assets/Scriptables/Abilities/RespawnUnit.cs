@@ -15,6 +15,8 @@ public class RespawnUnit : ScriptableAbility, IAbilityCallBacks
     {
         var targetHex = (targetedHexes as Hex[] ?? targetedHexes.ToArray())[0];
 
+        if(player.ConsumeFaith(8)) castingUnit.RespawnUnit(targetHex);
+        
         Debug.Log($"Respawning {castingUnit} on {targetHex}");
     }
 }

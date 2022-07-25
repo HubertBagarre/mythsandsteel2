@@ -11,25 +11,8 @@ public class Vetrivel : ScriptableUnit
         CallbackManager.OnAnyUnitHexExit += UpdateAdjacentVetrivelsPhysicalDef;
 
         CallbackManager.OnAnyUnitHexEnter += UpdateAdjacentVetrivelsPhysicalDef;
-        
-        void UpdateAdjacentVetrivelsPhysicalDef(Unit unit,Hex hex)
-        {
-            Debug.Log($"Hex is {hex}");
-
-            foreach (var adjacentUnit in hex.AdjacentUnits())
-            {
-                if (adjacentUnit.unitScriptable is Vetrivel && !adjacentUnit.isDead)
-                {
-                    adjacentUnit.physicDef = Convert.ToSByte(adjacentUnit.basePhysicDef + adjacentUnit.NumberOfAdjacentEnemyUnits());
-                }
-            }
-            if (unit.unitScriptable is Vetrivel && !unit.isDead)
-            {
-                unit.physicDef = Convert.ToSByte(unit.basePhysicDef + unit.NumberOfAdjacentEnemyUnits());
-            }
-        }
     }
-
+    
     public override void AttackUnit(Unit vetrivelUnit, Unit attackedUnit)
     {
         var physicalDamage = vetrivelUnit.attackDamage;
@@ -39,5 +22,29 @@ public class Vetrivel : ScriptableUnit
         physicalDamage = vetrivelUnit.AdjacentUnits().Where(unit => player.ConsumeFaith(1)).Aggregate(physicalDamage, (current, unit) => (sbyte) (current + 1));
 
         attackedUnit.TakeDamage(physicalDamage, 0, vetrivelUnit);
+    }
+
+    public override void KillUnit(Unit killedUnit, bool physicalDeath, bool magicalDeath, Unit killer)
+    {
+        CallbackManager.OnAnyUnitHexExit -= UpdateAdjacentVetrivelsPhysicalDef;
+
+        CallbackManager.OnAnyUnitHexEnter -= UpdateAdjacentVetrivelsPhysicalDef;
+        
+        base.KillUnit(killedUnit, physicalDeath, magicalDeath, killer);
+    }
+    
+    private void UpdateAdjacentVetrivelsPhysicalDef(Unit unit,Hex hex)
+    {
+        foreach (var adjacentUnit in hex.AdjacentUnits())
+        {
+            if (adjacentUnit.unitScriptable is Vetrivel && !adjacentUnit.isDead)
+            {
+                adjacentUnit.physicDef = Convert.ToSByte(adjacentUnit.basePhysicDef + adjacentUnit.NumberOfAdjacentEnemyUnits());
+            }
+        }
+        if (unit.unitScriptable is Vetrivel && !unit.isDead)
+        {
+            unit.physicDef = Convert.ToSByte(unit.basePhysicDef + unit.NumberOfAdjacentEnemyUnits());
+        }
     }
 }

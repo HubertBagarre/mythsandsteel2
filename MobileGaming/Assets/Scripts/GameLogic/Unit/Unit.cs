@@ -67,13 +67,15 @@ public class Unit : NetworkBehaviour
         physicDef = basePhysicDef;
         magicDef = baseMagicDef;
         attacksPerTurn = baseAtkPerTurn;
-        attacksLeft = attacksPerTurn;
+        attacksLeft = 0;
         attackDamage = baseAttackDamage;
         attackRange = baseRange;
-        move = baseMove;
-        hasBeenActivated = false;
-        canUseAbility = true;
+        move = 0;
+        hasBeenActivated = true;
+        canUseAbility = false;
         unitScriptable.SetupEvents(this);
+        
+        ReplaceModel();
     }
 
     public void LinkUnitScriptable(byte id)
@@ -97,21 +99,22 @@ public class Unit : NetworkBehaviour
         abilityScriptable = ObjectIDList.GetAbilityScriptable(abilityScriptableId);
         currentAbilityCost = Convert.ToSByte((abilityScriptableId == 0) ? 0 : abilityScriptable.baseCost);
 
-        ReplaceModel();
-        
         ResetUnitStats();
     }
 
     private void ReplaceModel()
     {
         outlineScript = ModelSpawner.UpdateUnitModel(this).GetComponent<Outline>();
-        RpcReplaceModel();
+        gameObject.SetActive(!isDead);
+        RpcReplaceModel(!isDead);
+        if(player != null) player.RpcUIUpdateUnitHud();
     }
 
     [ClientRpc]
-    private void RpcReplaceModel()
+    private void RpcReplaceModel(bool showModel)
     {
         outlineScript = ModelSpawner.UpdateUnitModel(this).GetComponent<Outline>();
+        gameObject.SetActive(showModel);
     }
 
     public void ChangeTransformPosition(Vector3 newPos)
@@ -146,6 +149,14 @@ public class Unit : NetworkBehaviour
         unitScriptable.KillUnit(this,physicalDeath,magicalDeath,killer);
     }
 
+    public void RespawnUnit(Hex targetHex)
+    {
+        ResetUnitStats();
+        
+        ServerSideKnockBackAnim(this,targetHex);
+        RpcClientSideKnockBackAnim(this,targetHex,true);
+    }
+
     public void KnockBackUnit(Unit unit, int direction)
     {
         var targetHex = unit.currentHex.neighbours[direction];
@@ -162,12 +173,12 @@ public class Unit : NetworkBehaviour
         }
 
         ServerSideKnockBackAnim(unit,targetHex);
-        RpcClientSideKnockBackAnim(unit,targetHex);
+        RpcClientSideKnockBackAnim(unit,targetHex,false);
     }
 
     private void ServerSideKnockBackAnim(Unit unit, Hex hex)
     {
-        unit.currentHex.OnUnitExit(unit);
+        if(unit.currentHex != null) unit.currentHex.OnUnitExit(unit);
             
         hex.OnUnitEnter(unit);
         
@@ -176,7 +187,7 @@ public class Unit : NetworkBehaviour
     }
     
     [ClientRpc]
-    private void RpcClientSideKnockBackAnim(Unit unit, Hex hex)
+    private void RpcClientSideKnockBackAnim(Unit unit, Hex hex,bool respawnAnimation)
     {
         //TODO - Play Animation
         unit.transform.position = hex.transform.position + Vector3.up * 2f;

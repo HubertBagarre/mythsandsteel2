@@ -78,8 +78,6 @@ public class PlayerSM : StateMachine
     [SyncVar] public bool isAskingForAttackResolve;
     [SyncVar] public bool isAskingForAbilitySelectables;
     [SyncVar(hook = nameof(OnAbilitySelectablesReceivedValueChange))] public bool abilitySelectablesReceived;
-    [SyncVar] public bool isAskingForAvailableRespawnHexes;
-    [SyncVar] public bool availableRespawnHexesReceived;
     [SyncVar] public bool unitAbilityAnimationDone;
     [SyncVar] public bool unitMovementAnimationDone;
     [SyncVar] public bool unitAttackAnimationDone;
@@ -131,9 +129,7 @@ public class PlayerSM : StateMachine
         isAskingForUnitMovement = false;
         isAskingForAttackResolve = false;
         isAskingForAbilitySelectables = false;
-        isAskingForAvailableRespawnHexes = false;
         abilitySelectablesReceived = false;
-        availableRespawnHexesReceived = false;
         unitAbilityAnimationDone = false;
         unitMovementAnimationDone = false;
         turnIsOver = false;
