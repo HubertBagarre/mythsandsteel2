@@ -30,6 +30,7 @@ public class PlayerUIManager : NetworkBehaviour
 
     [Header("GameObjects")]
     [SerializeField] private UnitHud unitHudPrefab;
+    [SerializeField] private Transform unitHudParent;
     [SerializeField] private GameObject abilityGameObject;
     [SerializeField] private GameObject abilitySelectionGameObject;
     [SerializeField] private GameObject allyUnitPortraitGameObject;
@@ -167,7 +168,7 @@ public class PlayerUIManager : NetworkBehaviour
     {
         foreach (var unit in units)
         {
-            UnitHud unitHud = Instantiate(unitHudPrefab,canvas);
+            UnitHud unitHud = Instantiate(unitHudPrefab,unitHudParent);
             unitHud.SetVariables(unitHudOffset,unit,Camera.main);
             unitHud.UpdateHud();
             unitHudDict.Add(unit,unitHud);
