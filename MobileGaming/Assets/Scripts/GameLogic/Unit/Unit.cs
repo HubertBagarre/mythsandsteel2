@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CallbackManagement;
 using UnityEngine;
 using Mirror;
 
@@ -155,6 +156,8 @@ public class Unit : NetworkBehaviour
         
         ServerSideKnockBackAnim(this,targetHex);
         RpcClientSideKnockBackAnim(this,targetHex,true);
+
+        CallbackManager.UnitRespawned(this);
     }
 
     public void KnockBackUnit(Unit unit, int direction)

@@ -18,6 +18,7 @@ namespace CallbackManagement
         public static event NoParamEvent OnAnyPlayerTurnStart;
         public static event PlayerParamEvent OnPlayerTurnStart;
         public static event PlayerParamEvent OnPlayerTurnEnd;
+        public static event SingleUnitParamEvent OnUnitRespawned;
         public static event UnitHexParamEvent OnAnyUnitHexExit;
         public static event UnitHexParamEvent OnAnyUnitHexEnter;
         
@@ -26,6 +27,7 @@ namespace CallbackManagement
             OnAnyPlayerTurnStart = DoNothing;
             OnPlayerTurnStart = DoNothing;
             OnPlayerTurnEnd = DoNothing;
+            OnUnitRespawned = DoNothing;
             OnAnyUnitHexExit = DoNothing;
             OnAnyUnitHexEnter = DoNothing;
         }
@@ -71,6 +73,11 @@ namespace CallbackManagement
         public static void AnyPlayerTurnStart()
         {
             OnAnyPlayerTurnStart?.Invoke();
+        }
+        
+        public static void UnitRespawned(Unit unit)
+        {
+            OnUnitRespawned?.Invoke(unit);
         }
         
         public static void UnitHexEnter(Unit unit, Hex hex)

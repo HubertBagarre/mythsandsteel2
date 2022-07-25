@@ -17,6 +17,8 @@ public class FactionAttEotW : ScriptableFaction
 
         CallbackManager.OnAnyUnitHexEnter += GainFaithIfAllMovementSpent;
 
+        CallbackManager.OnUnitRespawned += NoFaithOverloadOnRespawn;
+
         void ClearPathDict()
         {
             foreach (var hexList in unitPathDict.Values.Where(list => list.Count > 0))
@@ -36,6 +38,13 @@ public class FactionAttEotW : ScriptableFaction
             if (unitPathDict[unit].Distinct().Count() == unitPathDict[unit].Count) targetPlayer.faith += 3;
 
             unitPathDict[unit].Clear();
+        }
+
+        void NoFaithOverloadOnRespawn(Unit unit)
+        {
+            if(unit.player != targetPlayer) return;
+
+            targetPlayer.faith -= 3;
         }
     }
 }
