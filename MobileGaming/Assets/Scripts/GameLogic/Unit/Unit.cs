@@ -138,6 +138,8 @@ public class Unit : NetworkBehaviour
     public void AttackUnit(Unit attackedUnit)
     {
         unitScriptable.AttackUnit(this,attackedUnit);
+
+        CallbackManager.UnitAttack(this, attackedUnit);
     }
 
     public void TakeDamage(sbyte physicalDamage,sbyte magicalDamage, Unit sourceUnit = null)
@@ -213,7 +215,13 @@ public class Unit : NetworkBehaviour
         //TODO - Play Animation
         unit.transform.position = hex.transform.position + Vector3.up * 2f;
     }
-    
+
+    public bool IsOnHexOfType(byte id)
+    {
+        if (currentHex == null) return false;
+        return currentHex.currentTileID == id;
+    }
+
     public bool AreEnemyUnitsInRange()
     {
         var enemyPlayer = playerId == 0 ? Convert.ToSByte(1) : Convert.ToSByte(0);

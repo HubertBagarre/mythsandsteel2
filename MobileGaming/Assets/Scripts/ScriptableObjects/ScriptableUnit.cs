@@ -1,4 +1,5 @@
 using System;
+using CallbackManagement;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Scriptables/Unit")]
@@ -59,6 +60,8 @@ public class ScriptableUnit : ScriptableObject
         
         targetUnit.currentHp -= Convert.ToSByte(physicalDamage + magicalDamage) ;
         
+        CallbackManager.UnitTakeDamage(targetUnit,physicalDamage,magicalDamage,sourceUnit);
+        
         if (targetUnit.currentHp <= 0)
         {
             targetUnit.KillUnit((physicalDamage>0),(magicalDamage>0),sourceUnit);
@@ -68,6 +71,8 @@ public class ScriptableUnit : ScriptableObject
     public virtual void KillUnit(Unit killedUnit,bool physicalDeath,bool magicalDeath,Unit killer)
     {
         Debug.Log($"{killedUnit} was killed by {killer} !! Physical Death : {physicalDeath}, Magical Death : {magicalDeath}");
+
+        CallbackManager.UnitKilled(killedUnit,physicalDeath,magicalDeath,killer);
         
         killedUnit.currentHex.OnUnitExit(killedUnit);
         killedUnit.currentHex = null;

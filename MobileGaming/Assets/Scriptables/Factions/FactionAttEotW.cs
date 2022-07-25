@@ -43,9 +43,9 @@ public class FactionAttEotW : ScriptableFaction
                 
                 CallbackManager.OnPlayerTurnStart += IncreaseMovement;
                     
-                void IncreaseMovement(PlayerSM player)
+                void IncreaseMovement(PlayerSM playerSm)
                 {
-                    if (player == targetPlayer)
+                    if (playerSm == targetPlayer)
                     {
                         adjAllyUnit.move++;
                         CallbackManager.OnPlayerTurnStart -= IncreaseMovement;

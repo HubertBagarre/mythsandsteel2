@@ -314,8 +314,8 @@ public class GameSM : StateMachine
         Debug.Log($"Checking Victory points for Player {playerSm.playerId}");
         var noEnemyUnitsOnFort = true;
         var gainedAtLeastOnePoint = false;
-        Debug.Log($"Found {playerSm.allUnits.Where(unit => !unit.isDead).Where(unit => unit.currentHex.currentTileID == 3).ToList().Count} alive units on Fort Tiles");
-        foreach (var unit in playerSm.allUnits.Where(unit => !unit.isDead).Where(unit => unit.currentHex.currentTileID == 3))
+        Debug.Log($"Found {playerSm.allUnits.Where(unit => !unit.isDead).Where(unit => unit.IsOnHexOfType(3)).ToList().Count} alive units on Fort Tiles");
+        foreach (var unit in playerSm.allUnits.Where(unit => !unit.isDead).Where(unit => unit.IsOnHexOfType(3)))
         {
             Debug.Log($"The player of the unit is {unit.player} ({unit.player.playerId}), checking for player {playerSm.playerId}");
             if(unit.player == playerSm)

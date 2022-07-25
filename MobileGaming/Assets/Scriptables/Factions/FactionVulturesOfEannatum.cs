@@ -27,7 +27,7 @@ public class FactionVulturesOfEannatum : ScriptableFaction
             player.faith += 3;
 
             foreach (var unit in player.allUnits.Where(unit => !unit.isDead)
-                         .Where(unit => unit.currentHex.currentTileID == 3)
+                         .Where(unit => unit.IsOnHexOfType(3))
                          .Where(unit => unit.playerId == player.playerId))
             {
                 if (unitTypes.Contains(unit.unitScriptableId)) continue;
@@ -42,7 +42,7 @@ public class FactionVulturesOfEannatum : ScriptableFaction
             if (!GameSM.IsPlayerTurn(targetPlayer)) return;
 
             foreach (var unit in player.allUnits.Where(unit => !unit.isDead)
-                         .Where(unit => unit.currentHex.currentTileID == 3)
+                         .Where(unit => unit.IsOnHexOfType(3))
                          .Where(unit => unit.playerId == player.playerId))
             {
                 player.faith++;
