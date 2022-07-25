@@ -17,17 +17,16 @@ namespace CallbackManagement
         public delegate void PlayerParamEvent(PlayerSM player);
         public static event NoParamEvent OnAnyPlayerTurnStart;
         public static event PlayerParamEvent OnPlayerTurnStart;
+        public static event PlayerParamEvent OnPlayerTurnEnd;
         public static event UnitHexParamEvent OnAnyUnitHexExit;
         public static event UnitHexParamEvent OnAnyUnitHexEnter;
         
         public static void InitEvents()
         {
             OnAnyPlayerTurnStart = DoNothing;
-            
             OnPlayerTurnStart = DoNothing;
-
+            OnPlayerTurnEnd = DoNothing;
             OnAnyUnitHexExit = DoNothing;
-            
             OnAnyUnitHexEnter = DoNothing;
         }
 
@@ -64,6 +63,11 @@ namespace CallbackManagement
             OnPlayerTurnStart?.Invoke(player);
         }
         
+        public static void PlayerTurnEnd(PlayerSM player)
+        {
+            OnPlayerTurnEnd?.Invoke(player);
+        }
+        
         public static void AnyPlayerTurnStart()
         {
             OnAnyPlayerTurnStart?.Invoke();
@@ -80,9 +84,6 @@ namespace CallbackManagement
         }
 
         #endregion
-
-
-        
     }
 }
 

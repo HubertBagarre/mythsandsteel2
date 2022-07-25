@@ -139,6 +139,16 @@ public class GameSM : StateMachine
         
         isMapGenerated = true;
     }
+
+    public void SetupPlayersFactionCallbacks()
+    {
+        foreach (var player in players)
+        {
+            var scriptableFaction = ObjectIDList.GetFactionScriptable(player.factionId);
+            Debug.Log($"Setting Up Events of {scriptableFaction.name} for Player {player.playerId}");
+            scriptableFaction.SetupEvents(player);
+        }
+    }
     
     #endregion
     
@@ -365,6 +375,16 @@ public class GameSM : StateMachine
         {
             player.RpcUIUpdateUnitHud();
         }
+    }
+
+    public static bool IsPlayerTurn(PlayerSM player)
+    {
+        return instance.currentPlayerId == player.playerId;
+    }
+    
+    public static bool IsPlayerTurn(int playerId)
+    {
+        return instance.currentPlayerId == playerId;
     }
     
     

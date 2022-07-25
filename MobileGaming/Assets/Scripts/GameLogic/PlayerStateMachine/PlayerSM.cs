@@ -17,7 +17,6 @@ public class PlayerSM : StateMachine
     [Header("Actions")]
     [SyncVar] public int maxActions;
     [SyncVar] public int factionId;
-    [SyncVar] public ScriptableFaction factionScriptable;
     [SyncVar(hook = nameof(OnActionsLeftValueChanged))] public int unitsToActivate;
     [SyncVar(hook = nameof(OnFaithValueChanged))] public int faith;
     [SyncVar] public int faithModifier;
@@ -101,7 +100,6 @@ public class PlayerSM : StateMachine
         faith = 6;
         faithModifier = 0;
         victoryPoints = 0;
-        factionScriptable = ObjectIDList.GetFactionScriptable(factionId);
     }
     
     protected override BaseState GetInitialState()

@@ -9,5 +9,5 @@ public class ScriptableFaction : ScriptableObject
     [TextArea(7,15)]
     public string culturalAbilityDescription;
     
-    public virtual void SetupEvents(){}
+    public virtual void SetupEvents(PlayerSM player){}
 }

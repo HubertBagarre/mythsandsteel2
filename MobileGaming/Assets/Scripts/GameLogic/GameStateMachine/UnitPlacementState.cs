@@ -32,6 +32,8 @@ namespace GameStates
             sm.unitsPlaced = false;
             hexGrid.ServerAssignUnitsToTiles();
             
+            sm.SetupPlayersFactionCallbacks();
+            
             sm.ChangeState(sm.prePlayerTurn);
         }
 
