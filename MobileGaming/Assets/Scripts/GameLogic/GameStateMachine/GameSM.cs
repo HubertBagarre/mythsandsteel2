@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -311,23 +310,18 @@ public class GameSM : StateMachine
     public void GainVictoryPointIfAlliedUnitIsOnFort(PlayerSM playerSm)
     {
         if(currentPlayerId != playerSm.playerId) return;
-        Debug.Log($"Checking Victory points for Player {playerSm.playerId}");
         var noEnemyUnitsOnFort = true;
         var gainedAtLeastOnePoint = false;
-        Debug.Log($"Found {playerSm.allUnits.Where(unit => !unit.isDead).Where(unit => unit.IsOnHexOfType(3)).ToList().Count} alive units on Fort Tiles");
         foreach (var unit in playerSm.allUnits.Where(unit => !unit.isDead).Where(unit => unit.IsOnHexOfType(3)))
         {
-            Debug.Log($"The player of the unit is {unit.player} ({unit.player.playerId}), checking for player {playerSm.playerId}");
             if(unit.player == playerSm)
             {
-                Debug.Log("Its an ally, Increasing Victory and giving 1 faith");
                 playerSm.victoryPoints++;
                 playerSm.faith++;
                 gainedAtLeastOnePoint = true;
             }
             else
             {
-                Debug.Log("Its an enemy, no Bonus Point");
                 noEnemyUnitsOnFort = false;
             }
         }
