@@ -15,7 +15,7 @@ MonoBehaviour:
   unitName: Vetrivel
   faction: 
   className: 2
-  baseMaxHp: 15
+  baseMaxHp: 1
   basePhysicDef: 0
   baseMagicDef: 1
   baseAtkPerTurn: 1

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -84,8 +85,9 @@ namespace GameStates
         private void OnAbilitySelectableAsked()
         {
             currentPlayer.isAskingForAbilitySelectables = false;
-            
-            sm.ServerSideSetAbilitySelectableHexes(currentPlayer.unitMovementUnit);
+            var abilityToCast = Convert.ToByte(currentPlayer.unitToRespawn != null ? 1 : currentPlayer.castingUnit.abilityScriptableId);
+            Debug.Log($"ABILITY TO CAST IS {abilityToCast}");
+            sm.ServerSideSetAbilitySelectableHexes(currentPlayer.castingUnit,abilityToCast);
         }
         
         private void OnAbilityResolveAsked()

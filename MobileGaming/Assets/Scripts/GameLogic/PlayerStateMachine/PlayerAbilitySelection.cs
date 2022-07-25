@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace PlayerStates
         private bool receivedSelectablesForAbilityTrigger;
         public int selectionsLeft;
         public readonly List<Hex> selectedHexes = new ();
+
+        public bool respawnMode;
 
         private ScriptableAbility scriptableAbility;
         private IAbilityCallBacks scriptableAbilityCallbacks;
@@ -26,7 +29,11 @@ namespace PlayerStates
             
             selectedHexes.Clear();
 
-            abilityCastingUnit = sm.selectedUnit;
+            respawnMode = (sm.unitToRespawn != null);
+            
+            abilityCastingUnit = respawnMode ? sm.unitToRespawn : sm.selectedUnit;
+            
+            if(respawnMode) Debug.Log($"Respawn Mode with : {abilityCastingUnit}");
 
             if (abilityCastingUnit == null)
             {
@@ -35,7 +42,7 @@ namespace PlayerStates
                 return;
             }
 
-            if(!abilityCastingUnit.hasAbility)
+            if(!abilityCastingUnit.hasAbility && !respawnMode)
             {
                 Debug.LogWarning("SELECTED UNIT HAS NO ABILITY, RETURNING TO IDLE");
                 sm.ChangeState(sm.idleState);
@@ -43,8 +50,13 @@ namespace PlayerStates
             }
 
             sm.castingUnit = abilityCastingUnit;
-            sm.abilityIndexToUse = abilityCastingUnit.abilityScriptableId;        
-            sm.CmdSetAbilityIndexToUse(abilityCastingUnit,abilityCastingUnit.abilityScriptableId);
+
+            var indexToUse = Convert.ToByte(respawnMode ? 1 : abilityCastingUnit.abilityScriptableId);
+            
+            sm.abilityIndexToUse = indexToUse;        
+            Debug.Log($"Ability Index to Use : {indexToUse} ({ObjectIDList.GetAbilityScriptable(sm.abilityIndexToUse).name})");
+            
+            sm.CmdSetAbilityIndexToUse(abilityCastingUnit,indexToUse);
             scriptableAbility = ObjectIDList.GetAbilityScriptable(sm.abilityIndexToUse);
             
             if(scriptableAbility is not IAbilityCallBacks casted)
@@ -71,11 +83,12 @@ namespace PlayerStates
 
             ClientSideSetAbilitySelectable(abilityCastingUnit);
             
-            sm.CmdGetAbilitySelectables();
+            sm.CmdGetAbilitySelectables(sm.unitToRespawn);
         }
 
         private void ClientSideSetAbilitySelectable(Unit castingUnit)
         {
+            Debug.Log($"{scriptableAbilityCallbacks}");
             var selectableHexes = scriptableAbilityCallbacks.AbilitySelectables(castingUnit);
             
             sm.entitiesToSelect = scriptableAbility.abilityTargetCount;
@@ -102,11 +115,13 @@ namespace PlayerStates
             selectionsLeft = sm.entitiesToSelect;
 
             UpdateAbilitySelectionText();
-            
-            foreach (var hex in sm.abilitySelectableHexes)                                             
-            {                                                                                
-                hex.ChangeHexColor(Hex.HexColors.Selectable);                                  
-            }                     
+
+            Debug.Log($"They are {sm.abilitySelectableHexes.Count} hexes selectables");
+            foreach (var hex in sm.abilitySelectableHexes)
+            {
+                Debug.Log($"{hex} is selectable");
+                hex.ChangeHexColor(Hex.HexColors.Selectable);
+            }
         }
 
         private void UpdateAbilitySelectionText()

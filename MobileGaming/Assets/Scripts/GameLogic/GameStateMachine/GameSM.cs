@@ -156,14 +156,6 @@ public class GameSM : StateMachine
         player1UnitsPlaced = true;
     }
     
-    private static void PlacePlayerUnits(int[] units, Vector2Int[] positions,int player)
-    {
-        for (int i = 0; i < positions.Length; i++)
-        {
-            NetworkSpawner.SpawnUnit(3,positions[i],Convert.ToSByte(player));
-        }
-    }
-
     public void PlaceUnits()
     {
         StartCoroutine(UnitPlacementRoutine());
@@ -269,9 +261,9 @@ public class GameSM : StateMachine
 
     #region Ability Selectable
 
-    public void ServerSideSetAbilitySelectableHexes(Unit castingUnit)
+    public void ServerSideSetAbilitySelectableHexes(Unit castingUnit,byte abilityIndex)
     {
-        var scriptableAbility = ObjectIDList.GetAbilityScriptable(castingUnit.abilityScriptableId);
+        var scriptableAbility = ObjectIDList.GetAbilityScriptable(abilityIndex);
         if (scriptableAbility is IAbilityCallBacks abilityCallback)
         {
             var selectableHexes = abilityCallback.AbilitySelectables(castingUnit);                                 

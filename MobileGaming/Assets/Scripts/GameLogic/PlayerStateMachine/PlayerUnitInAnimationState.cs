@@ -61,6 +61,15 @@ namespace PlayerStates
             
             var movementUnit = sm.unitMovementUnit;
             sm.ChangeState(sm.idleState);
+            
+            if (sm.unitToRespawn != null)
+            {
+                sm.unitToRespawn = null;
+                sm.CmdResetRespawnUnit();
+                return;
+            }
+
+            
             if((movementUnit.attacksLeft>0 && movementUnit.AreEnemyUnitsInRange()) || (movementUnit.move>0 && movementUnit.canUseAbility)) sm.CmdSendUnitClicked(movementUnit);
         }
         
@@ -71,6 +80,14 @@ namespace PlayerStates
             
             var movementUnit = sm.unitMovementUnit;
             sm.ChangeState(sm.idleState);
+            
+            if (sm.unitToRespawn != null)
+            {
+                sm.unitToRespawn = null;
+                sm.CmdResetRespawnUnit();
+                return;
+            }
+            
             if((movementUnit.attacksLeft>0 && movementUnit.AreEnemyUnitsInRange()) || (movementUnit.move>0 && movementUnit.canUseAbility)) sm.CmdSendUnitClicked(movementUnit);
         }
 

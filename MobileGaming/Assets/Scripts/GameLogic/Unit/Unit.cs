@@ -10,7 +10,7 @@ public class Unit : NetworkBehaviour
     public string unitName;
     [SyncVar] public sbyte playerId;
     [SyncVar] public ScriptableUnit.Classes className;
-    public PlayerSM player => GameSM.instance?.players[playerId];
+    [SyncVar] public PlayerSM player;
 
     [Header("Position")]
     [SyncVar] public sbyte hexCol;

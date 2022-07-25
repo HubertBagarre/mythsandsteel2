@@ -62,6 +62,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 722ad07902acf944fbf3bae3ecf54c40, type: 2}
   <abilities>k__BackingField:
   - {fileID: 0}
+  - {fileID: 11400000, guid: 280bbdd6e19ce4e4082db16da0cc62a2, type: 2}
   - {fileID: 11400000, guid: d95af2bc33fac40489f8b0b5bffe4291, type: 2}
   <unitPlacements>k__BackingField:
   - {fileID: 11400000, guid: ce01a522d3777f74e86751eca757e97c, type: 2}

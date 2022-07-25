@@ -125,13 +125,13 @@ public class PlayerUIManager : NetworkBehaviour
     {
         abilityConfirmButton.interactable = value;
     }
-
-    public void ToggleUnitRespawnMenu()
+    
+    public void SetActiveRespawnMenu(bool value)
     {
-        unitRespawnMenuGameObject.SetActive(!unitRespawnMenuGameObject.activeSelf);
+        unitRespawnMenuGameObject.SetActive(value);
     }
 
-    public void InitializeRespawnButtons(IEnumerable<Unit> units)
+    public void InitializeRespawnButtons(IEnumerable<Unit> units,PlayerSM player)
     {
         respawnUnitButtons.Clear();
         foreach (var unit in units)
@@ -139,6 +139,7 @@ public class PlayerUIManager : NetworkBehaviour
             var respawnUnitButton = Instantiate(respawnUnitButtonPrefab, unitRespawnParent);
             respawnUnitButton.associatedUnit = unit;
             respawnUnitButton.gameObject.SetActive(false);
+            respawnUnitButton.associatedPlayer = player;
             respawnUnitButtons.Add(respawnUnitButton);
         }
     }

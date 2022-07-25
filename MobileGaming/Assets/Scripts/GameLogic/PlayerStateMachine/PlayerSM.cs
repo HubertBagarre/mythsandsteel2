@@ -12,6 +12,7 @@ public class PlayerSM : StateMachine
     public PlayerAbilitySelection abilitySelectionState;
     public PlayerInactiveState inactiveState;
     public PlayerUnitInAnimationState unitInAnimationState;
+    public PlayerRespawnUnitSelectionState respawnUnitSelectionState;
 
     [Header("Actions")]
     [SyncVar] public int maxActions;
@@ -53,6 +54,9 @@ public class PlayerSM : StateMachine
     [Header("Ability Selection")]
     [SyncVar] public int entitiesToSelect;
 
+    [Header("Unit Respawning")]
+    [SyncVar] public Unit unitToRespawn;
+
     [Header("User Interface")]
     [SerializeField] private PlayerUIManager uiManager;
     
@@ -74,6 +78,8 @@ public class PlayerSM : StateMachine
     [SyncVar] public bool isAskingForAttackResolve;
     [SyncVar] public bool isAskingForAbilitySelectables;
     [SyncVar(hook = nameof(OnAbilitySelectablesReceivedValueChange))] public bool abilitySelectablesReceived;
+    [SyncVar] public bool isAskingForAvailableRespawnHexes;
+    [SyncVar] public bool availableRespawnHexesReceived;
     [SyncVar] public bool unitAbilityAnimationDone;
     [SyncVar] public bool unitMovementAnimationDone;
     [SyncVar] public bool unitAttackAnimationDone;
@@ -86,6 +92,7 @@ public class PlayerSM : StateMachine
         abilitySelectionState = new PlayerAbilitySelection(this);
         inactiveState = new PlayerInactiveState(this);
         unitInAnimationState = new PlayerUnitInAnimationState(this);
+        respawnUnitSelectionState = new PlayerRespawnUnitSelectionState(this);
         
         inputManager = PlayerInputManager.instance;
     }
@@ -99,8 +106,6 @@ public class PlayerSM : StateMachine
         factionScriptable = ObjectIDList.GetFactionScriptable(factionId);
     }
     
-    
-
     protected override BaseState GetInitialState()
     {
         if (!isLocalPlayer)
@@ -126,7 +131,9 @@ public class PlayerSM : StateMachine
         isAskingForUnitMovement = false;
         isAskingForAttackResolve = false;
         isAskingForAbilitySelectables = false;
+        isAskingForAvailableRespawnHexes = false;
         abilitySelectablesReceived = false;
+        availableRespawnHexesReceived = false;
         unitAbilityAnimationDone = false;
         unitMovementAnimationDone = false;
         turnIsOver = false;
@@ -206,12 +213,12 @@ public class PlayerSM : StateMachine
         foreach (var unit in units)
         {
             allUnits.Add(unit);
+            if (unit.playerId == playerId) unit.player = this;
         }
         foreach (var hex in hexes)
         {
             allHexes.Add(hex);
         }
-        //Debug.Log($"Set Lists, they have {allUnits.Count} and {allHexes.Count} elements");
     }
     
     #region Camera Management
@@ -467,10 +474,16 @@ public class PlayerSM : StateMachine
     {
         if(currentState != abilitySelectionState) return;
         ChangeState(idleState);
-        if (selectedUnit != null)
+        if (selectedUnit == null) return;
+        
+        if (unitToRespawn != null)
         {
-            if(selectedUnit.move > 0 || selectedUnit.attacksLeft > 0) CmdSendUnitClicked(selectedUnit);
+            unitToRespawn = null;
+            CmdResetRespawnUnit();
+            return;
         }
+        
+        if(selectedUnit.move > 0 || selectedUnit.attacksLeft > 0) CmdSendUnitClicked(selectedUnit);
     }
 
     public void TryToLaunchAbility()
@@ -517,8 +530,10 @@ public class PlayerSM : StateMachine
     }
     
     [Command]
-    public void CmdGetAbilitySelectables()
+    public void CmdGetAbilitySelectables(Unit respawningUnit)
     {
+        Debug.Log("ASKING FOR ABILITY SELECTABLES");
+        if (respawningUnit != null) unitToRespawn = respawningUnit;
         isAskingForAbilitySelectables = true;
         abilitySelectablesReceived = false;
     }
@@ -558,13 +573,17 @@ public class PlayerSM : StateMachine
         casting.move = 0;
         casting.attacksLeft = 0;
         casting.canUseAbility = false;
-        StartCoroutine(PlayAbilityAnimationRoutine(casting,casting.abilityScriptable as IAbilityCallBacks,targets));
+        var ability = casting.abilityScriptable;
+        if (unitToRespawn != null) ability = ObjectIDList.GetAbilityScriptable(1);
+        StartCoroutine(PlayAbilityAnimationRoutine(casting,ability as IAbilityCallBacks,targets));
     }
 
     [ClientRpc]
     public void RpcAbilityResolve(Unit casting,Hex[] targets)
     {
-        StartCoroutine(PlayAbilityAnimationRoutine(casting,casting.abilityScriptable as IAbilityCallBacks, targets));
+        var ability = casting.abilityScriptable;
+        if (unitToRespawn != null) ability = ObjectIDList.GetAbilityScriptable(1);
+        StartCoroutine(PlayAbilityAnimationRoutine(casting,ability as IAbilityCallBacks,targets));
     }
     
     private IEnumerator PlayAbilityAnimationRoutine(Unit casting,IAbilityCallBacks ability,IEnumerable<Hex> targets)
@@ -603,6 +622,23 @@ public class PlayerSM : StateMachine
 
     #endregion
 
+    #region Unit Respawning
+
+    public void TryToRespawnUnit(Unit unit)
+    {
+        Debug.Log($"{this} is trying to respawn {unit}");
+        unitToRespawn = unit;
+        ChangeState(abilitySelectionState);
+    }
+
+    [Command]
+    public void CmdResetRespawnUnit()
+    {
+        unitToRespawn = null;
+    }
+
+    #endregion
+
     private void TryToEndTurn()
     {
         if(currentState != idleState) return;
@@ -634,15 +670,6 @@ public class PlayerSM : StateMachine
         if(allUnits.Count <= 0) return;
         if (gameSM == null) return;
         if(gameSM.CheckIfPlayerWon()) gameSM.ChangeState(gameSM.endingState);
-    }
-
-   
-    [ClientRpc]
-    public void DisplayIfItsYourTurn(int playerTurn)
-    {
-        // TODO - Replace with disable button and play animation
-        
-        uiManager.EnableNextTurnButton(playerId == playerTurn);
     }
 
     #region hooks
@@ -727,13 +754,13 @@ public class PlayerSM : StateMachine
         if (newValue)
         {
             inputManager.OnStartTouch += TryToSelectUnitOrTile;
-            uiManager.AddButtonListeners(TryToEndTurn,TryToUseAbility,TryToLaunchAbility,ExitAbilitySelection,UIToggleRespawnMenu);
+            uiManager.AddButtonListeners(TryToEndTurn,TryToUseAbility,TryToLaunchAbility,ExitAbilitySelection,ToggleRespawnMenu);
             uiManager.UpdateActionsLeft(unitsToActivate);
         }
         else
         {
             inputManager.OnStartTouch -= TryToSelectUnitOrTile;
-            uiManager.RemoveButtonListeners(TryToEndTurn,TryToUseAbility,TryToLaunchAbility,ExitAbilitySelection,UIToggleRespawnMenu);
+            uiManager.RemoveButtonListeners(TryToEndTurn,TryToUseAbility,TryToLaunchAbility,ExitAbilitySelection,ToggleRespawnMenu);
         }
     }
 
@@ -744,6 +771,14 @@ public class PlayerSM : StateMachine
     private void UIChangeDebugText()
     {
         uiManager.ChangeDebugText($"Player {playerId}, {currentState}");
+    }
+    
+    [ClientRpc]
+    public void DisplayIfItsYourTurn(int playerTurn)
+    {
+        // TODO - Replace with disable button and play animation
+        
+        uiManager.EnableNextTurnButton(playerId == playerTurn);
     }
 
     public void UIUpdateFaithCount()
@@ -767,7 +802,8 @@ public class PlayerSM : StateMachine
     public void RpcUISetupUnitHuds()
     {
         uiManager.GenerateUnitHuds(allUnits);
-        uiManager.InitializeRespawnButtons(allUnits);
+        uiManager.InitializeRespawnButtons(allUnits,this);
+        uiManager.RefreshUnitOutlines(allUnits,playerId);
     }
     
     [ClientRpc]
@@ -782,10 +818,16 @@ public class PlayerSM : StateMachine
         uiManager.UpdateUnitHud();
     }
 
-    public void UIToggleRespawnMenu()
+    public void ToggleRespawnMenu()
     {
-        uiManager.ToggleUnitRespawnMenu();
-        uiManager.ActivateRespawnButtons(playerId);
+        if(currentState == idleState) ChangeState(respawnUnitSelectionState);
+        else if(currentState == respawnUnitSelectionState) ChangeState(idleState);
+    }
+
+    public void ActivateRespawnMenu(bool value)
+    {
+        if(value) uiManager.ActivateRespawnButtons(playerId);
+        uiManager.SetActiveRespawnMenu(value);
     }
 
     #endregion
