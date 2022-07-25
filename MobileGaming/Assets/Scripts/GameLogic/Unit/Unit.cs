@@ -178,8 +178,21 @@ public class Unit : NetworkBehaviour
 
     private void ServerSideKnockBackAnim(Unit unit, Hex hex)
     {
-        if(unit.currentHex != null) unit.currentHex.OnUnitExit(unit);
-            
+        if (unit.currentHex != null)
+        {
+            var unitCurrentHex = unit.currentHex;
+                
+            unitCurrentHex.OnUnitExit(unit);
+                
+            unitCurrentHex.currentUnit = unitCurrentHex.previousUnit;
+            unitCurrentHex.previousUnit = null;
+        }
+        
+        hex.currentUnit = unit;
+        unit.currentHex = hex;
+        unit.hexCol = hex.col;
+        unit.hexRow = hex.row;
+        
         hex.OnUnitEnter(unit);
         
         //TODO - Play Animation

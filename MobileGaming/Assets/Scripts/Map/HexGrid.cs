@@ -147,15 +147,5 @@ public class HexGrid : NetworkBehaviour
     {
         player.SetUnitsAndHexesArrays(units.ToArray(),hexes.Values.ToArray());
     }
-    
-    public void SyncHexGridVariables()
-    {
-        Debug.Log("Syncing Hexes");
-        foreach (var hex in hexes.Values)
-        {
-            hex.currentUnit = hex.currentUnit;
-            if (hex.currentUnit != null) hex.currentUnit.currentHex = hex;
-        }
-    }
-    
+
 }

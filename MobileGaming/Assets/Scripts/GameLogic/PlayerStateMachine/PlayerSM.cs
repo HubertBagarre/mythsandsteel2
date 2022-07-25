@@ -361,11 +361,22 @@ public class PlayerSM : StateMachine
         {
             if (isServer)
             {
-                unit.currentHex.OnUnitExit(unit);
+                var unitCurrentHex = unit.currentHex;
+                
+                unitCurrentHex.OnUnitExit(unit);
+                
+                unitCurrentHex.currentUnit = unitCurrentHex.previousUnit;
+                unitCurrentHex.previousUnit = null;
+
+                hex.DecreaseUnitMovement(unit);
+                
+                hex.previousUnit = hex.currentUnit;
+                hex.currentUnit = unit;
+                unit.currentHex = hex;
+                unit.hexCol = hex.col;
+                unit.hexRow = hex.row;
             
                 hex.OnUnitEnter(unit);
-                
-                hex.DecreaseUnitMovement(unit);
             }
             
             unit.transform.position = hex.transform.position + Vector3.up * 2f;
@@ -375,13 +386,11 @@ public class PlayerSM : StateMachine
             yield return new WaitForSeconds(0.5f);
             
         }
+        
+        unit.currentHex.currentUnit = unit;
 
         if (isServer)
         {
-            HexGrid.instance.SyncHexGridVariables();
-
-            unit.currentHex.currentUnit = unit;
-            
             unitMovementAnimationDone = true;
         }
     }

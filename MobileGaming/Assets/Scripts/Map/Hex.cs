@@ -13,6 +13,7 @@ public class Hex : NetworkBehaviour
     [Header("Gaming")]
     [SyncVar] public sbyte movementCost = 1;
     [SyncVar] public Unit currentUnit;
+    [SyncVar] public Unit previousUnit;
     [SyncVar(hook = nameof(OnCurrentTileIdValueChanged))] public int currentTileID;
     [SyncVar(hook = nameof(OnCollectibleIdValueChanged))] public int currentCollectibleId;
     public bool hasCollectible => currentCollectibleId != 0;
@@ -171,11 +172,6 @@ public class Hex : NetworkBehaviour
     
     public void OnUnitEnter(Unit unit)
     {
-        unit.currentHex = this;
-        currentUnit = unit;
-        unit.hexCol = col;
-        unit.hexRow = row;
-
         if (hasCollectible)
         {
             var collectibleId = currentCollectibleId;
@@ -194,8 +190,6 @@ public class Hex : NetworkBehaviour
 
     public void OnUnitExit(Unit unit)
     {
-        if (currentUnit == unit) currentUnit = null;
-        
         CallbackManager.UnitHexExit(unit,this);
         
         ModelSpawner.UpdateHexCollectible(this);
