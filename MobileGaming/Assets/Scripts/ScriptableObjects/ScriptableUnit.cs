@@ -74,4 +74,10 @@ public class ScriptableUnit : ScriptableObject
         killedUnit.gameObject.SetActive(false);
         killedUnit.RpcSetUnitActive(false);
     }
+
+    public virtual void HealUnit(Unit unitToHeal,int value)
+    {
+        if (value < 0) value = 0;
+        unitToHeal.currentHp += Convert.ToSByte(value);
+    }
 }

@@ -15,7 +15,7 @@ public class FactionAttEotW : ScriptableFaction
 
         CallbackManager.OnAnyPlayerTurnStart += ClearPathDict;
 
-        CallbackManager.OnAnyUnitHexEnter += GainFaithIfAllMovementSpent;
+        CallbackManager.OnAnyUnitHexEnter += EffectIfAllMovementSpent;
 
         CallbackManager.OnUnitRespawned += NoFaithOverloadOnRespawn;
 
@@ -27,18 +27,38 @@ public class FactionAttEotW : ScriptableFaction
             }
         }
 
-        void GainFaithIfAllMovementSpent(Unit unit,Hex hex)
+        void EffectIfAllMovementSpent(Unit unit,Hex hex)
         {
             if(unit.player != targetPlayer) return;
             
             unitPathDict[unit].Add(hex);
-
+            
             if (unit.move != 0) return;
+
+            foreach (var adjAllyUnit in unit.AdjacentUnits().Where(adjUnit => adjUnit.playerId == unit.playerId))
+            {
+                adjAllyUnit.HealUnit(2);
+                
+                adjAllyUnit.move++;
+                
+                CallbackManager.OnPlayerTurnStart += IncreaseMovement;
+                    
+                void IncreaseMovement(PlayerSM player)
+                {
+                    if (player == targetPlayer)
+                    {
+                        adjAllyUnit.move++;
+                        CallbackManager.OnPlayerTurnStart -= IncreaseMovement;
+                    }
+                }
+            }
             
             if (unitPathDict[unit].Distinct().Count() == unitPathDict[unit].Count) targetPlayer.faith += 3;
 
             unitPathDict[unit].Clear();
         }
+
+        
 
         void NoFaithOverloadOnRespawn(Unit unit)
         {

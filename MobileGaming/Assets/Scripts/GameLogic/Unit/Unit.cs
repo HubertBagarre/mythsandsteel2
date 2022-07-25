@@ -150,6 +150,11 @@ public class Unit : NetworkBehaviour
         unitScriptable.KillUnit(this,physicalDeath,magicalDeath,killer);
     }
 
+    public void HealUnit(int value)
+    {
+        unitScriptable.HealUnit(this,value);
+    }
+
     public void RespawnUnit(Hex targetHex)
     {
         ResetUnitStats();
