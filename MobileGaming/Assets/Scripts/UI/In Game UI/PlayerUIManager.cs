@@ -144,11 +144,12 @@ public class PlayerUIManager : NetworkBehaviour
         }
     }
 
-    public void ActivateRespawnButtons(int playerId)
+    public void ActivateRespawnButtons(int playerId,bool interactable)
     {
         foreach (var button in respawnUnitButtons)
         {
             button.gameObject.SetActive(button.associatedUnit.isDead && button.associatedUnit.playerId == playerId);
+            button.button.interactable = interactable;
         }
     }
     

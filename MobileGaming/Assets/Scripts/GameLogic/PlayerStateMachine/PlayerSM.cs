@@ -98,7 +98,7 @@ public class PlayerSM : StateMachine
     public void InitiateVariables()
     {
         maxActions = 3;
-        faith = 99;
+        faith = 6;
         faithModifier = 0;
         victoryPoints = 0;
         factionScriptable = ObjectIDList.GetFactionScriptable(factionId);
@@ -822,7 +822,7 @@ public class PlayerSM : StateMachine
 
     public void ActivateRespawnMenu(bool value)
     {
-        if(value) uiManager.ActivateRespawnButtons(playerId);
+        if(value) uiManager.ActivateRespawnButtons(playerId,faith >= 8 - faithModifier);
         uiManager.SetActiveRespawnMenu(value);
     }
 
