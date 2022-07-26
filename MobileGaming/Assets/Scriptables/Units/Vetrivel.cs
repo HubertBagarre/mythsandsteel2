@@ -26,6 +26,8 @@ public class Vetrivel : ScriptableUnit
 
     public override void KillUnit(Unit killedUnit, bool physicalDeath, bool magicalDeath, Unit killer)
     {
+        Debug.Log($"Killed unit hex in scriptable : {killedUnit.currentHex}");
+        
         CallbackManager.OnAnyUnitHexExit -= UpdateAdjacentVetrivelsPhysicalDef;
 
         CallbackManager.OnAnyUnitHexEnter -= UpdateAdjacentVetrivelsPhysicalDef;

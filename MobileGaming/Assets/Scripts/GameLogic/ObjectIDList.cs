@@ -10,8 +10,8 @@ public class ObjectIDList : MonoBehaviour
     [field: SerializeField] public  List<ScriptableTile> tiles { get; private set; } = new ();
     [field: SerializeField] public  List<ScriptableAbility> abilities { get; private set; } = new ();
     [field: SerializeField] public  List<ScriptableUnitPlacement> unitPlacements { get; private set; } = new ();
-    
     [field: SerializeField] public  List<ScriptableCollectible> collectibles { get; private set; } = new ();
+    [field: SerializeField] public  List<ScriptableBuffInfo> buffInfos { get; private set; } = new ();
     
     public static ObjectIDList instance;
     
@@ -62,5 +62,11 @@ public class ObjectIDList : MonoBehaviour
     {
         if (index < 0 || index >= instance.collectibles.Count) index = 0;
         return instance.collectibles[index];
+    }
+    
+    public static ScriptableBuffInfo GetBuffScriptable(int index)
+    {
+        if (index < 0 || index >= instance.buffInfos.Count) index = 0;
+        return instance.buffInfos[index];
     }
 }

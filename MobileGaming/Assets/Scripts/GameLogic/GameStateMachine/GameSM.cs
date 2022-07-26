@@ -210,6 +210,8 @@ public class GameSM : StateMachine
             unit.move = unit.baseMove;
             unit.attacksLeft = unit.attacksPerTurn;
             unit.canUseAbility = true;
+            unit.canAttack = true;
+            unit.canMove = true;
         }
     }
 

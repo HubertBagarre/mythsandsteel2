@@ -6,6 +6,42 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Scriptables/Faction/Immram Warband")]
 public class FactionImmramWarband : ScriptableFaction
 {
+    private class MovementBuff : BaseUnitBuff
+    {
+        private int turnsActive = 0;
+        
+        protected override void OnBuffAdded(Unit unit)
+        {
+            Debug.Log($"This unit has {unit.currentBuffs.Count} buffs ({unit.currentBuffs.Count(buff => buff.GetType() == typeof(MovementBuff))} of type {typeof(MovementBuff)})");
+            if (unit.currentBuffs.Count(buff => buff.GetType() == typeof(MovementBuff)) >= 4)
+            {
+                if(unit.currentBuffs.Contains(this)) unit.currentBuffs.Remove(this);
+                return;
+            }
+            
+            CallbackManager.OnPlayerTurnStart += IncreaseMovement;
+        }
+
+        protected override void OnBuffRemoved(Unit unit)
+        {
+            CallbackManager.OnPlayerTurnStart -= IncreaseMovement;
+        }
+
+        private void IncreaseMovement(PlayerSM playerSm)
+        {
+            if (playerSm == assignedUnit.player)
+            {
+                assignedUnit.move++;
+                turnsActive++;
+            }
+
+            if (turnsActive > 0)
+            {
+                RemoveBuff();
+            }
+        }
+    }
+    
     public override void SetupEvents(PlayerSM player)
     {
         var targetPlayer = player;
@@ -37,20 +73,12 @@ public class FactionImmramWarband : ScriptableFaction
                 attackedUnit.TakeDamage(0,3,attackingUnit);
 
                 var previouslyAttackingUnit = attackedDict[attackedUnit].Last();
-                previouslyAttackingUnit.move++;
-                attackingUnit.move++;
                 
-                CallbackManager.OnPlayerTurnStart += IncreaseMovement;
-                    
-                void IncreaseMovement(PlayerSM playerSm)
-                {
-                    if (playerSm == targetPlayer)
-                    {
-                        previouslyAttackingUnit.move++;
-                        attackingUnit.move++;
-                        CallbackManager.OnPlayerTurnStart -= IncreaseMovement;
-                    }
-                }
+                previouslyAttackingUnit.move++;
+                previouslyAttackingUnit.AddBuff(new MovementBuff());
+                
+                attackingUnit.move++;
+                attackingUnit.AddBuff(new MovementBuff());
             }
             
             attackedDict[attackedUnit].Add(attackingUnit);

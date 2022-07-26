@@ -37,7 +37,6 @@ namespace PlayerStates
 
             if (movingUnit.hasAbility && movingUnit.canUseAbility)
             {
-                Debug.Log($"{sm.selectedUnit.abilityScriptable.name} costs {sm.selectedUnit.currentAbilityCost} faith. You have {sm.faith}");
                 sm.DisplayAbilityButton(true,(sm.selectedUnit.currentAbilityCost <= sm.faith));
             }
             
@@ -56,8 +55,11 @@ namespace PlayerStates
         private void ClientSideSetAccessibleHexesNew(Unit unitToGetAccessibleHexes)
         {
             var enemyUnits = sm.allUnits.Where(unit => unit.playerId != unitToGetAccessibleHexes.playerId);
-            var bfsResult = GraphSearch.BFSGetRange(unitToGetAccessibleHexes,enemyUnits,unitToGetAccessibleHexes.attacksLeft > 0);
+            
+            var bfsResult = GraphSearch.BFSGetRange(unitToGetAccessibleHexes,enemyUnits,unitToGetAccessibleHexes.canAttack);
+            
             var returnHexes = bfsResult.hexesInRange.Where(hex => !hex.HasUnitOfPlayer(0) && !hex.HasUnitOfPlayer(1));
+            
             var attackableUnits = bfsResult.attackableUnits;
         
             foreach (var hex in returnHexes)

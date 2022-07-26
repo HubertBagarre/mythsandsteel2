@@ -428,9 +428,11 @@ public class PlayerSM : StateMachine
     {
         if(!attacking.hasBeenActivated) unitsToActivate--;
         attacking.hasBeenActivated = true;
-        attacking.move = 0;
         attacking.canUseAbility = false;
+        attacking.canMove = false;
+        
         attacking.attacksLeft--;
+        
         StartCoroutine(PlayAttackAnimationRoutine(attacking, attacked));
     }
 
@@ -573,9 +575,10 @@ public class PlayerSM : StateMachine
     {
         if(!casting.hasBeenActivated) unitsToActivate--;
         casting.hasBeenActivated = true;
-        casting.move = 0;
-        casting.attacksLeft = 0;
         casting.canUseAbility = false;
+        casting.canMove = false;
+        casting.canAttack = false;
+
         var ability = casting.abilityScriptable;
         if (unitToRespawn != null) ability = ObjectIDList.GetAbilityScriptable(1);
         StartCoroutine(PlayAbilityAnimationRoutine(casting,ability as IAbilityCallBacks,targets));

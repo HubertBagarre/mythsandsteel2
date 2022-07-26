@@ -6,6 +6,36 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Scriptables/Faction/The Army To The Edge Of The World")]
 public class FactionAttEotW : ScriptableFaction
 {
+    private class MovementBuff : BaseUnitBuff
+    {
+        private int turnsActive = 0;
+        
+        protected override void OnBuffAdded(Unit unit)
+        {
+            CallbackManager.OnPlayerTurnStart += IncreaseMovement;
+        }
+
+        protected override void OnBuffRemoved(Unit unit)
+        {
+            CallbackManager.OnPlayerTurnStart -= IncreaseMovement;
+        }
+
+        private void IncreaseMovement(PlayerSM playerSm)
+        {
+            if (playerSm == assignedUnit.player)
+            {
+                assignedUnit.move++;
+                turnsActive++;
+                Debug.Log($"Turns active : {turnsActive}");
+            }
+
+            if (turnsActive > 0)
+            {
+                RemoveBuff();
+            }
+        }
+    }
+    
     public override void SetupEvents(PlayerSM player)
     {
         var targetPlayer = player;
@@ -26,42 +56,31 @@ public class FactionAttEotW : ScriptableFaction
             }
         }
 
-        void EffectIfAllMovementSpent(Unit unit,Hex hex)
+        void EffectIfAllMovementSpent(Unit unit, Hex hex)
         {
-            if(unit.player != targetPlayer) return;
-            
+            if (unit.player != targetPlayer) return;
+
             unitPathDict[unit].Add(hex);
-            
+
             if (unit.move != 0) return;
 
             foreach (var adjAllyUnit in unit.AdjacentUnits().Where(adjUnit => adjUnit.playerId == unit.playerId))
             {
                 adjAllyUnit.HealUnit(2);
-                
+
                 adjAllyUnit.move++;
-                
-                CallbackManager.OnPlayerTurnStart += IncreaseMovement;
-                    
-                void IncreaseMovement(PlayerSM playerSm)
-                {
-                    if (playerSm == targetPlayer)
-                    {
-                        adjAllyUnit.move++;
-                        CallbackManager.OnPlayerTurnStart -= IncreaseMovement;
-                    }
-                }
+
+                adjAllyUnit.AddBuff(new MovementBuff());
             }
-            
+
             if (unitPathDict[unit].Distinct().Count() == unitPathDict[unit].Count) targetPlayer.faith += 3;
 
             unitPathDict[unit].Clear();
         }
 
-        
-
         void NoFaithOverloadOnRespawn(Unit unit)
         {
-            if(unit.player != targetPlayer) return;
+            if (unit.player != targetPlayer) return;
 
             targetPlayer.faith -= 3;
         }

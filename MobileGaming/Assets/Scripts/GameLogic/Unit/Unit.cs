@@ -43,7 +43,11 @@ public class Unit : NetworkBehaviour
     [SyncVar] public sbyte move;
     [SyncVar] public sbyte currentAbilityCost;
     [SyncVar] public bool hasBeenActivated;
+    [SyncVar] public bool canAttack;
+    [SyncVar] public bool canMove;
     [SyncVar] public bool canUseAbility;
+
+    public readonly SyncList<BaseUnitBuff> currentBuffs = new();
 
     [Header("Components")]
     public NetworkAnimator animator;
@@ -74,6 +78,8 @@ public class Unit : NetworkBehaviour
         move = 0;
         hasBeenActivated = true;
         canUseAbility = false;
+        canMove = false;
+        canAttack = false;
         unitScriptable.SetupEvents(this);
         
         ReplaceModel();
@@ -144,11 +150,13 @@ public class Unit : NetworkBehaviour
 
     public void TakeDamage(sbyte physicalDamage,sbyte magicalDamage, Unit sourceUnit = null)
     {
-        unitScriptable.TakeDamage(this,physicalDamage,magicalDamage,sourceUnit);
+        if(!isDead) unitScriptable.TakeDamage(this,physicalDamage,magicalDamage,sourceUnit);
     }
 
     public void KillUnit(bool physicalDeath,bool magicalDeath,Unit killer)
     {
+        Debug.Log($"Killed unit hex before scriptable : {this.currentHex}");
+        
         unitScriptable.KillUnit(this,physicalDeath,magicalDeath,killer);
     }
 
@@ -216,6 +224,14 @@ public class Unit : NetworkBehaviour
         unit.transform.position = hex.transform.position + Vector3.up * 2f;
     }
 
+    public void AddBuff(BaseUnitBuff buff)
+    {
+        buff.assignedUnit = this;
+        buff.AddBuff();
+    }
+    
+    #region Helpers
+    
     public bool IsOnHexOfType(byte id)
     {
         if (currentHex == null) return false;
@@ -252,6 +268,8 @@ public class Unit : NetworkBehaviour
     {
         return AdjacentUnits().Count(unit => unit.playerId != playerId);
     }
+
+    #endregion
 
     [ClientRpc]
     public void RpcSetUnitActive(bool value)

@@ -70,9 +70,7 @@ namespace PlayerStates
                 return false;
             };
             
-            Debug.Log($"Unit can use ability : {unit.canUseAbility}, attacks left : {unit.attacksLeft}, movement left : {unit.move}");
-            
-            return unit.canUseAbility || (unit.attacksLeft > 0 && unit.AreEnemyUnitsInRange())|| unit.move > 0;
+            return unit.canUseAbility || (unit.canAttack && unit.attacksLeft > 0 && unit.AreEnemyUnitsInRange())|| (unit.canMove && unit.move > 0);
         }
         
         private void EnterMovingState(Unit unit)

@@ -64,16 +64,21 @@ public class ScriptableUnit : ScriptableObject
         
         if (targetUnit.currentHp <= 0)
         {
+            Debug.Log($"Killed unit hex on damage taken : {targetUnit.currentHex}");
+            
             targetUnit.KillUnit((physicalDamage>0),(magicalDamage>0),sourceUnit);
         }
     }
 
     public virtual void KillUnit(Unit killedUnit,bool physicalDeath,bool magicalDeath,Unit killer)
     {
+        Debug.Log($"Killed unit hex before callback : {killedUnit.currentHex}");
+        
         Debug.Log($"{killedUnit} was killed by {killer} !! Physical Death : {physicalDeath}, Magical Death : {magicalDeath}");
 
         CallbackManager.UnitKilled(killedUnit,physicalDeath,magicalDeath,killer);
         
+        Debug.Log($"Killed unit hex after callback : {killedUnit.currentHex}");
         killedUnit.currentHex.OnUnitExit(killedUnit);
         killedUnit.currentHex = null;
         killedUnit.gameObject.SetActive(false);
@@ -84,5 +89,6 @@ public class ScriptableUnit : ScriptableObject
     {
         if (value < 0) value = 0;
         unitToHeal.currentHp += Convert.ToSByte(value);
+        if (unitToHeal.currentHp > unitToHeal.baseMaxHp) unitToHeal.currentHp = unitToHeal.baseMaxHp;
     }
 }
