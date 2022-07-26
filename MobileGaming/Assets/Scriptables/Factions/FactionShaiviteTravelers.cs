@@ -43,14 +43,15 @@ public class FactionShaiviteTravelers : ScriptableFaction
 
             if (playerSm != assignedUnit.player) return;
             
+            ApplyPostureEffect();
+            
             if (assignedUnit.currentHp < (int) Math.Floor(assignedUnit.maxHp / 2f))
             {
-                timesPostureChangedThisTurn++;
                 assignedUnit.player.faith += 2;
-                posture = posture == Postures.Defensive ? Postures.Offensive : Postures.Defensive;
+                ChangePosture();
             }
             
-            ApplyPostureEffect();
+            
         }
 
         private void ApplyPostureEffect()
