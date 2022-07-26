@@ -74,3 +74,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 11400000, guid: cf9d4b0c642371240be8d4c1c8d2c6ae, type: 2}
   - {fileID: 11400000, guid: 170af65399456ba449851e44df1348e0, type: 2}
+  <buffInfos>k__BackingField:
+  - {fileID: 11400000, guid: ce23336dc1519d447a3568358d64183c, type: 2}
+  - {fileID: 11400000, guid: ef493976f4857214591ee9e447da6ef3, type: 2}
+  - {fileID: 11400000, guid: bb2a818234eb0c6439dda43c0bfa93f0, type: 2}
+  - {fileID: 11400000, guid: f1d1a5d620d1905499941ea14cdceed1, type: 2}

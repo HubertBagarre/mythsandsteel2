@@ -6,9 +6,7 @@ public class BaseUnitBuff
     public Unit assignedUnit;
     
     public int buffInfoId;
-
-    public int maxStacks;
-
+    
     public void AddBuff()
     {
         assignedUnit.currentBuffs.Add(this);

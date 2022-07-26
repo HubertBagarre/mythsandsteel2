@@ -207,6 +207,10 @@ public class GameSM : StateMachine
         foreach (var unit in hexGrid.units.Where(unit => unit.playerId == currentPlayerId))
         {
             unit.hasBeenActivated = false;
+            unit.attackDamage = unit.baseAttackDamage;
+            unit.attackRange = unit.baseRange;
+            unit.physicDef = unit.basePhysicDef;
+            unit.magicDef = unit.baseMagicDef;
             unit.move = unit.baseMove;
             unit.attacksLeft = unit.attacksPerTurn;
             unit.canUseAbility = true;

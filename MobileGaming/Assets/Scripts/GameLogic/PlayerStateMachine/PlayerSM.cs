@@ -1,6 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using CallbackManagement;
 using Mirror;
 using UnityEngine;
 using PlayerStates;
@@ -606,10 +607,12 @@ public class PlayerSM : StateMachine
         
         if (isServer)
         {
-            ability.OnAbilityTargetingHexes(casting,targets,this);
+            var targetedHexes = targets as Hex[] ?? targets.ToArray();
+            ability.OnAbilityTargetingHexes(casting,targetedHexes,this);
             castingUnit = null;
             selectedHexesForAbility.Clear();
             unitAbilityAnimationDone = true;
+            if(ability is not RespawnUnit) CallbackManager.UnitAbilityCasted(casting,targetedHexes.ToArray());
         }
     }
     

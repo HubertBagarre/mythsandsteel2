@@ -12,12 +12,13 @@ public class FactionImmramWarband : ScriptableFaction
         
         protected override void OnBuffAdded(Unit unit)
         {
-            Debug.Log($"This unit has {unit.currentBuffs.Count} buffs ({unit.currentBuffs.Count(buff => buff.GetType() == typeof(MovementBuff))} of type {typeof(MovementBuff)})");
-            if (unit.currentBuffs.Count(buff => buff.GetType() == typeof(MovementBuff)) >= 4)
+            if (unit.currentBuffs.Count(buff => buff is MovementBuff) >= 4)
             {
                 if(unit.currentBuffs.Contains(this)) unit.currentBuffs.Remove(this);
                 return;
             }
+            
+            buffInfoId = 1;
             
             CallbackManager.OnPlayerTurnStart += IncreaseMovement;
         }

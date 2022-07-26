@@ -9,6 +9,7 @@ namespace CallbackManagement
         public delegate void SingleUnitParamEvent(Unit unit);
         public delegate void DoubleUnitParamEvent(Unit unit1,Unit unit2);
         public delegate void UnitHexParamEvent(Unit unit, Hex hex);
+        public delegate void UnitHexesParamEvent(Unit unit, Hex[] hexes);
         public delegate void PlayerParamEvent(PlayerSM player);
         public delegate void UnitTakeDamageD(Unit targetUnit, sbyte physicalDamage, sbyte magicalDamage, Unit sourceUnit);
         public delegate void UnitKilledEvent(Unit killedUnit,bool physicalDeath,bool magicalDeath,Unit killer);
@@ -22,7 +23,8 @@ namespace CallbackManagement
         public static event UnitHexParamEvent OnAnyUnitHexEnter;
         public static event UnitTakeDamageD OnUnitTakeDamage;
         public static event UnitKilledEvent OnUnitKilled;
-        
+        public static event UnitHexesParamEvent OnUnitAbilityCasted;
+
         public static void InitEvents()
         {
             OnAnyPlayerTurnStart = DoNothing;
@@ -42,6 +44,8 @@ namespace CallbackManagement
             OnUnitTakeDamage = DoNothing;
             
             OnUnitKilled = DoNothing;
+
+            OnUnitAbilityCasted = DoNothing;
         }
 
         private static void DoNothing()
@@ -57,6 +61,11 @@ namespace CallbackManagement
         private static void DoNothing(Unit unit,Hex hex)
         {
             Debug.Log($"Doing nothing, param : {unit}, {hex}");
+        }
+        
+        private static void DoNothing(Unit unit,Hex[] hexes)
+        {
+            Debug.Log($"Doing nothing, param : {unit}, Hexes :{hexes.Length}");
         }
         
         private static void DoNothing(Unit unit1,Unit unit2)
@@ -126,8 +135,15 @@ namespace CallbackManagement
         {
             OnUnitKilled?.Invoke(killedunit, physicaldeath, magicaldeath, killer);
         }
+        
+        public static void UnitAbilityCasted(Unit unit, Hex[] hexes)
+        {
+            OnUnitAbilityCasted?.Invoke(unit, hexes);
+        }
 
         #endregion
+
+        
     }
 }
 
