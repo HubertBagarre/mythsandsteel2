@@ -34,7 +34,7 @@ public class FactionShaiviteTravelers : ScriptableFaction
 
             CallbackManager.OnUnitAbilityCasted += PostureCheckAfterAbility;
             
-            buffInfoId = 2;
+            buffInfoId = 3;
         }
 
         private void TurnStartOperations(PlayerSM playerSm)
@@ -58,14 +58,14 @@ public class FactionShaiviteTravelers : ScriptableFaction
             if (posture == Postures.Defensive)
             {
                 assignedUnit.HealUnit(2);
-                buffInfoId = 2;
+                buffInfoId = 3;
             }
             else
             {
                 assignedUnit.attacksPerTurn += 1;
                 assignedUnit.physicDef -= 1;
                 assignedUnit.magicDef -= 1;
-                buffInfoId = 3;
+                buffInfoId = 4;
             }
         }
 

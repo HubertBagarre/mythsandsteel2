@@ -49,7 +49,7 @@ public class FactionAttEotW : ScriptableFaction
         
         protected override void OnBuffAdded(Unit unit)
         {
-            buffInfoId = 0;
+            buffInfoId = 1;
             assignedUnit.attackDamage += 1;
             
             CallbackManager.OnPlayerTurnStart += IncreaseAttack;

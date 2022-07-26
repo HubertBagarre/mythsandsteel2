@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 196a08cc8a2529c47914196ba0b45230, type: 3}
-  m_Name: Ambaxtoi
+  m_Name: Eclectical Satrapies (Attack)
   m_EditorClassIdentifier: 
   icon: {fileID: 0}
-  description: +1 Movement avant le prochain mouvement.
+  description: Has +1 movement.
