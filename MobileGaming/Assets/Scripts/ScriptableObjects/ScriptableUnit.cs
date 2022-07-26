@@ -16,6 +16,7 @@ public class ScriptableUnit : ScriptableObject
     public string unitName;
     public string faction;
     public Classes className;
+    public Sprite portraitImage;
 
     [Header("Stats")]
     public sbyte baseMaxHp;

@@ -15,6 +15,7 @@ MonoBehaviour:
   unitName: Vetrivel
   faction: 
   className: 2
+  portraitImage: {fileID: 21300000, guid: dcbdee4810a789e48a8c3de59e236580, type: 3}
   baseMaxHp: 1
   basePhysicDef: 0
   baseMagicDef: 1

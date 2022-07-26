@@ -18,7 +18,7 @@ public class PlayerUIManager : NetworkBehaviour
     [SerializeField] private TextMeshProUGUI faithCountText;
     [SerializeField] private TextMeshProUGUI victoryPointText;
     [SerializeField] private TextMeshProUGUI abilitySelectionText;
-    
+
     [Header("Buttons")]
     [SerializeField] private Button nextTurnButton;
     [SerializeField] private Button abilityButton;
@@ -26,15 +26,21 @@ public class PlayerUIManager : NetworkBehaviour
     [SerializeField] private Button abilityCancelButton;
     [SerializeField] private Button faithButton;
     [SerializeField] private Button pauseButton;
+    
+    
+    [Header("Unit Portrait")]
     [SerializeField] private Button allyUnitPortraitButton;
+    [SerializeField] private Transform allyUnitPortraitParent;
+    [SerializeField] private Image allyUnitPortraitImage;
+    [SerializeField] private TextMeshProUGUI allyUnitPortraitTextTop;
+    [SerializeField] private TextMeshProUGUI allyUnitPortraitTextBot;
 
     [Header("GameObjects")]
     [SerializeField] private UnitHud unitHudPrefab;
     [SerializeField] private Transform unitHudParent;
     [SerializeField] private GameObject abilityGameObject;
     [SerializeField] private GameObject abilitySelectionGameObject;
-    [SerializeField] private GameObject allyUnitPortraitGameObject;
-    
+
     [Header("Unit Respawn")]
     [SerializeField] private GameObject unitRespawnMenuGameObject;
     [SerializeField] private Transform unitRespawnParent;
@@ -184,4 +190,18 @@ public class PlayerUIManager : NetworkBehaviour
     }
 
     #endregion
+
+    #region Unit Portrait
+
+    public void UpdateUnitPortrait(Unit unit)
+    {
+        allyUnitPortraitImage.sprite = ObjectIDList.GetUnitScriptable(unit.unitScriptableId).portraitImage;
+        allyUnitPortraitTextTop.text =
+            $"{unit.currentHp}<sprite=8>\n{unit.physicDef}<sprite=24>\n{unit.magicDef}<sprite=1>";
+        allyUnitPortraitTextBot.text =
+            $"{unit.attacksLeft}<sprite=39>\n{unit.attackDamage}<sprite=21>\n{unit.move}<sprite=43>";
+    }
+
+    #endregion
+    
 }

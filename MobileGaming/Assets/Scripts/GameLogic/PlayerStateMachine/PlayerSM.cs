@@ -166,6 +166,7 @@ public class PlayerSM : StateMachine
             var objectUnit = objectHit.GetComponent<Unit>();
             if (objectUnit != null)
             {
+                if(objectUnit.player == this) uiManager.UpdateUnitPortrait(objectUnit);
                 CmdSendUnitClicked(objectUnit);
             }
             
