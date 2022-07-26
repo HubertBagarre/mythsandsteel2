@@ -81,7 +81,7 @@ public class GraphSearch
     public static BFSResult BFSGetRange(Unit unit,IEnumerable<Unit> enemyUnits,bool withAttack = true)
     {
         var movement = unit.canMove ? unit.move : 0;
-        return BFSGetRange(unit.currentHex, unit.move, enemyUnits,withAttack);
+        return BFSGetRange(unit.currentHex, movement, enemyUnits,withAttack);
     }
     
     

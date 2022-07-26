@@ -14,11 +14,17 @@ public class FactionAttEotW : ScriptableFaction
         {
             buffInfoId = 0;
             CallbackManager.OnPlayerTurnStart += IncreaseMovement;
+            CallbackManager.OnUnitMove += RemoveBuffOnMovement;
         }
 
         protected override void OnBuffRemoved(Unit unit)
         {
             CallbackManager.OnPlayerTurnStart -= IncreaseMovement;
+        }
+
+        private void RemoveBuffOnMovement(Unit unit, Hex hex)
+        {
+            if(unit == assignedUnit) RemoveBuff();
         }
 
         private void IncreaseMovement(PlayerSM playerSm)
@@ -42,7 +48,6 @@ public class FactionAttEotW : ScriptableFaction
         var targetPlayer = player;
 
         var unitPathDict = player.allUnits.ToDictionary(someUnit => someUnit, someUnit => new List<Hex>());
-        var unitThatGaveTheBuffThisTurn = new List<Unit>();
 
         CallbackManager.OnAnyPlayerTurnStart += ClearTrackers;
 
@@ -56,8 +61,6 @@ public class FactionAttEotW : ScriptableFaction
             {
                 hexList.Clear();
             }
-            
-            unitThatGaveTheBuffThisTurn.Clear();
         }
 
         void EffectIfAllMovementSpent(Unit unit, Hex hex)
@@ -72,12 +75,10 @@ public class FactionAttEotW : ScriptableFaction
             {
                 adjAllyUnit.HealUnit(2);
 
-                if(!unitThatGaveTheBuffThisTurn.Contains(adjAllyUnit)) adjAllyUnit.move++;
+                adjAllyUnit.move++;
 
                 adjAllyUnit.AddBuff(new MovementBuff());
             }
-            
-            unitThatGaveTheBuffThisTurn.Add(unit);
 
             if (unitPathDict[unit].Distinct().Count() == unitPathDict[unit].Count) targetPlayer.faith += 3;
 

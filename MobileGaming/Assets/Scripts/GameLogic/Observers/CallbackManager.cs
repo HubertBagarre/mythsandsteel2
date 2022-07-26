@@ -21,6 +21,7 @@ namespace CallbackManagement
         public static event DoubleUnitParamEvent OnUnitAttack;
         public static event UnitHexParamEvent OnAnyUnitHexExit;
         public static event UnitHexParamEvent OnAnyUnitHexEnter;
+        public static event UnitHexParamEvent OnUnitMove;
         public static event UnitTakeDamageD OnUnitTakeDamage;
         public static event UnitKilledEvent OnUnitKilled;
         public static event UnitHexesParamEvent OnUnitAbilityCasted;
@@ -40,6 +41,8 @@ namespace CallbackManagement
             OnAnyUnitHexExit = DoNothing;
             
             OnAnyUnitHexEnter = DoNothing;
+
+            OnUnitMove = DoNothing;
             
             OnUnitTakeDamage = DoNothing;
             
@@ -126,6 +129,11 @@ namespace CallbackManagement
             OnAnyUnitHexExit?.Invoke(unit, hex);
         }
         
+        public static void UnitMove(Unit unit, Hex hex)
+        {
+            OnUnitMove?.Invoke(unit, hex);
+        }
+        
         public static void UnitTakeDamage(Unit targetunit, sbyte physicaldamage, sbyte magicaldamage, Unit sourceunit)
         {
             OnUnitTakeDamage?.Invoke(targetunit, physicaldamage, magicaldamage, sourceunit);
@@ -142,8 +150,6 @@ namespace CallbackManagement
         }
 
         #endregion
-
-        
     }
 }
 

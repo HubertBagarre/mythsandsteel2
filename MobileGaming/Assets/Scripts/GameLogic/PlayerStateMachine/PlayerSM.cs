@@ -393,6 +393,8 @@ public class PlayerSM : StateMachine
         if (isServer)
         {
             unitMovementAnimationDone = true;
+            if (unit.move == 0) unitMovementUnit.canMove = false;
+            CallbackManager.UnitMove(unit,unit.currentHex);
         }
     }
     
