@@ -26,7 +26,7 @@ public class FactionAttEotW : ScriptableFaction
         {
             if(unit == assignedUnit) RemoveBuff();
         }
-
+        
         private void IncreaseMovement(PlayerSM playerSm)
         {
             if (playerSm == assignedUnit.player)
@@ -34,6 +34,44 @@ public class FactionAttEotW : ScriptableFaction
                 assignedUnit.move++;
                 turnsActive++;
                 Debug.Log($"Turns active : {turnsActive}");
+            }
+
+            if (turnsActive > 0)
+            {
+                RemoveBuff();
+            }
+        }
+    }
+    
+    private class AttackBuff : BaseUnitBuff
+    {
+        private int turnsActive = 0;
+        
+        protected override void OnBuffAdded(Unit unit)
+        {
+            buffInfoId = 0;
+            assignedUnit.attackDamage += 1;
+            
+            CallbackManager.OnPlayerTurnStart += IncreaseAttack;
+            CallbackManager.OnUnitAttack += RemoveBuffOnAttack;
+        }
+
+        protected override void OnBuffRemoved(Unit unit)
+        {
+            CallbackManager.OnPlayerTurnStart -= IncreaseAttack;
+        }
+
+        private void RemoveBuffOnAttack(Unit attackingUnit, Unit attackedUnit)
+        {
+            if(attackingUnit == assignedUnit) RemoveBuff();
+        }
+        
+        private void IncreaseAttack(PlayerSM playerSm)
+        {
+            if (playerSm == assignedUnit.player)
+            {
+                assignedUnit.attackDamage += 1;
+                turnsActive++;
             }
 
             if (turnsActive > 0)
@@ -78,6 +116,7 @@ public class FactionAttEotW : ScriptableFaction
                 adjAllyUnit.move++;
 
                 adjAllyUnit.AddBuff(new MovementBuff());
+                adjAllyUnit.AddBuff(new AttackBuff());
             }
 
             if (unitPathDict[unit].Distinct().Count() == unitPathDict[unit].Count) targetPlayer.faith += 3;
