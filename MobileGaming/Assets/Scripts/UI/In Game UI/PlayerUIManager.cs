@@ -55,6 +55,9 @@ public class PlayerUIManager : NetworkBehaviour
     [SerializeField] private GameObject gameEndMenuGameObject;
     [SerializeField] private TextMeshProUGUI gameEndText;
     [SerializeField] private TextMeshProUGUI autoDisconnectText;
+
+    [Header("Offset Camera")]
+    [SerializeField] private bool cameraOffCentered;
     
     [Header("Other")]
     [SerializeField] private Color allyOutlineColor;
@@ -70,6 +73,8 @@ public class PlayerUIManager : NetworkBehaviour
     {
         cam = Camera.main;
         pauseButton.onClick.AddListener(TogglePauseMenu);
+        abilityConfirmButton.onClick.AddListener(()=>Debug.Log("CLICKED CONFIRMED"));
+        abilityCancelButton.onClick.AddListener(()=>Debug.Log("CLICKED CANCEL"));
     }
 
     public void ChangeDebugText(string text)
@@ -138,23 +143,28 @@ public class PlayerUIManager : NetworkBehaviour
         return pauseMenuGameObject.activeSelf || unitRespawnMenuGameObject.activeSelf || gameEndMenuGameObject.activeSelf;
     }
     
-    public void SetCameraOffCenter(bool value,bool invertedCam)
+    #region CameraOffcenter
+
+    public void OffCenterCamera()
     {
-        var anchor = cam.transform.parent;
-        if (value)
-        {
-            cam.transform.DOLocalMove(new Vector3(0, 34, 0), 0.4f);
-            cam.transform.DOLocalRotate(new Vector3(90, 0, 0),0.4f);
-            anchor.transform.DOLocalMove(new Vector3(-7.5f, 8, 0), 0.4f);
-        }
-        else
-        {
-            cam.transform.DOLocalMove(new Vector3(0, 34, -8.7f), 0.4f);
-            cam.transform.DOLocalRotate(new Vector3(75, 0, 0),0.4f);
-            anchor.transform.DOLocalMove(Vector3.zero, 0.4f);
-        }
+        if(cameraOffCentered) return;
+        cam.transform.localPosition = new Vector3(0, 34, 0);
+        cam.transform.localRotation = Quaternion.Euler(new Vector3(90, 0, 0));
+        cam.transform.parent.localPosition =new Vector3(-7.5f, 8, 0);
+        cameraOffCentered = true;
+    }
+
+    public void CenterCamera()
+    {
+        if(!cameraOffCentered) return;
+        cam.transform.localPosition = new Vector3(0, 34, -8.7f);
+        cam.transform.localRotation = Quaternion.Euler(new Vector3(75, 0, 0));
+        cam.transform.parent.localPosition = Vector3.zero; 
+        cameraOffCentered = false;
     }
     
+    #endregion
+
     #region Pause Menu
     
     private void TogglePauseMenu()
