@@ -18,7 +18,7 @@ public class PlayerUIManager : NetworkBehaviour
     [SerializeField] private TextMeshProUGUI faithCountText;
     [SerializeField] private TextMeshProUGUI victoryPointText;
     [SerializeField] private TextMeshProUGUI abilitySelectionText;
-    
+
     [Header("Buttons")]
     [SerializeField] private Button nextTurnButton;
     [SerializeField] private Button abilityButton;
@@ -26,21 +26,34 @@ public class PlayerUIManager : NetworkBehaviour
     [SerializeField] private Button abilityCancelButton;
     [SerializeField] private Button faithButton;
     [SerializeField] private Button pauseButton;
+    
+    [Header("Unit Portrait")]
     [SerializeField] private Button allyUnitPortraitButton;
+    [SerializeField] private Transform allyUnitPortraitParent;
+    [SerializeField] private Image allyUnitPortraitImage;
+    [SerializeField] private TextMeshProUGUI allyUnitPortraitTextTop;
+    [SerializeField] private TextMeshProUGUI allyUnitPortraitTextBot;
 
     [Header("GameObjects")]
     [SerializeField] private UnitHud unitHudPrefab;
     [SerializeField] private Transform unitHudParent;
     [SerializeField] private GameObject abilityGameObject;
     [SerializeField] private GameObject abilitySelectionGameObject;
-    [SerializeField] private GameObject allyUnitPortraitGameObject;
-    
+
     [Header("Unit Respawn")]
     [SerializeField] private GameObject unitRespawnMenuGameObject;
     [SerializeField] private Transform unitRespawnParent;
     [SerializeField] private RespawnUnitButton respawnUnitButtonPrefab;
     private readonly List<RespawnUnitButton> respawnUnitButtons = new ();
-
+    
+    [Header("Pause Menu")]
+    [SerializeField] private GameObject pauseMenuGameObject;
+    
+    [Header("End Game Screen")]
+    [SerializeField] private GameObject gameEndMenuGameObject;
+    [SerializeField] private TextMeshProUGUI gameEndText;
+    [SerializeField] private TextMeshProUGUI autoDisconnectText;
+    
     [Header("Other")]
     [SerializeField] private Color allyOutlineColor;
     [SerializeField] private Color enemyOutlineColor;
@@ -48,6 +61,7 @@ public class PlayerUIManager : NetworkBehaviour
     [Header("Unit Hud")]
     [SerializeField] private Vector2 unitHudOffset;
     private Dictionary<Unit, UnitHud> unitHudDict = new();
+    
 
     public static PlayerUIManager instance;
 
@@ -59,6 +73,11 @@ public class PlayerUIManager : NetworkBehaviour
     private void OnDestroy()
     {
         instance = null;
+    }
+
+    private void Start()
+    {
+        pauseButton.onClick.AddListener(TogglePauseMenu);
     }
 
     public void ChangeDebugText(string text)
@@ -73,12 +92,12 @@ public class PlayerUIManager : NetworkBehaviour
     
     public void UpdateFaithCount(int faithCount)
     {
-        faithCountText.text = faithCount.ToString();
+        faithCountText.text = $"{faithCount}<sprite=0>";
     }
     
     public void UpdateVictoryPoint(int victoryPoint)
     {
-        victoryPointText.text = victoryPoint.ToString();
+        victoryPointText.text = $"{victoryPoint}<sprite=34>";
     }
 
     public void EnableNextTurnButton(bool value)
@@ -116,7 +135,23 @@ public class PlayerUIManager : NetworkBehaviour
         abilityCancelButton.onClick.RemoveListener(cancelAbilityAction);
         faithButton.onClick.RemoveListener(faithButtonAction);
     }
+
+    public bool IsInMenu()
+    {
+        return pauseMenuGameObject.activeSelf || unitRespawnMenuGameObject.activeSelf || gameEndMenuGameObject.activeSelf;
+    }
     
+    #region Pause Menu
+    
+    private void TogglePauseMenu()
+    {
+        pauseMenuGameObject.SetActive(!pauseMenuGameObject.activeSelf);
+    }
+
+    #endregion
+
+    #region Ability Selection
+
     public void UpdateAbilitySelectionText(string moText)
     {
         abilitySelectionText.text = $"Select {moText}";
@@ -126,7 +161,11 @@ public class PlayerUIManager : NetworkBehaviour
     {
         abilityConfirmButton.interactable = value;
     }
+
+    #endregion
     
+    #region Respawn Menu
+
     public void SetActiveRespawnMenu(bool value)
     {
         unitRespawnMenuGameObject.SetActive(value);
@@ -153,7 +192,9 @@ public class PlayerUIManager : NetworkBehaviour
             button.button.interactable = interactable;
         }
     }
-    
+
+    #endregion
+
     #region Unit Hud
 
     public void RefreshUnitOutlines(IEnumerable<Unit> allUnits,int playerId)
@@ -182,6 +223,36 @@ public class PlayerUIManager : NetworkBehaviour
             unitHud.UpdateHud();
         }
     }
+
+    #endregion
+
+    #region Unit Portrait
+
+    public void UpdateUnitPortrait(Unit unit)
+    {
+        allyUnitPortraitImage.sprite = ObjectIDList.GetUnitScriptable(unit.unitScriptableId).portraitImage;
+        allyUnitPortraitTextTop.text =
+            $"{unit.currentHp}<sprite=8>\n{unit.physicDef}<sprite=24>\n{unit.magicDef}<sprite=1>";
+        allyUnitPortraitTextBot.text =
+            $"{unit.attacksLeft}<sprite=39>\n{unit.attackDamage}<sprite=21>\n{unit.move}<sprite=43>";
+    }
+
+    #endregion
+
+    #region End Game Screen
+
+    public void DisplayEndgameScreen(string message)
+    {
+        gameEndMenuGameObject.SetActive(true);
+        gameEndText.text = message;
+    }
+
+    public void UpdateAutoDisconnectMessage(int value)
+    {
+        autoDisconnectText.text = $"Déconnection dans {value}";
+    }
+
+
 
     #endregion
 }

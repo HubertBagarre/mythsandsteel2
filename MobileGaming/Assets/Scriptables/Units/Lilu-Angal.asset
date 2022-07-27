@@ -15,6 +15,7 @@ MonoBehaviour:
   unitName: Lilu-Angal
   faction: 
   className: 1
+  portraitImage: {fileID: 21300000, guid: f16282d8e2e8c494192f2ddfbc00fc1e, type: 3}
   baseMaxHp: 17
   basePhysicDef: 2
   baseMagicDef: 0

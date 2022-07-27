@@ -85,6 +85,7 @@ public class GameSM : StateMachine
     
     public override void ChangeState(BaseState newState)
     {
+        if(newState == endingState && currentState == endingState) return;
         base.ChangeState(newState);
         debugText.text = currentState.ToString();
     }
@@ -359,7 +360,7 @@ public class GameSM : StateMachine
         return player.victoryPoints >= 10;
     }
 
-    public void DisconnectPlayers()
+    public void EndGameForPlayers()
     {
         foreach (var player in players)
         {

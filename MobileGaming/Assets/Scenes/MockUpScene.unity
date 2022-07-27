@@ -10714,6 +10714,15 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4446024842820702547, guid: 3d6ac46de5dfc21469853f7f08ebe8aa, type: 3}
+      propertyPath: m_text
+      value: "<color=#DE6A02>+3<sprite=3> D\xE9g\xE2ts d'Attaque</color> jusqu'\xE0
+        la fin du tour."
+      objectReference: {fileID: 0}
+    - target: {fileID: 4446024842820702547, guid: 3d6ac46de5dfc21469853f7f08ebe8aa, type: 3}
+      propertyPath: m_spriteAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 15b59bd8bac6080438a51e0ab36e750f, type: 2}
     - target: {fileID: 4774104694101259957, guid: 3d6ac46de5dfc21469853f7f08ebe8aa, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 100.06738

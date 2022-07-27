@@ -67,6 +67,7 @@ public class PlayerSM : StateMachine
     [Header("Inputs")]
     private PlayerInputManager inputManager;
     [SerializeField] private LayerMask layersToHit;
+    private bool isInMenu => uiManager.IsInMenu();
     
     [Header("Trigger Bools")]
     [SyncVar(hook = nameof(OnUnitClickedValueChanged))] public bool clickedUnit;
@@ -112,7 +113,7 @@ public class PlayerSM : StateMachine
         }
         
         cam = Camera.main;
-        
+
         ResetTriggerVariables();
         
         uiManager.ChangeDebugText($"Player {playerId}, {currentState}");
@@ -148,6 +149,8 @@ public class PlayerSM : StateMachine
     
     private void TryToSelectUnitOrTile(Vector2 screenPosition,float time)
     {
+        if(isInMenu) return;
+        
         var ray = cam.ScreenPointToRay(screenPosition);
 
         if (Physics.Raycast(ray, out var hit, layersToHit))
@@ -159,6 +162,7 @@ public class PlayerSM : StateMachine
             var objectHex = objectHit.GetComponent<Hex>();
             if (objectHex != null)
             {
+                // TODO - Update selected Hex Box
                 CmdSendHexClicked(objectHex);
                 return;
             }
@@ -166,12 +170,14 @@ public class PlayerSM : StateMachine
             var objectUnit = objectHit.GetComponent<Unit>();
             if (objectUnit != null)
             {
+                if(objectUnit.player == this) uiManager.UpdateUnitPortrait(objectUnit);
+                // TODO - Update Selected Unit Box
                 CmdSendUnitClicked(objectUnit);
             }
             
             return;
         }
-
+        
         CmdSendNothingClicked();
     }
 
@@ -393,6 +399,8 @@ public class PlayerSM : StateMachine
         if (isServer)
         {
             unitMovementAnimationDone = true;
+            if (unit.move == 0) unitMovementUnit.canMove = false;
+            CallbackManager.UnitMove(unit,unit.currentHex);
         }
     }
     
@@ -847,6 +855,19 @@ public class PlayerSM : StateMachine
         if(!isLocalPlayer) return;
         var moreText = winner == playerId ? "It's you !" : "It's not you !";
         Debug.Log($"Player {winner} won ! {moreText}");
+        uiManager.DisplayEndgameScreen($"Player {winner} won ! {moreText}");
+        
+        StartCoroutine(AutoDisconnectRoutine());
+    }
+
+    private IEnumerator AutoDisconnectRoutine()
+    {
+        for (int i = 31 - 1; i >= 0; i--)
+        {
+            uiManager.UpdateAutoDisconnectMessage(i);
+            yield return new WaitForSeconds(1f);
+        }
+        
         if (NetworkClient.isConnected)
         {
             NetworkManager.singleton.StopClient();

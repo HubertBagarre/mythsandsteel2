@@ -18,7 +18,7 @@ public class FactionImmramWarband : ScriptableFaction
                 return;
             }
             
-            buffInfoId = 1;
+            buffInfoId = 2;
             
             CallbackManager.OnPlayerTurnStart += IncreaseMovement;
         }

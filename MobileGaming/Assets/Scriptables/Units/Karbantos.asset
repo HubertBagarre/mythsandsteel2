@@ -15,6 +15,7 @@ MonoBehaviour:
   unitName: Karbantos
   faction: 
   className: 0
+  portraitImage: {fileID: 21300000, guid: a5be8675cae8601489435130922fa655, type: 3}
   baseMaxHp: 18
   basePhysicDef: 0
   baseMagicDef: 1

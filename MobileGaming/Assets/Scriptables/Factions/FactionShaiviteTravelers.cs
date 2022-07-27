@@ -16,7 +16,7 @@ public class FactionShaiviteTravelers : ScriptableFaction
     
     private class Posture : BaseUnitBuff
     {
-        private int times = 0;
+        private int timesPostureChangedThisTurn = 0;
 
         public Postures posture;
         
@@ -24,39 +24,110 @@ public class FactionShaiviteTravelers : ScriptableFaction
         {
             posture = Postures.Defensive;
 
-            CallbackManager.OnAnyPlayerTurnStart += ResetTimeCount;
+            CallbackManager.OnPlayerTurnStart += TurnStartOperations;
             
-            buffInfoId = 2;
+            CallbackManager.OnUnitRespawned += RespawnInOffensivePosture;
+        
+            CallbackManager.OnUnitAttack += PostureCheckAfterAttack;
+
+            CallbackManager.OnUnitMove += PostureCheckAfterMovement;
+
+            CallbackManager.OnUnitAbilityCasted += PostureCheckAfterAbility;
+            
+            buffInfoId = 3;
         }
 
-        private void ResetTimeCount()
+        private void TurnStartOperations(PlayerSM playerSm)
         {
-            times = 0;
+            timesPostureChangedThisTurn = 0;
+
+            if (playerSm != assignedUnit.player) return;
+            
+            ApplyPostureEffect();
+            
+            if (assignedUnit.currentHp < (int) Math.Floor(assignedUnit.maxHp / 2f))
+            {
+                assignedUnit.player.faith += 2;
+                ChangePosture();
+            }
+            
+            
         }
 
-        public void ChangePosture()
+        private void ApplyPostureEffect()
         {
-            if(times >= 2) return;
-            
-            times++;
-            
             if (posture == Postures.Defensive)
             {
-                posture = Postures.Offensive;
-                assignedUnit.attacksPerTurn += 1;
-                assignedUnit.physicDef -= 1;
-                assignedUnit.magicDef -= 1;
+                assignedUnit.HealUnit(2);
                 buffInfoId = 3;
             }
             else
             {
+                assignedUnit.attacksPerTurn += 1;
+                assignedUnit.physicDef -= 1;
+                assignedUnit.magicDef -= 1;
+                buffInfoId = 4;
+            }
+        }
+
+        private void RespawnInOffensivePosture(Unit unit)
+        {
+            if (unit != assignedUnit) return;
+            
+            posture = Postures.Offensive;
+            
+            ApplyPostureEffect();
+        }
+
+        private void PostureCheckAfterAttack(Unit attackingUnit,Unit attackedUnit)
+        {
+            if(attackingUnit != assignedUnit) return;
+
+            if (!attackingUnit.canMove && (!attackedUnit.canAttack || !attackingUnit.canUseAbility))
+            {
+                ChangePosture();
+            }
+        }
+        
+        private void PostureCheckAfterMovement(Unit unit,Hex hex)
+        {
+            if(unit != assignedUnit) return;
+            
+            if (!unit.canMove && (!unit.canAttack || !unit.canUseAbility))
+            {
+                ChangePosture();
+            }
+        }
+        
+        private void PostureCheckAfterAbility(Unit unit,Hex[] hexes)
+        {
+            if(unit != assignedUnit) return;
+            
+            if (!unit.canMove && (!unit.canAttack || !unit.canUseAbility))
+            {
+                ChangePosture();
+            }
+        }
+        
+        private void ChangePosture()
+        {
+            if(timesPostureChangedThisTurn >= 2) return;
+            
+            timesPostureChangedThisTurn++;
+            
+            if (posture == Postures.Defensive)
+            {
+                posture = Postures.Offensive;
+            }
+            else
+            {
                 posture = Postures.Defensive;
-                assignedUnit.HealUnit(2);
                 assignedUnit.attacksPerTurn -= 1;
                 assignedUnit.physicDef += 1;
                 assignedUnit.magicDef += 1;
-                buffInfoId = 2;
             }
+            
+            ApplyPostureEffect();
         }
     }
     
@@ -68,18 +139,12 @@ public class FactionShaiviteTravelers : ScriptableFaction
         {
             unit.AddBuff(new Posture());
         }
+        
 
         CallbackManager.OnUnitAttack += GainFaithOnAttacked;
 
-        CallbackManager.OnPlayerTurnStart += OnPlayerTurnStart;
-
-        CallbackManager.OnUnitRespawned += RespawnInOffensivePosture;
+        CallbackManager.OnPlayerTurnStart += SetFaithModifierOnTurnStart;
         
-        CallbackManager.OnUnitAttack += PostureCheckAfterAttack;
-
-        CallbackManager.OnAnyUnitHexEnter += PostureCheckAfterMovement;
-
-        CallbackManager.OnUnitAbilityCasted += PostureCheckAfterAbility;
         
         void GainFaithOnAttacked(Unit attackingUnit,Unit attackedUnit)
         {
@@ -90,90 +155,26 @@ public class FactionShaiviteTravelers : ScriptableFaction
             if(IsUnitInPosture(attackedUnit,Postures.Defensive)) targetPlayer.faith += 1;
         }
         
-        void OnPlayerTurnStart(PlayerSM playerSm)
-        {
-            SetFaithModifierOnTurnStart(playerSm);
-
-            EffectOnPosture(playerSm);
-
-            ChangeStanceOnTurnStart(playerSm);
-        }
-
+        
         void SetFaithModifierOnTurnStart(PlayerSM playerSm)
         {
             if(targetPlayer != playerSm) return;
 
-            foreach (var unit in targetPlayer.allUnits.Where(unit => unit.player = targetPlayer).Where(unit => !unit.isDead))
+            Debug.Log("Bonk");
+            
+            Debug.Log($"Player {targetPlayer.playerId} has {targetPlayer.allUnits.Count(unit => unit.player == targetPlayer)} ally units");
+            
+            Debug.Log($"Player {targetPlayer.playerId} has {targetPlayer.allUnits.Where(unit => unit.player == targetPlayer).Count(HasPosture)} ally units with Posture Buff");
+
+            foreach (var unit in targetPlayer.allUnits.Where(unit => unit.player == targetPlayer).Where(unit => !unit.isDead))
             {
                 Debug.Log($"{unit} current buff count : {unit.currentBuffs.Count}");
                 if(HasPosture(unit)) Debug.Log($"{unit} current posture count : {GetPosture(unit).posture}");
             }
             
-            targetPlayer.faithModifier = (targetPlayer.allUnits.Where(unit => !unit.isDead).Where(unit => unit.player = targetPlayer).Any(unit => IsUnitInPosture(unit,Postures.Offensive))) ? 0 : 1;
-        }
-        
-        void EffectOnPosture(PlayerSM playerSm)
-        {
-            if(targetPlayer != playerSm) return;
-
-            foreach (var unit in targetPlayer.allUnits.Where(unit => !unit.isDead).Where(unit => unit.player = targetPlayer))
-            {
-                if(IsUnitInPosture(unit,Postures.Defensive))
-                {
-                    unit.HealUnit(2);
-                }
-                else
-                {
-                    unit.attacksPerTurn += 1;
-                    unit.physicDef -= 1;
-                    unit.magicDef -= 1;
-                }
-            }
-        }
-
-        void ChangeStanceOnTurnStart(PlayerSM playerSm)
-        {
-            if(targetPlayer != playerSm) return;
-            
-            foreach (var unit in targetPlayer.allUnits.Where(unit => !unit.isDead).Where(unit => unit.player = targetPlayer))
-            {
-                if (unit.currentHp < (int) Math.Floor(unit.maxHp / 2f))
-                {
-                    GetPosture(unit).ChangePosture();
-                }
-            }
-        }
-
-        void RespawnInOffensivePosture(Unit unit)
-        {
-            if (unit.player != targetPlayer) return;
-
-            GetPosture(unit).posture = Postures.Offensive;
-            unit.attacksPerTurn += 1;
-            unit.physicDef -= 1;
-            unit.magicDef -= 1;
-        }
-
-        void PostureCheckAfterAttack(Unit attackingUnit, Unit attackedUnit)
-        {
-            ChangePostureOnNoMoreActions(attackingUnit);
-        }
-
-        void PostureCheckAfterMovement(Unit unit, Hex hex)
-        {
-            ChangePostureOnNoMoreActions(unit);
-        }
-
-        void PostureCheckAfterAbility(Unit unit, Hex[] hexes)
-        {
-            ChangePostureOnNoMoreActions(unit);
-        }
-
-        void ChangePostureOnNoMoreActions(Unit unit)
-        {
-            if(targetPlayer != unit.player) return;
-            
-            if(!unit.canMove && (!unit.canAttack || !unit.canUseAbility)) GetPosture(unit).ChangePosture();
+            var msg = (targetPlayer.allUnits.Where(unit => !unit.isDead).Where(unit => unit.player == targetPlayer).Any(unit => IsUnitInPosture(unit,Postures.Offensive))) ? "No Faith modifier : " : "Faith Modifier at : ";
+            targetPlayer.faithModifier = (targetPlayer.allUnits.Where(unit => !unit.isDead).Where(unit => unit.player == targetPlayer).Any(unit => IsUnitInPosture(unit,Postures.Offensive))) ? 0 : -1;
+            Debug.Log($"{msg}+{targetPlayer.faithModifier}");
         }
     }
     

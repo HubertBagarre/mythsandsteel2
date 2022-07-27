@@ -4,11 +4,14 @@ using UnityEngine.UI;
 
 public class NetworkCanvasHUDGameScene : MonoBehaviour
 {
-    [SerializeField] private Button leaveButton;
+    [SerializeField] private Button[] leaveButtons;
     
     private void Start()
     {
-        leaveButton.onClick.AddListener(ButtonStop);
+        foreach (var leaveButton in leaveButtons)
+        {
+            leaveButton.onClick.AddListener(ButtonStop);
+        }
     }
     
     public void ButtonStop()
