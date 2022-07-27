@@ -146,6 +146,10 @@ MonoBehaviour:
   gameEndMenuGameObject: {fileID: 1798638543407723503}
   gameEndText: {fileID: 6081707283636331218}
   autoDisconnectText: {fileID: 5294525326779743835}
+  cameraOffCentered: 0
+  coverAnimator: {fileID: 2244415372767948376}
+  coverText: {fileID: 40876005520622621}
+  loadingBar: {fileID: 1123689230625894123}
   allyOutlineColor: {r: 0.2766235, g: 1, b: 0, a: 1}
   enemyOutlineColor: {r: 1, g: 0, b: 0, a: 1}
   unitHudOffset: {x: 0, y: 0}
@@ -246,6 +250,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c2043368a7e60654881c91700d3cfe3a, type: 3}
+--- !u!114 &40876005520622621 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6655681155661138027, guid: c2043368a7e60654881c91700d3cfe3a, type: 3}
+  m_PrefabInstance: {fileID: 6686862748490746998}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &176926848703471683 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6825223058616642613, guid: c2043368a7e60654881c91700d3cfe3a, type: 3}
@@ -278,6 +293,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1123689230625894123 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6004608212827251357, guid: c2043368a7e60654881c91700d3cfe3a, type: 3}
+  m_PrefabInstance: {fileID: 6686862748490746998}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1596353689079473367 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5398655990677776545, guid: c2043368a7e60654881c91700d3cfe3a, type: 3}
@@ -305,6 +325,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &2244415372767948376 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 4893514892387492398, guid: c2043368a7e60654881c91700d3cfe3a, type: 3}
+  m_PrefabInstance: {fileID: 6686862748490746998}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &2368055912814629775 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8940072367481233401, guid: c2043368a7e60654881c91700d3cfe3a, type: 3}

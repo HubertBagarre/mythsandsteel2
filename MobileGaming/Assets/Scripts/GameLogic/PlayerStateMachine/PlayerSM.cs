@@ -774,6 +774,7 @@ public class PlayerSM : StateMachine
             inputManager.OnStartTouch += TryToSelectUnitOrTile;
             uiManager.AddButtonListeners(TryToEndTurn,TryToUseAbility,TryToLaunchAbility,ExitAbilitySelection,ToggleRespawnMenu);
             uiManager.UpdateActionsLeft(unitsToActivate);
+            uiManager.PassBand("YOUR TURN");
         }
         else
         {
@@ -861,6 +862,12 @@ public class PlayerSM : StateMachine
         if(value) uiManager.ActivateRespawnButtons(playerId,faith >= 8 - faithModifier);
         uiManager.SetActiveRespawnMenu(value);
     }
+    
+    [ClientRpc]
+    public void RpcUIHideCoverScreen()
+    {
+        uiManager.HideLoadingScreen();
+    }
 
     #endregion
     
@@ -870,8 +877,6 @@ public class PlayerSM : StateMachine
     public void RpcOnEndGame(DisconnectReason reason,int winner)
     {
         if(!isLocalPlayer) return;
-        
-        
         var moreText = winner == playerId ? "It's you !" : "It's not you !";
         var text = reason == DisconnectReason.Win ? $"Player {winner} won ! {moreText}" : "Déconnection de l'adversaire";
         uiManager.DisplayEndgameScreen(text);

@@ -59,6 +59,11 @@ public class PlayerUIManager : NetworkBehaviour
     [Header("Offset Camera")]
     [SerializeField] private bool cameraOffCentered;
     
+    [Header("Transition Screen")]
+    [SerializeField] private Animator coverAnimator;
+    [SerializeField] private TextMeshProUGUI coverText;
+    [SerializeField] private GameObject loadingBar;
+
     [Header("Other")]
     [SerializeField] private Color allyOutlineColor;
     [SerializeField] private Color enemyOutlineColor;
@@ -276,5 +281,20 @@ public class PlayerUIManager : NetworkBehaviour
         autoDisconnectText.text = $"Déconnection dans {value}";
     }
     
+    #endregion
+
+    #region Transition Screen
+
+    public void PassBand(string text)
+    {
+        coverText.text = text;
+        coverAnimator.SetTrigger("PassBand");
+    }
+    
+    public void HideLoadingScreen()
+    {
+        loadingBar.SetActive(false);
+    }
+
     #endregion
 }
