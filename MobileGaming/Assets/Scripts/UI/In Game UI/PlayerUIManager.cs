@@ -27,7 +27,6 @@ public class PlayerUIManager : NetworkBehaviour
     [SerializeField] private Button faithButton;
     [SerializeField] private Button pauseButton;
     
-    
     [Header("Unit Portrait")]
     [SerializeField] private Button allyUnitPortraitButton;
     [SerializeField] private Transform allyUnitPortraitParent;
@@ -46,7 +45,11 @@ public class PlayerUIManager : NetworkBehaviour
     [SerializeField] private Transform unitRespawnParent;
     [SerializeField] private RespawnUnitButton respawnUnitButtonPrefab;
     private readonly List<RespawnUnitButton> respawnUnitButtons = new ();
-
+    
+    [Header("Pause Menu")]
+    [SerializeField] private GameObject pauseMenuGameObject;
+    
+    
     [Header("Other")]
     [SerializeField] private Color allyOutlineColor;
     [SerializeField] private Color enemyOutlineColor;
@@ -67,6 +70,11 @@ public class PlayerUIManager : NetworkBehaviour
         instance = null;
     }
 
+    private void Start()
+    {
+        pauseButton.onClick.AddListener(TogglePauseMenu);
+    }
+
     public void ChangeDebugText(string text)
     {
         debugText.text = text;
@@ -79,12 +87,12 @@ public class PlayerUIManager : NetworkBehaviour
     
     public void UpdateFaithCount(int faithCount)
     {
-        faithCountText.text = faithCount.ToString();
+        faithCountText.text = $"{faithCount}<sprite=0>";
     }
     
     public void UpdateVictoryPoint(int victoryPoint)
     {
-        victoryPointText.text = victoryPoint.ToString();
+        victoryPointText.text = $"{victoryPoint}<sprite=34>";
     }
 
     public void EnableNextTurnButton(bool value)
@@ -122,7 +130,23 @@ public class PlayerUIManager : NetworkBehaviour
         abilityCancelButton.onClick.RemoveListener(cancelAbilityAction);
         faithButton.onClick.RemoveListener(faithButtonAction);
     }
+
+    public bool IsInMenu()
+    {
+        return pauseMenuGameObject.activeSelf || unitRespawnMenuGameObject.activeSelf;
+    }
+
+    #region Pause Menu
     
+    private void TogglePauseMenu()
+    {
+        pauseMenuGameObject.SetActive(!pauseMenuGameObject.activeSelf);
+    }
+
+    #endregion
+
+    #region Ability Selection
+
     public void UpdateAbilitySelectionText(string moText)
     {
         abilitySelectionText.text = $"Select {moText}";
@@ -132,7 +156,11 @@ public class PlayerUIManager : NetworkBehaviour
     {
         abilityConfirmButton.interactable = value;
     }
+
+    #endregion
     
+    #region Respawn Menu
+
     public void SetActiveRespawnMenu(bool value)
     {
         unitRespawnMenuGameObject.SetActive(value);
@@ -159,7 +187,9 @@ public class PlayerUIManager : NetworkBehaviour
             button.button.interactable = interactable;
         }
     }
-    
+
+    #endregion
+
     #region Unit Hud
 
     public void RefreshUnitOutlines(IEnumerable<Unit> allUnits,int playerId)

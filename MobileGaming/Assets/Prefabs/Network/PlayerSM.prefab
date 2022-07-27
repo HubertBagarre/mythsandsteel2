@@ -141,6 +141,7 @@ MonoBehaviour:
   unitRespawnMenuGameObject: {fileID: 6677293160518069205}
   unitRespawnParent: {fileID: 2368055912814629775}
   respawnUnitButtonPrefab: {fileID: 6434808649814701981, guid: d45e23e3d41ce1442aec21ccd4a12ec0, type: 3}
+  pauseMenuGameObject: {fileID: 7374745681176690427}
   allyOutlineColor: {r: 0.2766235, g: 1, b: 0, a: 1}
   enemyOutlineColor: {r: 1, g: 0, b: 0, a: 1}
   unitHudOffset: {x: 0, y: 0}
@@ -425,6 +426,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &7374745681176690427 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4221242990426108557, guid: c2043368a7e60654881c91700d3cfe3a, type: 3}
+  m_PrefabInstance: {fileID: 6686862748490746998}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &7959069237187461699 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3654892583183257141, guid: c2043368a7e60654881c91700d3cfe3a, type: 3}
