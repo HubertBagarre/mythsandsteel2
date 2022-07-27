@@ -21,7 +21,17 @@ namespace GameStates
 
         public override void UpdateLogic()
         {
-            if(sm.players[0] != null && sm.players[1] != null && sm.players[1] != sm.players[0]) sm.ChangeState(sm.startingState);
+            if (sm.players[0] != null && sm.players[1] != null && sm.players[1] != sm.players[0])
+            {
+                //if player 0 isn't in index 0, swap players in list
+                if(sm.players[0].playerId != 0)
+                {
+                    Debug.Log("Swapping players in list");
+                    (sm.players[0], sm.players[1]) = (sm.players[1], sm.players[0]);
+                }
+                
+                sm.ChangeState(sm.startingState);
+            }
         }
         
         

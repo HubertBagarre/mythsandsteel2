@@ -30,6 +30,7 @@ public class GameSM : StateMachine
     [Header("Trash Flags")]
     public bool isMapGenerated;
     public bool unitsPlaced;
+    public bool unitHudGenerated;
     public bool player0UnitsPlaced;
     public bool player1UnitsPlaced;
     
@@ -75,6 +76,7 @@ public class GameSM : StateMachine
     {
         isMapGenerated = false;
         unitsPlaced = false;
+        unitHudGenerated = false;
 
         player0UnitsPlaced = false;
         player1UnitsPlaced = false;

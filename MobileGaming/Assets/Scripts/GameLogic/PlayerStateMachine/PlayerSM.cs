@@ -645,6 +645,7 @@ public class PlayerSM : StateMachine
     {
         Debug.Log($"{this} is trying to respawn {unit}");
         unitToRespawn = unit;
+        //SetCameraOffCenter(true);
         ChangeState(abilitySelectionState);
     }
 
@@ -815,12 +816,25 @@ public class PlayerSM : StateMachine
         uiManager.EnableAbilityConfirmButton(value == 0);
     }
     
+    public void UIUpdateDeathCount()
+    {
+        Debug.Log($"Updating Death Count, isLocalPlayer : {isLocalPlayer}");
+        Debug.Log($"They are {allUnits.Count()} units, {allUnits.Count(unit => unit.player == this)} ally units, {allUnits.Count(unit => unit.isDead)} dead units and {allUnits.Where(unit => unit.isDead).Count(unit => unit.player == this)} dead ally units");
+        RpcUpdateDeathCount(allUnits.Where(unit => unit.isDead).Count(unit => unit.player == this));
+    }
+
+    [ClientRpc]
+    public void RpcUpdateDeathCount(int value)
+    {
+        if(isLocalPlayer) uiManager.UpdateDeathCount(value);
+    }
+
     [ClientRpc]
     public void RpcUISetupUnitHuds()
     {
-        uiManager.GenerateUnitHuds(allUnits);
-        uiManager.InitializeRespawnButtons(allUnits,this);
-        uiManager.RefreshUnitOutlines(allUnits,playerId);
+        Debug.Log($"Setting up HUD for player {playerId}");
+        if(isLocalPlayer) uiManager.GenerateUnitHuds(allUnits);
+        if(isLocalPlayer) uiManager.InitializeRespawnButtons(allUnits,this);
     }
     
     [ClientRpc]
@@ -828,6 +842,7 @@ public class PlayerSM : StateMachine
     {
         uiManager.UpdateUnitHud();
         if(isLocalPlayer) uiManager.RefreshUnitOutlines(allUnits,playerId);
+        uiManager.UpdateDeathCount(allUnits.Count(unit => unit.isDead && unit.playerId == playerId));
     }
 
     public void UIUpdateUnitHud()
@@ -845,6 +860,11 @@ public class PlayerSM : StateMachine
     {
         if(value) uiManager.ActivateRespawnButtons(playerId,faith >= 8 - faithModifier);
         uiManager.SetActiveRespawnMenu(value);
+    }
+
+    public void SetCameraOffCenter(bool value)
+    {
+        uiManager.SetCameraOffCenter(value,playerId == 1);
     }
 
     #endregion

@@ -4,6 +4,7 @@ using System.Linq;
 using CallbackManagement;
 using UnityEngine;
 using Mirror;
+using QuickOutline;
 
 public class Unit : NetworkBehaviour
 {
@@ -158,6 +159,8 @@ public class Unit : NetworkBehaviour
         Debug.Log($"Killed unit hex before scriptable : {this.currentHex}");
         
         unitScriptable.KillUnit(this,physicalDeath,magicalDeath,killer);
+
+        player.UIUpdateDeathCount(); 
     }
 
     public void HealUnit(int value)
@@ -171,8 +174,10 @@ public class Unit : NetworkBehaviour
         
         ServerSideKnockBackAnim(this,targetHex);
         RpcClientSideKnockBackAnim(this,targetHex,true);
-
+        
         CallbackManager.UnitRespawned(this);
+        
+        player.UIUpdateDeathCount();
     }
 
     public void KnockBackUnit(Unit unit, int direction)

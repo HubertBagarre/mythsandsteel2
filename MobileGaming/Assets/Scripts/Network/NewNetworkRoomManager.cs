@@ -145,6 +145,11 @@ public class NewNetworkRoomManager : NetworkRoomManager
         playerSm.factionId = lobbyContainer.factionIndex;
         playerSm.unitPlacementPresetId = lobbyContainer.unitPlacementIndex;
         gameSm.players[playerSm.playerId] = playerSm;
+        if (gameSm.unitHudGenerated)
+        {
+            Debug.Log("Player joined after huds where called");
+            playerSm.RpcUISetupUnitHuds();
+        }
         return true;
     }
 

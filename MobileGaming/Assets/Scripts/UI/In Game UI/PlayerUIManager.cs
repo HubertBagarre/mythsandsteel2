@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using Mirror;
 using TMPro;
 using UnityEngine;
@@ -18,6 +19,7 @@ public class PlayerUIManager : NetworkBehaviour
     [SerializeField] private TextMeshProUGUI faithCountText;
     [SerializeField] private TextMeshProUGUI victoryPointText;
     [SerializeField] private TextMeshProUGUI abilitySelectionText;
+    [SerializeField] private TextMeshProUGUI deathCountText;
 
     [Header("Buttons")]
     [SerializeField] private Button nextTurnButton;
@@ -61,22 +63,12 @@ public class PlayerUIManager : NetworkBehaviour
     [Header("Unit Hud")]
     [SerializeField] private Vector2 unitHudOffset;
     private Dictionary<Unit, UnitHud> unitHudDict = new();
-    
 
-    public static PlayerUIManager instance;
-
-    public void Awake()
-    {
-        if (isLocalPlayer) instance = this;
-    }
-
-    private void OnDestroy()
-    {
-        instance = null;
-    }
+    private Camera cam;
 
     private void Start()
     {
+        cam = Camera.main;
         pauseButton.onClick.AddListener(TogglePauseMenu);
     }
 
@@ -98,6 +90,11 @@ public class PlayerUIManager : NetworkBehaviour
     public void UpdateVictoryPoint(int victoryPoint)
     {
         victoryPointText.text = $"{victoryPoint}<sprite=34>";
+    }
+
+    public void UpdateDeathCount(int deathCount)
+    {
+        deathCountText.text = $"{deathCount}<sprite=30>";
     }
 
     public void EnableNextTurnButton(bool value)
@@ -139,6 +136,23 @@ public class PlayerUIManager : NetworkBehaviour
     public bool IsInMenu()
     {
         return pauseMenuGameObject.activeSelf || unitRespawnMenuGameObject.activeSelf || gameEndMenuGameObject.activeSelf;
+    }
+    
+    public void SetCameraOffCenter(bool value,bool invertedCam)
+    {
+        var anchor = cam.transform.parent;
+        if (value)
+        {
+            cam.transform.DOLocalMove(new Vector3(0, 34, 0), 0.4f);
+            cam.transform.DOLocalRotate(new Vector3(90, 0, 0),0.4f);
+            anchor.transform.DOLocalMove(new Vector3(-7.5f, 8, 0), 0.4f);
+        }
+        else
+        {
+            cam.transform.DOLocalMove(new Vector3(0, 34, -8.7f), 0.4f);
+            cam.transform.DOLocalRotate(new Vector3(75, 0, 0),0.4f);
+            anchor.transform.DOLocalMove(Vector3.zero, 0.4f);
+        }
     }
     
     #region Pause Menu
@@ -249,11 +263,8 @@ public class PlayerUIManager : NetworkBehaviour
 
     public void UpdateAutoDisconnectMessage(int value)
     {
-        Debug.Log(value);
         autoDisconnectText.text = $"Déconnection dans {value}";
     }
-
-
-
+    
     #endregion
 }

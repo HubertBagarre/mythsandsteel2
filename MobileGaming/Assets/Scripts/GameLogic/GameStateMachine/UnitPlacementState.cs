@@ -47,6 +47,7 @@ namespace GameStates
         public override void Exit()
         {
             SetupUnitHuds();
+            
         }
 
         private void SetupUnitHuds()
@@ -55,6 +56,8 @@ namespace GameStates
             {
                 player.RpcUISetupUnitHuds();
             }
+
+            sm.unitHudGenerated = true;
         }
     }
 }
