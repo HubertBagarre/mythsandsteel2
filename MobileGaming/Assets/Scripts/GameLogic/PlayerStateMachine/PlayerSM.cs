@@ -862,11 +862,6 @@ public class PlayerSM : StateMachine
         uiManager.SetActiveRespawnMenu(value);
     }
 
-    public void SetCameraOffCenter(bool value)
-    {
-        uiManager.SetCameraOffCenter(value,playerId == 1);
-    }
-
     #endregion
     
     public enum DisconnectReason{Win,Disconnect}
