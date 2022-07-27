@@ -855,6 +855,19 @@ public class PlayerSM : StateMachine
         if(!isLocalPlayer) return;
         var moreText = winner == playerId ? "It's you !" : "It's not you !";
         Debug.Log($"Player {winner} won ! {moreText}");
+        uiManager.DisplayEndgameScreen($"Player {winner} won ! {moreText}");
+        
+        StartCoroutine(AutoDisconnectRoutine());
+    }
+
+    private IEnumerator AutoDisconnectRoutine()
+    {
+        for (int i = 31 - 1; i >= 0; i--)
+        {
+            uiManager.UpdateAutoDisconnectMessage(i);
+            yield return new WaitForSeconds(1f);
+        }
+        
         if (NetworkClient.isConnected)
         {
             NetworkManager.singleton.StopClient();

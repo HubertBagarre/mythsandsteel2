@@ -18,7 +18,7 @@ namespace GameStates
         {
             sm.AllowPlayerSend(-1);
             
-            sm.DisconnectPlayers();
+            sm.EndGameForPlayers();
             
             sm.debugText2.text = $"Player {sm.winner} won !";
         }

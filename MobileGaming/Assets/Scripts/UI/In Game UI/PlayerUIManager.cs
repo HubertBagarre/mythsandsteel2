@@ -49,6 +49,10 @@ public class PlayerUIManager : NetworkBehaviour
     [Header("Pause Menu")]
     [SerializeField] private GameObject pauseMenuGameObject;
     
+    [Header("End Game Screen")]
+    [SerializeField] private GameObject gameEndMenuGameObject;
+    [SerializeField] private TextMeshProUGUI gameEndText;
+    [SerializeField] private TextMeshProUGUI autoDisconnectText;
     
     [Header("Other")]
     [SerializeField] private Color allyOutlineColor;
@@ -57,6 +61,7 @@ public class PlayerUIManager : NetworkBehaviour
     [Header("Unit Hud")]
     [SerializeField] private Vector2 unitHudOffset;
     private Dictionary<Unit, UnitHud> unitHudDict = new();
+    
 
     public static PlayerUIManager instance;
 
@@ -133,9 +138,9 @@ public class PlayerUIManager : NetworkBehaviour
 
     public bool IsInMenu()
     {
-        return pauseMenuGameObject.activeSelf || unitRespawnMenuGameObject.activeSelf;
+        return pauseMenuGameObject.activeSelf || unitRespawnMenuGameObject.activeSelf || gameEndMenuGameObject.activeSelf;
     }
-
+    
     #region Pause Menu
     
     private void TogglePauseMenu()
@@ -233,5 +238,21 @@ public class PlayerUIManager : NetworkBehaviour
     }
 
     #endregion
-    
+
+    #region End Game Screen
+
+    public void DisplayEndgameScreen(string message)
+    {
+        gameEndMenuGameObject.SetActive(true);
+        gameEndText.text = message;
+    }
+
+    public void UpdateAutoDisconnectMessage(int value)
+    {
+        autoDisconnectText.text = $"Déconnection dans {value}";
+    }
+
+
+
+    #endregion
 }
