@@ -249,6 +249,7 @@ public class PlayerUIManager : NetworkBehaviour
 
     public void UpdateAutoDisconnectMessage(int value)
     {
+        Debug.Log(value);
         autoDisconnectText.text = $"Déconnection dans {value}";
     }
 

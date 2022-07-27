@@ -848,14 +848,18 @@ public class PlayerSM : StateMachine
     }
 
     #endregion
+    
+    public enum DisconnectReason{Win,Disconnect}
 
     [ClientRpc]
-    public void RpcOnEndGame(int winner)
+    public void RpcOnEndGame(DisconnectReason reason,int winner)
     {
         if(!isLocalPlayer) return;
+        
+        
         var moreText = winner == playerId ? "It's you !" : "It's not you !";
-        Debug.Log($"Player {winner} won ! {moreText}");
-        uiManager.DisplayEndgameScreen($"Player {winner} won ! {moreText}");
+        var text = reason == DisconnectReason.Win ? $"Player {winner} won ! {moreText}" : "Déconnection de l'adversaire";
+        uiManager.DisplayEndgameScreen(text);
         
         StartCoroutine(AutoDisconnectRoutine());
     }

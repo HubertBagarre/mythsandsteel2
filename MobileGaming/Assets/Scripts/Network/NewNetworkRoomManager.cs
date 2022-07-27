@@ -66,10 +66,18 @@ public class NewNetworkRoomManager : NetworkRoomManager
     public override void OnRoomServerDisconnect(NetworkConnectionToClient conn)
     {
         Debug.Log($"Players left : {roomSlots.Count}");
+        if (roomSlots.Count == 1)
+        {
+            if(GameSM.instance.players.Length == 2) GameSM.instance.ReturnToLobby();
+        }
         if (roomSlots.Count > 0) return;
         Debug.Log("No More Players In Game, returning to lobby");
-        if(GameSM.instance != null) GameSM.instance.ReturnToLobby();
-        ServerChangeScene(RoomScene);
+        if (GameSM.instance != null)
+        {
+            GameSM.instance.ReturnToLobby();
+            ServerChangeScene(RoomScene);
+        }
+        
     }
 
     /// <summary>

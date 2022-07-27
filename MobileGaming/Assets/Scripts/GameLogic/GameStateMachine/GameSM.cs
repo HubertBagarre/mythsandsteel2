@@ -92,6 +92,13 @@ public class GameSM : StateMachine
 
     public void ReturnToLobby()
     {
+        if (currentState != endingState)
+        {
+            foreach (var player in players)
+            {
+                if(player != null) player.RpcOnEndGame(PlayerSM.DisconnectReason.Disconnect,0);
+            }
+        }
         ChangeState(lobbyState);
     }
     
@@ -364,7 +371,7 @@ public class GameSM : StateMachine
     {
         foreach (var player in players)
         {
-            player.RpcOnEndGame(winner);
+            player.RpcOnEndGame(PlayerSM.DisconnectReason.Win,winner);
         }
     }
 
