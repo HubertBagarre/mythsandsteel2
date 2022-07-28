@@ -18,7 +18,6 @@ public class PlayerUIManager : NetworkBehaviour
     [SerializeField] private TextMeshProUGUI actionsLeftText;
     [SerializeField] private TextMeshProUGUI faithCountText;
     [SerializeField] private TextMeshProUGUI victoryPointText;
-    [SerializeField] private TextMeshProUGUI abilitySelectionText;
     [SerializeField] private TextMeshProUGUI deathCountText;
 
     [Header("Buttons")]
@@ -39,9 +38,15 @@ public class PlayerUIManager : NetworkBehaviour
     [Header("GameObjects")]
     [SerializeField] private UnitHud unitHudPrefab;
     [SerializeField] private Transform unitHudParent;
+    
+    
+    [Header("Unit Ability")]
     [SerializeField] private GameObject abilityGameObject;
     [SerializeField] private GameObject abilitySelectionGameObject;
-
+    [SerializeField] private TextMeshProUGUI abilitySelectionText;
+    [SerializeField] private TextMeshProUGUI abilityCostText;
+    [SerializeField] private Image abilityImage;
+    
     [Header("Unit Respawn")]
     [SerializeField] private GameObject unitRespawnMenuGameObject;
     [SerializeField] private Transform unitRespawnParent;
@@ -113,18 +118,6 @@ public class PlayerUIManager : NetworkBehaviour
         if (!value) actionsLeftText.text = string.Empty;
     }
 
-    public void EnableAbilityButton(bool value,bool interactable)
-    {
-        abilityGameObject.SetActive(value);
-        if (value) abilityButton.interactable = interactable;
-    }
-
-    public void EnableAbilitySelection(bool value)
-    {
-        abilitySelectionGameObject.SetActive(value);
-        abilityGameObject.SetActive(!value);
-    }
-
     public void AddButtonListeners(UnityAction nextTurnAction,UnityAction abilityAction,UnityAction confirmAbilityAction,UnityAction cancelAbilityAction,UnityAction faithButtonAction)
     {
         nextTurnButton.onClick.AddListener(nextTurnAction);
@@ -189,6 +182,27 @@ public class PlayerUIManager : NetworkBehaviour
     public void EnableAbilityConfirmButton(bool value)
     {
         abilityConfirmButton.interactable = value;
+    }
+
+    #endregion
+    
+    #region Unit Ability
+
+    public void EnableAbilityButton(bool value,bool interactable)
+    {
+        abilityGameObject.SetActive(value);
+        if (value){ abilityButton.interactable = interactable;}
+    }
+
+    public void UpdateAbilityCostText(int value)
+    {
+        abilityCostText.text = $"{value}<sprite=0>";
+    }
+
+    public void EnableAbilitySelection(bool value)
+    {
+        abilitySelectionGameObject.SetActive(value);
+        abilityGameObject.SetActive(!value);
     }
 
     #endregion

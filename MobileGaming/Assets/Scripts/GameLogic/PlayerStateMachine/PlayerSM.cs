@@ -529,6 +529,7 @@ public class PlayerSM : StateMachine
     public void DisplayAbilityButton(bool value,bool interactable = true)
     {
         uiManager.EnableAbilityButton(value,interactable);
+        if(value) uiManager.UpdateAbilityCostText(selectedUnit.currentAbilityCost+faithModifier);
     }
 
     public void DisplayAbilityConfirmPanel(bool value)
@@ -774,12 +775,13 @@ public class PlayerSM : StateMachine
             inputManager.OnStartTouch += TryToSelectUnitOrTile;
             uiManager.AddButtonListeners(TryToEndTurn,TryToUseAbility,TryToLaunchAbility,ExitAbilitySelection,ToggleRespawnMenu);
             uiManager.UpdateActionsLeft(unitsToActivate);
-            uiManager.PassBand("YOUR TURN");
+            uiManager.PassBand("VOTRE TOUR");
         }
         else
         {
             inputManager.OnStartTouch -= TryToSelectUnitOrTile;
             uiManager.RemoveButtonListeners(TryToEndTurn,TryToUseAbility,TryToLaunchAbility,ExitAbilitySelection,ToggleRespawnMenu);
+            uiManager.PassBand("TOUR DE L'ADVERSAIRE");
         }
     }
 
