@@ -89,9 +89,17 @@ public class NewNetworkRoomManager : NetworkRoomManager
         if (sceneName == RoomScene)
         {
             if(GameSM.instance == null) NetworkSpawner.SpawnGameStateMachine();
-        } 
+        }
+
         if (sceneName == GameplayScene)
+        {
             NetworkSpawner.SpawnGrid();
+            foreach (var roomPlayer in roomSlots)
+            {
+                roomPlayer.GetComponent<NetworkCanvasHUDRoomScene>().SetRoomHUDActive(false);
+            }
+        }
+            
     } }
 
     /// <summary>
@@ -175,12 +183,24 @@ public class NewNetworkRoomManager : NetworkRoomManager
     /// <summary>
     /// This is a hook to allow custom behaviour when the game client enters the room.
     /// </summary>
-    public override void OnRoomClientEnter() { }
+    public override void OnRoomClientEnter()
+    {
+        foreach (var roomPlayer in roomSlots)
+        {
+            roomPlayer.GetComponent<NetworkCanvasHUDRoomScene>().UpdatePlayerList(roomSlots);
+        }
+    }
 
     /// <summary>
     /// This is a hook to allow custom behaviour when the game client exits the room.
     /// </summary>
-    public override void OnRoomClientExit() { }
+    public override void OnRoomClientExit()
+    {
+        foreach (var roomPlayer in roomSlots)
+        {
+            roomPlayer.GetComponent<NetworkCanvasHUDRoomScene>().UpdatePlayerList(roomSlots);
+        }
+    }
 
     /// <summary>
     /// This is called on the client when it connects to server.
@@ -190,7 +210,10 @@ public class NewNetworkRoomManager : NetworkRoomManager
     /// <summary>
     /// This is called on the client when disconnected from a server.
     /// </summary>
-    public override void OnRoomClientDisconnect() { }
+    public override void OnRoomClientDisconnect()
+    {
+        
+    }
 
     /// <summary>
     /// This is called on the client when a client is started.
