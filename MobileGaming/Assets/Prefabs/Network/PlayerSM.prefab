@@ -32,6 +32,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 550449216894022927}
+  - {fileID: 8275186982780644271}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -155,6 +156,79 @@ MonoBehaviour:
   allyOutlineColor: {r: 0.2766235, g: 1, b: 0, a: 1}
   enemyOutlineColor: {r: 1, g: 0, b: 0, a: 1}
   unitHudOffset: {x: 0, y: 0}
+--- !u!1001 &5936505896401166718
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 7333084345128710917}
+    m_Modifications:
+    - target: {fileID: 2357047400550582993, guid: 1684e16e458b38e449d3b4e9f4db3b06, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2357047400550582993, guid: 1684e16e458b38e449d3b4e9f4db3b06, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2357047400550582993, guid: 1684e16e458b38e449d3b4e9f4db3b06, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2357047400550582993, guid: 1684e16e458b38e449d3b4e9f4db3b06, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2357047400550582993, guid: 1684e16e458b38e449d3b4e9f4db3b06, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2357047400550582993, guid: 1684e16e458b38e449d3b4e9f4db3b06, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2357047400550582993, guid: 1684e16e458b38e449d3b4e9f4db3b06, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2357047400550582993, guid: 1684e16e458b38e449d3b4e9f4db3b06, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2357047400550582993, guid: 1684e16e458b38e449d3b4e9f4db3b06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2357047400550582993, guid: 1684e16e458b38e449d3b4e9f4db3b06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2357047400550582993, guid: 1684e16e458b38e449d3b4e9f4db3b06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5530937915963612046, guid: 1684e16e458b38e449d3b4e9f4db3b06, type: 3}
+      propertyPath: m_Name
+      value: PowerPoint
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1684e16e458b38e449d3b4e9f4db3b06, type: 3}
+--- !u!114 &5973335069117915523 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 38060900886298877, guid: 1684e16e458b38e449d3b4e9f4db3b06, type: 3}
+  m_PrefabInstance: {fileID: 5936505896401166718}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26fb8df1e715b2c41897a583bf2dfb2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &8275186982780644271 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2357047400550582993, guid: 1684e16e458b38e449d3b4e9f4db3b06, type: 3}
+  m_PrefabInstance: {fileID: 5936505896401166718}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6686862748490746998
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -250,6 +324,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8858361364603348157, guid: c2043368a7e60654881c91700d3cfe3a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 5973335069117915523}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c2043368a7e60654881c91700d3cfe3a, type: 3}
 --- !u!114 &40876005520622621 stripped

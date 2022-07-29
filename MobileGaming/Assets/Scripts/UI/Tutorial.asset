@@ -39,7 +39,7 @@ MonoBehaviour:
     video: {fileID: 0}
   - title: "Jouer les Unit\xE9s"
     text: 7
-    image: {fileID: 0}
+    image: {fileID: 492409264, guid: 32ffbd143de63a44fb6651905eff2ab0, type: 3}
     video: {fileID: 0}
   - title: "Multiples Attaques et Capacit\xE9s"
     text: 8
