@@ -72,6 +72,7 @@ public class Unit : NetworkBehaviour
 
     private void Start()
     {
+        if(isServer) return;
         var unitModel = ModelSpawner.UpdateUnitModel(this);
         outlineScript = unitModel.GetComponent<Outline>();
         animator = unitModel.GetComponent<Animator>();

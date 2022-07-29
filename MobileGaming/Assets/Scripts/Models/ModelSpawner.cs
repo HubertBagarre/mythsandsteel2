@@ -7,14 +7,16 @@ public class ModelSpawner : MonoBehaviour
 {
     public static GameObject UpdateUnitModel(Unit unit)
     {
-        if (unit.modelParent.childCount > 0) Destroy(unit.modelParent.GetChild(0).gameObject);
+        foreach (Transform child in unit.modelParent)
+        {
+            Destroy(child.gameObject);
+        }
 
         return Instantiate(unit.unitScriptable.modelPrefab, unit.modelParent);
     }
     
     public static GameObject UpdateHexModel(Hex hex)
     {
-        
         if (hex.modelParent.childCount > 0) Destroy(hex.modelParent.GetChild(0).gameObject);
         
         return !hex.shouldBeRendered ? null : Instantiate(ObjectIDList.GetTileScriptable(hex.currentTileID).model, hex.modelParent);
