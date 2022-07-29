@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e9cf43cec26cfb469826f0ad8daf8ac, type: 3}
+  m_Name: Tutorial
+  m_EditorClassIdentifier: 
+  slides:
+  - title: Qu'est-ce que Devotion Tactics ?
+    text: 1
+    image: {fileID: 0}
+    video: {fileID: 0}
+  - title: Lancer une Partie
+    text: 2
+    image: {fileID: 0}
+    video: {fileID: 32900000, guid: 5d66e425039b3774eaa1b9fb03f54f8e, type: 3}
+  - title: Objectifs de Jeu
+    text: 3
+    image: {fileID: 0}
+    video: {fileID: 0}
+  - title: "Art\xE9facts et Foi"
+    text: 4
+    image: {fileID: 0}
+    video: {fileID: 0}
+  - title: "R\xE9animation"
+    text: 5
+    image: {fileID: 0}
+    video: {fileID: 0}
+  - title: Factions
+    text: 6
+    image: {fileID: 0}
+    video: {fileID: 0}
+  - title: "Jouer les Unit\xE9s"
+    text: 7
+    image: {fileID: 0}
+    video: {fileID: 0}
+  - title: "Multiples Attaques et Capacit\xE9s"
+    text: 8
+    image: {fileID: 0}
+    video: {fileID: 0}

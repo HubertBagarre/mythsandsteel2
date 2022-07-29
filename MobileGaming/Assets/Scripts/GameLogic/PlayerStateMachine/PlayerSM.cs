@@ -368,6 +368,8 @@ public class PlayerSM : StateMachine
         unit.PlayWalkingAnimation(true);
 
         var walkDuration = unit.walkDuration*unit.walkSpeedMulitplier;
+
+        if (walkDuration == 0) walkDuration = 0.5f;
         
         foreach (var hex in path)
         {
