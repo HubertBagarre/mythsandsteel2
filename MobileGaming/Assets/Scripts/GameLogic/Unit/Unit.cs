@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CallbackManagement;
@@ -267,7 +268,23 @@ public class Unit : NetworkBehaviour
     [ClientRpc]
     public void RpcSetUnitActive(bool value)
     {
-        gameObject.SetActive(value);
+        if (value)
+        {
+            gameObject.SetActive(true);
+            PlayDeathAnimation(false);
+            return;
+        }
+
+        StartCoroutine(PlayDeathAnimationRoutine());
+
+
+    }
+
+    private IEnumerator PlayDeathAnimationRoutine()
+    {
+        PlayDeathAnimation(true);
+        yield return new WaitForSeconds(deathDuration);
+        gameObject.SetActive(false);
     }
 
     
@@ -286,13 +303,30 @@ public class Unit : NetworkBehaviour
 
     public void PlayAttackAnimation()
     {
-        if(animator != null) animator.SetTrigger("Attack");
+        if (animator == null) return;
+        
+        animator.SetTrigger("Attack");
+    }
+    
+    public void PlayAbilityAnimation()
+    {
+        if (animator == null) return;
+        
+        animator.SetTrigger("Ability");
     }
 
-    public float GetCurrentAnimationDuration()
+    public void PlayWalkingAnimation(bool value)
     {
-        if (animator == null) return 0;
-        return animator.GetCurrentAnimatorStateInfo(0).length;
+        if (animator == null) return;
+        
+        animator.SetBool("IsWalking",value);
+    }
+    
+    private void PlayDeathAnimation(bool value)
+    {
+        if (animator == null) return;
+        
+        animator.SetBool("IsDead",value);
     }
 
     #region Helpers

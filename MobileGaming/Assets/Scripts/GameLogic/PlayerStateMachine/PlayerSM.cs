@@ -459,9 +459,6 @@ public class PlayerSM : StateMachine
         
         attacking.LookAt(attacked);
         attacking.PlayAttackAnimation();
-        
-        //TODO - Look at attacked
-        //TODO - Play Animation
 
         yield return new WaitForSeconds(attacking.attackDuration);
         
@@ -613,9 +610,9 @@ public class PlayerSM : StateMachine
         
         yield return null;
         
-        //TODO - Play Animation
-        
-        yield return new WaitForSeconds(0.5f);
+        casting.PlayAbilityAnimation();
+
+        yield return new WaitForSeconds(casting.abilityDuration);
         
         if (isServer)
         {
