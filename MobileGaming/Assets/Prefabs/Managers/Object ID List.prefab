@@ -65,11 +65,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 280bbdd6e19ce4e4082db16da0cc62a2, type: 2}
   - {fileID: 11400000, guid: d95af2bc33fac40489f8b0b5bffe4291, type: 2}
   <unitPlacements>k__BackingField:
-  - {fileID: 11400000, guid: ce01a522d3777f74e86751eca757e97c, type: 2}
-  - {fileID: 11400000, guid: abfbd1dc06ef3424f81847dd081ef684, type: 2}
+  - {fileID: 11400000, guid: e30d8c34d48c50741b9198178fc38146, type: 2}
   - {fileID: 11400000, guid: 5fd26befd06e1d84ba2bb49b09a92509, type: 2}
   - {fileID: 11400000, guid: 5b791ef87925f0c44bbbf796ec076ae0, type: 2}
-  - {fileID: 11400000, guid: e30d8c34d48c50741b9198178fc38146, type: 2}
+  - {fileID: 11400000, guid: abfbd1dc06ef3424f81847dd081ef684, type: 2}
+  - {fileID: 11400000, guid: ce01a522d3777f74e86751eca757e97c, type: 2}
+  - {fileID: 11400000, guid: 3a246bca1f854074797e1362a2b60734, type: 2}
+  - {fileID: 11400000, guid: 36e0ab5ad074de04b88a9d9d368b710e, type: 2}
+  - {fileID: 11400000, guid: 29841dde8bbd7a646b9f0dca54f8b0ae, type: 2}
   <collectibles>k__BackingField:
   - {fileID: 0}
   - {fileID: 11400000, guid: cf9d4b0c642371240be8d4c1c8d2c6ae, type: 2}

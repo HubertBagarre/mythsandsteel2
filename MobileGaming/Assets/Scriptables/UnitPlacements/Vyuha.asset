@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f656050a6c021ec4bbe51558d86e648e, type: 3}
-  m_Name: 2-3-1
+  m_Name: Vyuha
   m_EditorClassIdentifier: 
   placements:
   - unitIndex: 1
     positions:
     - {x: 1, y: 1}
-    - {x: 1, y: 2}
+    - {x: 1, y: 7}
   - unitIndex: 2
     positions:
     - {x: 1, y: 3}
-    - {x: 1, y: 4}
-    - {x: 1, y: 5}
   - unitIndex: 3
     positions:
-    - {x: 1, y: 6}
-  placementPreview: {fileID: -919092721, guid: cf6edd83cac0cac43a17f281029442d7, type: 3}
+    - {x: 1, y: 4}
+    - {x: 1, y: 5}
+    - {x: 0, y: 5}
+  placementPreview: {fileID: -51482122, guid: cf6edd83cac0cac43a17f281029442d7, type: 3}
