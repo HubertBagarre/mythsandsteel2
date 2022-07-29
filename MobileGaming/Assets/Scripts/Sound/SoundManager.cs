@@ -11,6 +11,8 @@ public class SoundManager : MonoBehaviour
 
     public static SoundManager Instance = null;
 
+    public AudioClip MusicTransition;
+
     private void Awake()
     {
         if(Instance == null)
@@ -25,18 +27,11 @@ public class SoundManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public void PlayMusic(AudioClip clip, bool second = false)
+    public void PlayMusic(AudioClip clip, AudioClip clipSecond)
     {
-        if (!second)
-        {
-            musicSource.clip = clip;
-            musicSource.Play();
-        }
-        else
-        {
-            musicSourceSecond.clip = clip;
-            musicSourceSecond.Play();
-        }
+        musicSource.clip = clip;
+        musicSource.Play();
+        musicSourceSecond.clip = clipSecond;
     }
 
     public void PlaySound(AudioClip clip)
@@ -51,5 +46,13 @@ public class SoundManager : MonoBehaviour
             effectSourceSecond.clip = clip;
             effectSourceSecond.Play();
         }
+    }
+
+    public IEnumerator ChangeMusic()
+    {
+        musicSource.Stop();
+        PlaySound(MusicTransition);
+        yield return new WaitForSeconds(3);
+        musicSourceSecond.Play();
     }
 }
