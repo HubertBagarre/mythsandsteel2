@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CallbackManagement;
+using DG.Tweening;
 using Mirror;
 using UnityEngine;
 using PlayerStates;
@@ -364,36 +365,39 @@ public class PlayerSM : StateMachine
 
         unit.currentHex.currentUnit = null;
         
+        unit.PlayWalkingAnimation(true);
+
+        var walkDuration = unit.walkDuration*unit.walkSpeedMulitplier;
+        
         foreach (var hex in path)
         {
+            unit.LookAt(hex);
+            unit.transform.DOMove(hex.transform.position + Vector3.up * 2, walkDuration);
+            
+            yield return new WaitForSeconds(walkDuration);
+
+            var unitCurrentHex = unit.currentHex;
             if (isServer)
             {
-                var unitCurrentHex = unit.currentHex;
-                
                 unitCurrentHex.OnUnitExit(unit);
-                
+
                 unitCurrentHex.currentUnit = unitCurrentHex.previousUnit;
                 unitCurrentHex.previousUnit = null;
-
-                hex.DecreaseUnitMovement(unit);
                 
+                hex.DecreaseUnitMovement(unit);
+
                 hex.previousUnit = hex.currentUnit;
                 hex.currentUnit = unit;
                 unit.currentHex = hex;
                 unit.hexCol = hex.col;
                 unit.hexRow = hex.row;
-            
+
                 hex.OnUnitEnter(unit);
             }
-            
-            unit.transform.position = hex.transform.position + Vector3.up * 2f;
-            
-            //TODO - Wait for animation to finish
-            
-            yield return new WaitForSeconds(0.5f);
-            
         }
         
+        unit.PlayWalkingAnimation(false);
+
         unit.currentHex.currentUnit = unit;
 
         if (isServer)
@@ -460,7 +464,7 @@ public class PlayerSM : StateMachine
         attacking.LookAt(attacked);
         attacking.PlayAttackAnimation();
 
-        yield return new WaitForSeconds(attacking.attackDuration);
+        yield return new WaitForSeconds(attacking.attackPart1Duration);
         
         if (isServer)
         {
@@ -612,7 +616,7 @@ public class PlayerSM : StateMachine
         
         casting.PlayAbilityAnimation();
 
-        yield return new WaitForSeconds(casting.abilityDuration);
+        yield return new WaitForSeconds(casting.abilityPart1Duration);
         
         if (isServer)
         {

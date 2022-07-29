@@ -1,31 +1,64 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class AnimationTests : MonoBehaviour
 {
+    [SerializeField] private Transform unit;
     [SerializeField] private Animator animator;
 
-    public float walkSpeedMulitplier = 0.75f;
+    public float walkSpeedMultiplier = 0.75f;
+    public float walkSpeedExtra = 14f / 10f;
     public float idleDuration;
     public float walkDuration;
     public float attackDuration;
     public float abilityDuration;
     public float deathDuration;
-    
-    
-    public void GetAnimatorInfos()
+
+    public void Start()
     {
-        if (animator == null) return;
+        var animationClips = (animator.runtimeAnimatorController as AnimatorOverrideController)?.animationClips;
+        if (animationClips != null)
+        {
+            foreach (var VARIABLE in animationClips)
+            {
+                Debug.Log(VARIABLE.name);
+            }
 
-        Debug.Log($"Does this have override controller ? : {animator.runtimeAnimatorController is AnimatorOverrideController}");
-        if (animator.runtimeAnimatorController is not AnimatorOverrideController overrideController) return;
+            if (animator != null)
+            {
+                if (animator.runtimeAnimatorController is AnimatorOverrideController overrideController)
+                {
+                    idleDuration = overrideController.animationClips[0].length;
+                    walkDuration = overrideController.animationClips[1].length;
+                    attackDuration = overrideController.animationClips[2].length;
+                    abilityDuration = overrideController.animationClips[3].length;
+                    deathDuration = overrideController.animationClips[4].length;
+                }
+            }
+        }
+    }
 
-        idleDuration = overrideController.animationClips[0].length;
-        walkDuration = overrideController.animationClips[1].length * 1/walkSpeedMulitplier;
-        attackDuration = overrideController.animationClips[2].length;
-        abilityDuration = overrideController.animationClips[3].length;
-        deathDuration = overrideController.animationClips[4].length;
+    public void MoveForward()
+    {
+        StartCoroutine(MoveRoutine());
+    }
+
+    private IEnumerator MoveRoutine()
+    {
+        var currentPos = unit.position;
+        var targetPos = currentPos + new Vector3(2,0,0);
+        unit.DOMove(targetPos,walkDuration*walkSpeedExtra*walkSpeedMultiplier);
+        PlayWalkingAnimation(true);
+        yield return new WaitForSeconds(walkDuration);
+        PlayWalkingAnimation(false);
+    }
+
+    public void TurnRight()
+    {
+        unit.transform.localPosition = new Vector3(-20, 0, 6.92f);
     }
 
     public void PlayAttackAnimation()

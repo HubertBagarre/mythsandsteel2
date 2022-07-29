@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CallbackManagement;
+using DG.Tweening;
 using UnityEngine;
 using Mirror;
 using QuickOutline;
@@ -64,10 +65,9 @@ public class Unit : NetworkBehaviour
     
     [Header("Animation Info")]
     [SyncVar] public float walkSpeedMulitplier = 0.75f;
-    [SyncVar] public float idleDuration;
     [SyncVar] public float walkDuration;
-    [SyncVar] public float attackDuration;
-    [SyncVar] public float abilityDuration;
+    [SyncVar] public float attackPart1Duration;
+    [SyncVar] public float abilityPart1Duration;
     [SyncVar] public float deathDuration;
 
     private void Start()
@@ -125,10 +125,9 @@ public class Unit : NetworkBehaviour
         {
             if (prefabAnimator.runtimeAnimatorController is AnimatorOverrideController overrideController)
             {
-                idleDuration = overrideController.animationClips[0].length;
-                walkDuration = overrideController.animationClips[1].length * 1/walkSpeedMulitplier;
-                attackDuration = overrideController.animationClips[2].length;
-                abilityDuration = overrideController.animationClips[3].length;
+                walkDuration = overrideController.animationClips[1].length;
+                attackPart1Duration = overrideController.animationClips[2].length;
+                abilityPart1Duration = overrideController.animationClips[3].length;
                 deathDuration = overrideController.animationClips[4].length;
             }
         }
@@ -293,7 +292,8 @@ public class Unit : NetworkBehaviour
         var dir = hex.transform.position - transform.position;
         var lookRotation = Quaternion.LookRotation(dir);
         var rotation = lookRotation.eulerAngles;
-        transform.rotation = Quaternion.Euler(0f, rotation.y, 0f);
+        
+        transform.DOLocalRotate(new Vector3(0f, rotation.y, 0f),0.1f);
     }
 
     public void LookAt(Unit unit)
