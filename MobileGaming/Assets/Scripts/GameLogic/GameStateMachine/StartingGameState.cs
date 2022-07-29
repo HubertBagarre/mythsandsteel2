@@ -17,14 +17,7 @@ namespace GameStates
         public override void Enter()
         {
             sm.StartGenerationRoutine();
-
-            //if player 0 isn't in index 0, swap players in list
-            if(sm.players[0].playerId != 0)
-            {
-                Debug.Log("Swapping players in list");
-                (sm.players[0], sm.players[1]) = (sm.players[1], sm.players[0]);
-            }
-
+            
             foreach (var player in sm.players)
             {
                 player.InitiateVariables();

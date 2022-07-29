@@ -465,3 +465,4 @@ MonoBehaviour:
   associatedPlayer: {fileID: 0}
   button: {fileID: 2040701464557642934}
   textComponent: {fileID: 8200869008672255084}
+  imageComponent: {fileID: 2402315189246279249}

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: LiluAngalOverride
+  m_Controller: {fileID: 9100000, guid: f01624adb85e6624087db9248a740fa4, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 034e5f43c0fed834390676b3950e3b9c, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 034e5f43c0fed834390676b3950e3b9c, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: b4a81799a08bf6444ad4f34768a431e4, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 17d726c15fa9eef47a7004d2e2b67f34, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 370aa9615981c004b8721a5fedccdf85, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 370aa9615981c004b8721a5fedccdf85, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: ca0d28be058aaf64e980df9b2668d2da, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: ca0d28be058aaf64e980df9b2668d2da, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 7851f20614e17444eb191f796816697e, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 7851f20614e17444eb191f796816697e, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: b52d19f98d3994148bea7e6c67c5f5ce, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: b52d19f98d3994148bea7e6c67c5f5ce, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 953020d60d28ad141a97f4e51cca245f, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 953020d60d28ad141a97f4e51cca245f, type: 2}

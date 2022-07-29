@@ -30,6 +30,7 @@ public class GameSM : StateMachine
     [Header("Trash Flags")]
     public bool isMapGenerated;
     public bool unitsPlaced;
+    public bool unitHudGenerated;
     public bool player0UnitsPlaced;
     public bool player1UnitsPlaced;
     
@@ -75,6 +76,7 @@ public class GameSM : StateMachine
     {
         isMapGenerated = false;
         unitsPlaced = false;
+        unitHudGenerated = false;
 
         player0UnitsPlaced = false;
         player1UnitsPlaced = false;
@@ -92,6 +94,13 @@ public class GameSM : StateMachine
 
     public void ReturnToLobby()
     {
+        if (currentState != endingState)
+        {
+            foreach (var player in players)
+            {
+                if(player != null) player.RpcOnEndGame(PlayerSM.DisconnectReason.Disconnect,0);
+            }
+        }
         ChangeState(lobbyState);
     }
     
@@ -364,7 +373,7 @@ public class GameSM : StateMachine
     {
         foreach (var player in players)
         {
-            player.RpcOnEndGame(winner);
+            player.RpcOnEndGame(PlayerSM.DisconnectReason.Win,winner);
         }
     }
 

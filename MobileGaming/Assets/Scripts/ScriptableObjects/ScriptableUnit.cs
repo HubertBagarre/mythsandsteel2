@@ -32,13 +32,8 @@ public class ScriptableUnit : ScriptableObject
 
     [Header("Animations")]
     public GameObject modelPrefab;
-    public Animation idleAnimation;
-    public Animation movementAnimation;
-    public Animation attackAnimation;
-    public Animation abilityAnimation;
-    public Animation takeDamageAnimation;
-    public Animation deathAnimation;
-    
+    public float walkSpeedMultiplier;
+
     public virtual void SetupEvents(Unit affectedUnit) { }
     
     public virtual void AttackUnit(Unit attackingUnit, Unit attackedUnit)

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using Mirror;
 using TMPro;
 using UnityEngine;
@@ -17,7 +18,7 @@ public class PlayerUIManager : NetworkBehaviour
     [SerializeField] private TextMeshProUGUI actionsLeftText;
     [SerializeField] private TextMeshProUGUI faithCountText;
     [SerializeField] private TextMeshProUGUI victoryPointText;
-    [SerializeField] private TextMeshProUGUI abilitySelectionText;
+    [SerializeField] private TextMeshProUGUI deathCountText;
 
     [Header("Buttons")]
     [SerializeField] private Button nextTurnButton;
@@ -37,9 +38,15 @@ public class PlayerUIManager : NetworkBehaviour
     [Header("GameObjects")]
     [SerializeField] private UnitHud unitHudPrefab;
     [SerializeField] private Transform unitHudParent;
+    
+    
+    [Header("Unit Ability")]
     [SerializeField] private GameObject abilityGameObject;
     [SerializeField] private GameObject abilitySelectionGameObject;
-
+    [SerializeField] private TextMeshProUGUI abilitySelectionText;
+    [SerializeField] private TextMeshProUGUI abilityCostText;
+    [SerializeField] private Image abilityImage;
+    
     [Header("Unit Respawn")]
     [SerializeField] private GameObject unitRespawnMenuGameObject;
     [SerializeField] private Transform unitRespawnParent;
@@ -53,7 +60,15 @@ public class PlayerUIManager : NetworkBehaviour
     [SerializeField] private GameObject gameEndMenuGameObject;
     [SerializeField] private TextMeshProUGUI gameEndText;
     [SerializeField] private TextMeshProUGUI autoDisconnectText;
+
+    [Header("Offset Camera")]
+    [SerializeField] private bool cameraOffCentered;
     
+    [Header("Transition Screen")]
+    [SerializeField] private Animator coverAnimator;
+    [SerializeField] private TextMeshProUGUI coverText;
+    [SerializeField] private GameObject loadingBar;
+
     [Header("Other")]
     [SerializeField] private Color allyOutlineColor;
     [SerializeField] private Color enemyOutlineColor;
@@ -61,23 +76,15 @@ public class PlayerUIManager : NetworkBehaviour
     [Header("Unit Hud")]
     [SerializeField] private Vector2 unitHudOffset;
     private Dictionary<Unit, UnitHud> unitHudDict = new();
-    
 
-    public static PlayerUIManager instance;
-
-    public void Awake()
-    {
-        if (isLocalPlayer) instance = this;
-    }
-
-    private void OnDestroy()
-    {
-        instance = null;
-    }
+    private Camera cam;
 
     private void Start()
     {
+        cam = Camera.main;
         pauseButton.onClick.AddListener(TogglePauseMenu);
+        abilityConfirmButton.onClick.AddListener(()=>Debug.Log("CLICKED CONFIRMED"));
+        abilityCancelButton.onClick.AddListener(()=>Debug.Log("CLICKED CANCEL"));
     }
 
     public void ChangeDebugText(string text)
@@ -100,22 +107,15 @@ public class PlayerUIManager : NetworkBehaviour
         victoryPointText.text = $"{victoryPoint}<sprite=34>";
     }
 
+    public void UpdateDeathCount(int deathCount)
+    {
+        deathCountText.text = $"{deathCount}<sprite=30>";
+    }
+
     public void EnableNextTurnButton(bool value)
     {
         nextTurnButton.interactable = value;
         if (!value) actionsLeftText.text = string.Empty;
-    }
-
-    public void EnableAbilityButton(bool value,bool interactable)
-    {
-        abilityGameObject.SetActive(value);
-        if (value) abilityButton.interactable = interactable;
-    }
-
-    public void EnableAbilitySelection(bool value)
-    {
-        abilitySelectionGameObject.SetActive(value);
-        abilityGameObject.SetActive(!value);
     }
 
     public void AddButtonListeners(UnityAction nextTurnAction,UnityAction abilityAction,UnityAction confirmAbilityAction,UnityAction cancelAbilityAction,UnityAction faithButtonAction)
@@ -141,6 +141,28 @@ public class PlayerUIManager : NetworkBehaviour
         return pauseMenuGameObject.activeSelf || unitRespawnMenuGameObject.activeSelf || gameEndMenuGameObject.activeSelf;
     }
     
+    #region CameraOffcenter
+
+    public void OffCenterCamera()
+    {
+        if(cameraOffCentered) return;
+        cam.transform.localPosition = new Vector3(0, 34, 0);
+        cam.transform.localRotation = Quaternion.Euler(new Vector3(90, 0, 0));
+        cam.transform.parent.localPosition =new Vector3(-7.5f, 8, 0);
+        cameraOffCentered = true;
+    }
+
+    public void CenterCamera()
+    {
+        if(!cameraOffCentered) return;
+        cam.transform.localPosition = new Vector3(0, 34, -8.7f);
+        cam.transform.localRotation = Quaternion.Euler(new Vector3(75, 0, 0));
+        cam.transform.parent.localPosition = Vector3.zero; 
+        cameraOffCentered = false;
+    }
+    
+    #endregion
+
     #region Pause Menu
     
     private void TogglePauseMenu()
@@ -160,6 +182,27 @@ public class PlayerUIManager : NetworkBehaviour
     public void EnableAbilityConfirmButton(bool value)
     {
         abilityConfirmButton.interactable = value;
+    }
+
+    #endregion
+    
+    #region Unit Ability
+
+    public void EnableAbilityButton(bool value,bool interactable)
+    {
+        abilityGameObject.SetActive(value);
+        if (value){ abilityButton.interactable = interactable;}
+    }
+
+    public void UpdateAbilityCostText(int value)
+    {
+        abilityCostText.text = $"{value}<sprite=0>";
+    }
+
+    public void EnableAbilitySelection(bool value)
+    {
+        abilitySelectionGameObject.SetActive(value);
+        abilityGameObject.SetActive(!value);
     }
 
     #endregion
@@ -251,8 +294,21 @@ public class PlayerUIManager : NetworkBehaviour
     {
         autoDisconnectText.text = $"Déconnection dans {value}";
     }
+    
+    #endregion
 
+    #region Transition Screen
 
+    public void PassBand(string text)
+    {
+        coverText.text = text;
+        coverAnimator.SetTrigger("PassBand");
+    }
+    
+    public void HideLoadingScreen()
+    {
+        loadingBar.SetActive(false);
+    }
 
     #endregion
 }

@@ -1,9 +1,13 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CallbackManagement;
+using DG.Tweening;
 using UnityEngine;
 using Mirror;
+using QuickOutline;
+using Random = UnityEngine.Random;
 
 public class Unit : NetworkBehaviour
 {
@@ -50,7 +54,7 @@ public class Unit : NetworkBehaviour
     public readonly SyncList<BaseUnitBuff> currentBuffs = new();
 
     [Header("Components")]
-    public NetworkAnimator animator;
+    public Animator animator;
     public Outline outlineScript;
     public Transform modelParent;
 
@@ -59,10 +63,20 @@ public class Unit : NetworkBehaviour
     public ScriptableUnit unitScriptable;
     [SyncVar(hook = nameof(OnScriptableAbilityIdChange))] public byte abilityScriptableId;
     public ScriptableAbility abilityScriptable;
+    
+    [Header("Animation Info")]
+    [SyncVar] public float walkSpeedMulitplier = 0.75f;
+    [SyncVar] public float walkDuration;
+    [SyncVar] public float attackPart1Duration;
+    [SyncVar] public float abilityPart1Duration;
+    [SyncVar] public float deathDuration;
 
     private void Start()
     {
-        outlineScript = ModelSpawner.UpdateUnitModel(this).GetComponent<Outline>();
+        if(isServer) return;
+        var unitModel = ModelSpawner.UpdateUnitModel(this);
+        outlineScript = unitModel.GetComponent<Outline>();
+        animator = unitModel.GetComponent<Animator>();
     }
 
     public void ResetUnitStats()
@@ -106,13 +120,31 @@ public class Unit : NetworkBehaviour
         abilityScriptable = ObjectIDList.GetAbilityScriptable(abilityScriptableId);
         currentAbilityCost = Convert.ToSByte((abilityScriptableId == 0) ? 0 : abilityScriptable.baseCost);
 
+        walkSpeedMulitplier = unitScriptable.walkSpeedMultiplier;
+        if (walkSpeedMulitplier == 0) walkSpeedMulitplier = 1;
+        var prefabAnimator = unitScriptable.modelPrefab.GetComponent<Animator>();
+        if (prefabAnimator != null)
+        {
+            if (prefabAnimator.runtimeAnimatorController is AnimatorOverrideController overrideController)
+            {
+                walkDuration = overrideController.animationClips[1].length;
+                attackPart1Duration = overrideController.animationClips[2].length;
+                abilityPart1Duration = overrideController.animationClips[3].length;
+                deathDuration = overrideController.animationClips[4].length;
+            }
+        }
+        
         ResetUnitStats();
     }
 
     private void ReplaceModel()
     {
-        outlineScript = ModelSpawner.UpdateUnitModel(this).GetComponent<Outline>();
+        var unitModel = ModelSpawner.UpdateUnitModel(this);
+        outlineScript = unitModel.GetComponent<Outline>();
+        animator = unitModel.GetComponent<Animator>();
+        if(animator != null) animator.SetFloat("IdleOffset",Random.Range(0,0.5f));
         gameObject.SetActive(!isDead);
+
         RpcReplaceModel(!isDead);
         if(player != null) player.RpcUIUpdateUnitHud();
     }
@@ -158,6 +190,8 @@ public class Unit : NetworkBehaviour
         Debug.Log($"Killed unit hex before scriptable : {this.currentHex}");
         
         unitScriptable.KillUnit(this,physicalDeath,magicalDeath,killer);
+
+        player.UIUpdateDeathCount(); 
     }
 
     public void HealUnit(int value)
@@ -171,8 +205,10 @@ public class Unit : NetworkBehaviour
         
         ServerSideKnockBackAnim(this,targetHex);
         RpcClientSideKnockBackAnim(this,targetHex,true);
-
+        
         CallbackManager.UnitRespawned(this);
+        
+        player.UIUpdateDeathCount();
     }
 
     public void KnockBackUnit(Unit unit, int direction)
@@ -230,6 +266,71 @@ public class Unit : NetworkBehaviour
         buff.AddBuff();
     }
     
+    [ClientRpc]
+    public void RpcSetUnitActive(bool value)
+    {
+        if (value)
+        {
+            gameObject.SetActive(true);
+            PlayDeathAnimation(false);
+            return;
+        }
+
+        StartCoroutine(PlayDeathAnimationRoutine());
+
+
+    }
+
+    private IEnumerator PlayDeathAnimationRoutine()
+    {
+        PlayDeathAnimation(true);
+        yield return new WaitForSeconds(deathDuration);
+        gameObject.SetActive(false);
+    }
+
+    
+    public void LookAt(Hex hex)
+    {
+        var dir = hex.transform.position - transform.position;
+        var lookRotation = Quaternion.LookRotation(dir);
+        var rotation = lookRotation.eulerAngles;
+        
+        transform.DOLocalRotate(new Vector3(0f, rotation.y, 0f),0.1f);
+    }
+
+    public void LookAt(Unit unit)
+    {
+        if(unit.currentHex!= null) LookAt(unit.currentHex);
+    }
+
+    public void PlayAttackAnimation()
+    {
+        if (animator == null) return;
+        
+        animator.SetTrigger("Attack");
+    }
+    
+    public void PlayAbilityAnimation()
+    {
+        if (animator == null) return;
+        
+        animator.SetTrigger("Ability");
+    }
+
+    public void PlayWalkingAnimation(bool value)
+    {
+        if (animator == null) return;
+        
+        animator.SetBool("IsWalking",value);
+    }
+    
+    private void PlayDeathAnimation(bool value)
+    {
+        if (animator == null) return;
+        
+        animator.SetBool("IsDead",value);
+    }
+
     #region Helpers
     
     public bool IsOnHexOfType(byte id)
@@ -270,12 +371,7 @@ public class Unit : NetworkBehaviour
     }
 
     #endregion
-
-    [ClientRpc]
-    public void RpcSetUnitActive(bool value)
-    {
-        gameObject.SetActive(value);
-    }
+    
 
     #region Hooks
 

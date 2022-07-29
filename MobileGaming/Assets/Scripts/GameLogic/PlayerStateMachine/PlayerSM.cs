@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CallbackManagement;
+using DG.Tweening;
 using Mirror;
 using UnityEngine;
 using PlayerStates;
@@ -364,36 +365,39 @@ public class PlayerSM : StateMachine
 
         unit.currentHex.currentUnit = null;
         
+        unit.PlayWalkingAnimation(true);
+
+        var walkDuration = unit.walkDuration*unit.walkSpeedMulitplier;
+        
         foreach (var hex in path)
         {
+            unit.LookAt(hex);
+            unit.transform.DOMove(hex.transform.position + Vector3.up * 2, walkDuration);
+            
+            yield return new WaitForSeconds(walkDuration);
+
+            var unitCurrentHex = unit.currentHex;
             if (isServer)
             {
-                var unitCurrentHex = unit.currentHex;
-                
                 unitCurrentHex.OnUnitExit(unit);
-                
+
                 unitCurrentHex.currentUnit = unitCurrentHex.previousUnit;
                 unitCurrentHex.previousUnit = null;
-
-                hex.DecreaseUnitMovement(unit);
                 
+                hex.DecreaseUnitMovement(unit);
+
                 hex.previousUnit = hex.currentUnit;
                 hex.currentUnit = unit;
                 unit.currentHex = hex;
                 unit.hexCol = hex.col;
                 unit.hexRow = hex.row;
-            
+
                 hex.OnUnitEnter(unit);
             }
-            
-            unit.transform.position = hex.transform.position + Vector3.up * 2f;
-            
-            //TODO - Wait for animation to finish
-            
-            yield return new WaitForSeconds(0.5f);
-            
         }
         
+        unit.PlayWalkingAnimation(false);
+
         unit.currentHex.currentUnit = unit;
 
         if (isServer)
@@ -457,10 +461,10 @@ public class PlayerSM : StateMachine
         
         yield return null;
         
-        //TODO - Look at attacked
-        //TODO - Play Animation
-        
-        yield return new WaitForSeconds(0.5f);
+        attacking.LookAt(attacked);
+        attacking.PlayAttackAnimation();
+
+        yield return new WaitForSeconds(attacking.attackPart1Duration);
         
         if (isServer)
         {
@@ -529,6 +533,7 @@ public class PlayerSM : StateMachine
     public void DisplayAbilityButton(bool value,bool interactable = true)
     {
         uiManager.EnableAbilityButton(value,interactable);
+        if(value) uiManager.UpdateAbilityCostText(selectedUnit.currentAbilityCost+faithModifier);
     }
 
     public void DisplayAbilityConfirmPanel(bool value)
@@ -609,9 +614,9 @@ public class PlayerSM : StateMachine
         
         yield return null;
         
-        //TODO - Play Animation
-        
-        yield return new WaitForSeconds(0.5f);
+        casting.PlayAbilityAnimation();
+
+        yield return new WaitForSeconds(casting.abilityPart1Duration);
         
         if (isServer)
         {
@@ -645,6 +650,7 @@ public class PlayerSM : StateMachine
     {
         Debug.Log($"{this} is trying to respawn {unit}");
         unitToRespawn = unit;
+        //SetCameraOffCenter(true);
         ChangeState(abilitySelectionState);
     }
 
@@ -773,11 +779,13 @@ public class PlayerSM : StateMachine
             inputManager.OnStartTouch += TryToSelectUnitOrTile;
             uiManager.AddButtonListeners(TryToEndTurn,TryToUseAbility,TryToLaunchAbility,ExitAbilitySelection,ToggleRespawnMenu);
             uiManager.UpdateActionsLeft(unitsToActivate);
+            uiManager.PassBand("VOTRE TOUR");
         }
         else
         {
             inputManager.OnStartTouch -= TryToSelectUnitOrTile;
             uiManager.RemoveButtonListeners(TryToEndTurn,TryToUseAbility,TryToLaunchAbility,ExitAbilitySelection,ToggleRespawnMenu);
+            uiManager.PassBand("TOUR DE L'ADVERSAIRE");
         }
     }
 
@@ -815,12 +823,25 @@ public class PlayerSM : StateMachine
         uiManager.EnableAbilityConfirmButton(value == 0);
     }
     
+    public void UIUpdateDeathCount()
+    {
+        Debug.Log($"Updating Death Count, isLocalPlayer : {isLocalPlayer}");
+        Debug.Log($"They are {allUnits.Count()} units, {allUnits.Count(unit => unit.player == this)} ally units, {allUnits.Count(unit => unit.isDead)} dead units and {allUnits.Where(unit => unit.isDead).Count(unit => unit.player == this)} dead ally units");
+        RpcUpdateDeathCount(allUnits.Where(unit => unit.isDead).Count(unit => unit.player == this));
+    }
+
+    [ClientRpc]
+    public void RpcUpdateDeathCount(int value)
+    {
+        if(isLocalPlayer) uiManager.UpdateDeathCount(value);
+    }
+
     [ClientRpc]
     public void RpcUISetupUnitHuds()
     {
-        uiManager.GenerateUnitHuds(allUnits);
-        uiManager.InitializeRespawnButtons(allUnits,this);
-        uiManager.RefreshUnitOutlines(allUnits,playerId);
+        Debug.Log($"Setting up HUD for player {playerId}");
+        if(isLocalPlayer) uiManager.GenerateUnitHuds(allUnits);
+        if(isLocalPlayer) uiManager.InitializeRespawnButtons(allUnits,this);
     }
     
     [ClientRpc]
@@ -828,6 +849,7 @@ public class PlayerSM : StateMachine
     {
         uiManager.UpdateUnitHud();
         if(isLocalPlayer) uiManager.RefreshUnitOutlines(allUnits,playerId);
+        uiManager.UpdateDeathCount(allUnits.Count(unit => unit.isDead && unit.playerId == playerId));
     }
 
     public void UIUpdateUnitHud()
@@ -846,16 +868,24 @@ public class PlayerSM : StateMachine
         if(value) uiManager.ActivateRespawnButtons(playerId,faith >= 8 - faithModifier);
         uiManager.SetActiveRespawnMenu(value);
     }
+    
+    [ClientRpc]
+    public void RpcUIHideCoverScreen()
+    {
+        uiManager.HideLoadingScreen();
+    }
 
     #endregion
+    
+    public enum DisconnectReason{Win,Disconnect}
 
     [ClientRpc]
-    public void RpcOnEndGame(int winner)
+    public void RpcOnEndGame(DisconnectReason reason,int winner)
     {
         if(!isLocalPlayer) return;
         var moreText = winner == playerId ? "It's you !" : "It's not you !";
-        Debug.Log($"Player {winner} won ! {moreText}");
-        uiManager.DisplayEndgameScreen($"Player {winner} won ! {moreText}");
+        var text = reason == DisconnectReason.Win ? $"Player {winner} won ! {moreText}" : "Déconnection de l'adversaire";
+        uiManager.DisplayEndgameScreen(text);
         
         StartCoroutine(AutoDisconnectRoutine());
     }

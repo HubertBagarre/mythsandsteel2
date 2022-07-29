@@ -16,6 +16,11 @@ namespace GameStates
         
         public override void Enter()
         {
+            foreach (var player in sm.players)
+            {
+                player.RpcUIHideCoverScreen();
+            }
+            
             if (sm.CheckIfPlayerWon())
             {
                 sm.ChangeState(sm.endingState);

@@ -66,10 +66,18 @@ public class NewNetworkRoomManager : NetworkRoomManager
     public override void OnRoomServerDisconnect(NetworkConnectionToClient conn)
     {
         Debug.Log($"Players left : {roomSlots.Count}");
+        if (roomSlots.Count == 1)
+        {
+            if(GameSM.instance.players.Length == 2) GameSM.instance.ReturnToLobby();
+        }
         if (roomSlots.Count > 0) return;
         Debug.Log("No More Players In Game, returning to lobby");
-        if(GameSM.instance != null) GameSM.instance.ReturnToLobby();
-        ServerChangeScene(RoomScene);
+        if (GameSM.instance != null)
+        {
+            GameSM.instance.ReturnToLobby();
+            ServerChangeScene(RoomScene);
+        }
+        
     }
 
     /// <summary>
@@ -81,9 +89,17 @@ public class NewNetworkRoomManager : NetworkRoomManager
         if (sceneName == RoomScene)
         {
             if(GameSM.instance == null) NetworkSpawner.SpawnGameStateMachine();
-        } 
+        }
+
         if (sceneName == GameplayScene)
+        {
             NetworkSpawner.SpawnGrid();
+            foreach (var roomPlayer in roomSlots)
+            {
+                roomPlayer.GetComponent<NetworkCanvasHUDRoomScene>().SetRoomHUDActive(false);
+            }
+        }
+            
     } }
 
     /// <summary>
@@ -137,6 +153,11 @@ public class NewNetworkRoomManager : NetworkRoomManager
         playerSm.factionId = lobbyContainer.factionIndex;
         playerSm.unitPlacementPresetId = lobbyContainer.unitPlacementIndex;
         gameSm.players[playerSm.playerId] = playerSm;
+        if (gameSm.unitHudGenerated)
+        {
+            Debug.Log("Player joined after huds where called");
+            playerSm.RpcUISetupUnitHuds();
+        }
         return true;
     }
 
@@ -162,12 +183,24 @@ public class NewNetworkRoomManager : NetworkRoomManager
     /// <summary>
     /// This is a hook to allow custom behaviour when the game client enters the room.
     /// </summary>
-    public override void OnRoomClientEnter() { }
+    public override void OnRoomClientEnter()
+    {
+        foreach (var roomPlayer in roomSlots)
+        {
+            roomPlayer.GetComponent<NetworkCanvasHUDRoomScene>().UpdatePlayerList(roomSlots);
+        }
+    }
 
     /// <summary>
     /// This is a hook to allow custom behaviour when the game client exits the room.
     /// </summary>
-    public override void OnRoomClientExit() { }
+    public override void OnRoomClientExit()
+    {
+        foreach (var roomPlayer in roomSlots)
+        {
+            roomPlayer.GetComponent<NetworkCanvasHUDRoomScene>().UpdatePlayerList(roomSlots);
+        }
+    }
 
     /// <summary>
     /// This is called on the client when it connects to server.
@@ -177,7 +210,10 @@ public class NewNetworkRoomManager : NetworkRoomManager
     /// <summary>
     /// This is called on the client when disconnected from a server.
     /// </summary>
-    public override void OnRoomClientDisconnect() { }
+    public override void OnRoomClientDisconnect()
+    {
+        
+    }
 
     /// <summary>
     /// This is called on the client when a client is started.
