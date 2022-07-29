@@ -7,6 +7,7 @@ using DG.Tweening;
 using UnityEngine;
 using Mirror;
 using QuickOutline;
+using Random = UnityEngine.Random;
 
 public class Unit : NetworkBehaviour
 {
@@ -141,7 +142,7 @@ public class Unit : NetworkBehaviour
         var unitModel = ModelSpawner.UpdateUnitModel(this);
         outlineScript = unitModel.GetComponent<Outline>();
         animator = unitModel.GetComponent<Animator>();
-        
+        if(animator != null) animator.SetFloat("IdleOffset",Random.Range(0,0.5f));
         gameObject.SetActive(!isDead);
 
         RpcReplaceModel(!isDead);
