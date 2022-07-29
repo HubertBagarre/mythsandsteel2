@@ -457,10 +457,13 @@ public class PlayerSM : StateMachine
         
         yield return null;
         
+        attacking.LookAt(attacked);
+        attacking.PlayAttackAnimation();
+        
         //TODO - Look at attacked
         //TODO - Play Animation
-        
-        yield return new WaitForSeconds(0.5f);
+
+        yield return new WaitForSeconds(attacking.attackDuration);
         
         if (isServer)
         {

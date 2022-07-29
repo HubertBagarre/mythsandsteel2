@@ -51,7 +51,7 @@ public class Unit : NetworkBehaviour
     public readonly SyncList<BaseUnitBuff> currentBuffs = new();
 
     [Header("Components")]
-    public NetworkAnimator animator;
+    public Animator animator;
     public Outline outlineScript;
     public Transform modelParent;
 
@@ -60,10 +60,20 @@ public class Unit : NetworkBehaviour
     public ScriptableUnit unitScriptable;
     [SyncVar(hook = nameof(OnScriptableAbilityIdChange))] public byte abilityScriptableId;
     public ScriptableAbility abilityScriptable;
+    
+    [Header("Animation Info")]
+    [SyncVar] public float walkSpeedMulitplier = 0.75f;
+    [SyncVar] public float idleDuration;
+    [SyncVar] public float walkDuration;
+    [SyncVar] public float attackDuration;
+    [SyncVar] public float abilityDuration;
+    [SyncVar] public float deathDuration;
 
     private void Start()
     {
-        outlineScript = ModelSpawner.UpdateUnitModel(this).GetComponent<Outline>();
+        var unitModel = ModelSpawner.UpdateUnitModel(this);
+        outlineScript = unitModel.GetComponent<Outline>();
+        animator = unitModel.GetComponent<Animator>();
     }
 
     public void ResetUnitStats()
@@ -107,13 +117,32 @@ public class Unit : NetworkBehaviour
         abilityScriptable = ObjectIDList.GetAbilityScriptable(abilityScriptableId);
         currentAbilityCost = Convert.ToSByte((abilityScriptableId == 0) ? 0 : abilityScriptable.baseCost);
 
+        walkSpeedMulitplier = unitScriptable.walkSpeedMultiplier;
+        if (walkSpeedMulitplier == 0) walkSpeedMulitplier = 1;
+        var prefabAnimator = unitScriptable.modelPrefab.GetComponent<Animator>();
+        if (prefabAnimator != null)
+        {
+            if (prefabAnimator.runtimeAnimatorController is AnimatorOverrideController overrideController)
+            {
+                idleDuration = overrideController.animationClips[0].length;
+                walkDuration = overrideController.animationClips[1].length * 1/walkSpeedMulitplier;
+                attackDuration = overrideController.animationClips[2].length;
+                abilityDuration = overrideController.animationClips[3].length;
+                deathDuration = overrideController.animationClips[4].length;
+            }
+        }
+        
         ResetUnitStats();
     }
 
     private void ReplaceModel()
     {
-        outlineScript = ModelSpawner.UpdateUnitModel(this).GetComponent<Outline>();
+        var unitModel = ModelSpawner.UpdateUnitModel(this);
+        outlineScript = unitModel.GetComponent<Outline>();
+        animator = unitModel.GetComponent<Animator>();
+        
         gameObject.SetActive(!isDead);
+
         RpcReplaceModel(!isDead);
         if(player != null) player.RpcUIUpdateUnitHud();
     }
@@ -235,6 +264,37 @@ public class Unit : NetworkBehaviour
         buff.AddBuff();
     }
     
+    [ClientRpc]
+    public void RpcSetUnitActive(bool value)
+    {
+        gameObject.SetActive(value);
+    }
+
+    
+    public void LookAt(Hex hex)
+    {
+        var dir = hex.transform.position - transform.position;
+        var lookRotation = Quaternion.LookRotation(dir);
+        var rotation = lookRotation.eulerAngles;
+        transform.rotation = Quaternion.Euler(0f, rotation.y, 0f);
+    }
+
+    public void LookAt(Unit unit)
+    {
+        if(unit.currentHex!= null) LookAt(unit.currentHex);
+    }
+
+    public void PlayAttackAnimation()
+    {
+        if(animator != null) animator.SetTrigger("Attack");
+    }
+
+    public float GetCurrentAnimationDuration()
+    {
+        if (animator == null) return 0;
+        return animator.GetCurrentAnimatorStateInfo(0).length;
+    }
+
     #region Helpers
     
     public bool IsOnHexOfType(byte id)
@@ -275,12 +335,7 @@ public class Unit : NetworkBehaviour
     }
 
     #endregion
-
-    [ClientRpc]
-    public void RpcSetUnitActive(bool value)
-    {
-        gameObject.SetActive(value);
-    }
+    
 
     #region Hooks
 

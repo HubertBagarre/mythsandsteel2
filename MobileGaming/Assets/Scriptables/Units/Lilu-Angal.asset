@@ -25,9 +25,4 @@ MonoBehaviour:
   baseMove: 3
   abilityScriptableId: 2
   modelPrefab: {fileID: 7271450749672630003, guid: a1c0dc1fe5ce7b24d8679368814b10d9, type: 3}
-  idleAnimation: {fileID: 0}
-  movementAnimation: {fileID: 0}
-  attackAnimation: {fileID: 0}
-  abilityAnimation: {fileID: 0}
-  takeDamageAnimation: {fileID: 0}
-  deathAnimation: {fileID: 0}
+  walkSpeedMultiplier: 0.75

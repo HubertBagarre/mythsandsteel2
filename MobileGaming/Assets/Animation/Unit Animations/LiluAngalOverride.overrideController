@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: LiluAngalOverride
+  m_Controller: {fileID: 9100000, guid: f01624adb85e6624087db9248a740fa4, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 49fc0abb83a01184aad073c5bc0ce512, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 49fc0abb83a01184aad073c5bc0ce512, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 034e5f43c0fed834390676b3950e3b9c, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 034e5f43c0fed834390676b3950e3b9c, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: b4a81799a08bf6444ad4f34768a431e4, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: b4a81799a08bf6444ad4f34768a431e4, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 71ff9aba1ae0c834f8c78a56fd417729, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 71ff9aba1ae0c834f8c78a56fd417729, type: 2}
