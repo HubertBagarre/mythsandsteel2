@@ -1857,7 +1857,7 @@ MonoBehaviour:
   offlineScene: Assets/Scenes/Shipped Scenes/OfflineScene.unity
   onlineScene: Assets/Scenes/Shipped Scenes/RoomScene.unity
   transport: {fileID: 1870446295}
-  networkAddress: localhost
+  networkAddress: 146.148.113.177
   maxConnections: 3
   authenticator: {fileID: 0}
   playerPrefab: {fileID: 7333084345128710923, guid: 3d6ac46de5dfc21469853f7f08ebe8aa, type: 3}
