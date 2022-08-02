@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class UnitPlacementButton : MonoBehaviour
 {
     public int unitPlacementIndex;
-    public FactionAndPlacementSelector selector;
+    public LayoutSpawner selector;
     public Button button;
     [SerializeField] private TextMeshProUGUI text;
 

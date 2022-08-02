@@ -5,7 +5,7 @@ using UnityEngine;
 public class ScriptableUnitPlacement : ScriptableObject
 {
     public UnitPlacement[] placements;
-    public Sprite placementPreview;
+    public Sprite placementPreview,placementIllustration;
 
     [Serializable]
     public class UnitPlacement

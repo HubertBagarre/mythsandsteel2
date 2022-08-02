@@ -19591,13 +19591,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 68502856925070404, guid: e787c8c397be2ef42a4aae6449492390, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 68502856925070405, guid: e787c8c397be2ef42a4aae6449492390, type: 3}
       propertyPath: m_Name
       value: RoomPlayer
       objectReference: {fileID: 0}
     - target: {fileID: 68502856925070405, guid: e787c8c397be2ef42a4aae6449492390, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 68502856925070406, guid: e787c8c397be2ef42a4aae6449492390, type: 3}
       propertyPath: m_RootOrder
@@ -19647,17 +19651,45 @@ PrefabInstance:
       propertyPath: sceneId
       value: 2374592779
       objectReference: {fileID: 0}
+    - target: {fileID: 185307660340149266, guid: e787c8c397be2ef42a4aae6449492390, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 185307660340149266, guid: e787c8c397be2ef42a4aae6449492390, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6301608916468383061, guid: e787c8c397be2ef42a4aae6449492390, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6747645762767446614, guid: e787c8c397be2ef42a4aae6449492390, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8085143647752533973, guid: e787c8c397be2ef42a4aae6449492390, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8085143647752533973, guid: e787c8c397be2ef42a4aae6449492390, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8794013519522311010, guid: e787c8c397be2ef42a4aae6449492390, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9005173770377583807, guid: e787c8c397be2ef42a4aae6449492390, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 120
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9005173770377583807, guid: e787c8c397be2ef42a4aae6449492390, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 60
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9005173771210273372, guid: e787c8c397be2ef42a4aae6449492390, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 120
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e787c8c397be2ef42a4aae6449492390, type: 3}

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class FactionButton : MonoBehaviour
 {
     public int factionIndex;
-    public FactionAndPlacementSelector selector;
+    public LayoutSpawner selector;
     public Button button;
 
     private void Start()

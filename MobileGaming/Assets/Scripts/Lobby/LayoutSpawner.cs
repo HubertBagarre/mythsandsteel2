@@ -3,22 +3,20 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FactionAndPlacementSelector : MonoBehaviour
+public class LayoutSpawner : MonoBehaviour
 {
-    [Header("Faction Buttons")]
-    [SerializeField] private Transform factionLayoutTransform;
+    [SerializeField] private NetworkCanvasHUDRoomScene hudManager;
+    
+    
+    [SerializeField] private Transform factionLayoutTransform,unitPlacementLayoutTransform,unitFormationDetailLayoutTransform;
     [SerializeField] private FactionButton factionButtonPrefab;
-    [SerializeField] private TextMeshProUGUI factionTitleText;
-    [SerializeField] private TextMeshProUGUI factionDescriptionText;
-    
-    [Header("Unit Placement Buttons")]
-    [SerializeField] private Transform unitPlacementLayoutTransform;
     [SerializeField] private UnitPlacementButton unitPlacementButtonPrefab;
-    [SerializeField] private Image unitPlacementImagePreview;
-    
-    
+    [SerializeField] private UnitInfoButton unitInfoButtonPrefab;
+
+
     private readonly List<UnitPlacementButton> unitPlacementButtons = new ();
     private readonly List<FactionButton> factionButtons = new ();
+    private readonly List<UnitInfoButton> infoButtons = new();
 
     private void Start()
     {
@@ -48,6 +46,13 @@ public class FactionAndPlacementSelector : MonoBehaviour
             unitPlacementButtons.Add(item);
         }
         
+        for (var i = 0; i < ObjectIDList.instance.units.Count; i++)
+        {
+            var item = Instantiate(unitInfoButtonPrefab, unitFormationDetailLayoutTransform);
+            item.unitIndex = i;
+            infoButtons.Add(item);
+        }
+        
         unitPlacementLayoutTransform.localPosition = Vector3.zero;
     }
 
@@ -69,17 +74,28 @@ public class FactionAndPlacementSelector : MonoBehaviour
 
     public void SelectFaction(int index)
     {
-        var faction = ObjectIDList.GetFactionScriptable(index);
-        factionTitleText.text = faction.name;
-
-        factionDescriptionText.text =
-            $"Belief Ability: \n{faction.beliefAbilityDescription}\n \nCultural Ability: \n{faction.beliefAbilityDescription}";
+        hudManager.OnFactionSelected(index);
     }
     
     public void SelectUnitPlacement(int index)
     {
+        hudManager.OnFormationSelected(index);
+    }
+
+    public void UpdateUnitFormationDetails(int index)
+    {
         var placement = ObjectIDList.GetUnitPlacementScriptable(index);
 
-        unitPlacementImagePreview.sprite = placement.placementPreview;
+        foreach (var infoButton in infoButtons)
+        {
+            infoButton.unitCount = 0;
+        }
+
+        foreach (var unitPlacement in placement.placements)
+        {
+            var infoButton = infoButtons[unitPlacement.unitIndex];
+            infoButton.unitCount = unitPlacement.positions.Length;
+            infoButton.UpdateButtonState();
+        }
     }
 }
