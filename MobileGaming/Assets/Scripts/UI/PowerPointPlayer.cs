@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using LogicUI.FancyTextRendering;
 
 public class PowerPointPlayer : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class PowerPointPlayer : MonoBehaviour
     [SerializeField] private Image image;
     [SerializeField] private RawImage rawImage;
     [SerializeField] private Button leftArrowButton,rightArrowButton,endPresentationButton;
-    [SerializeField] private TextMeshProUGUI titleText, contentText;
+    [SerializeField] private MarkdownRenderer titleText, contentText;
     [SerializeField] private RenderTexture videoRenderTexture;
 
     public ScriptablePowerPoint presentation;
@@ -60,8 +61,8 @@ public class PowerPointPlayer : MonoBehaviour
 
     private void PlaySlide(ScriptablePowerPoint.Slide slide)
     {
-        titleText.text = slide.title;
-        contentText.text = slide.text;
+        titleText.Source = slide.title;
+        contentText.Source = slide.text;
         
         imageGameObject.SetActive(slide.image != null);
         videoGameObject.SetActive(slide.video != null);
@@ -69,7 +70,7 @@ public class PowerPointPlayer : MonoBehaviour
         videoPlayer.DOPause();
         
         if (slide.video != null)
-        {
+        {   
             rawImage.texture = videoRenderTexture;
             videoPlayer.clip = slide.video;
             videoPlayer.DOPlay();
