@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 160a106e3d84c6d48afb5c5feb6f97f1
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Ivy Mode
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: d51a0a8e73074284985d9cfe2a7ed7e4, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
