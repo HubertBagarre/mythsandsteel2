@@ -59,9 +59,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
   m_Name: IvyMode-Bold SDF
   m_EditorClassIdentifier: 
-  hashCode: 0
+  hashCode: -870417892
   material: {fileID: 6802440759704091869}
-  materialHashCode: 0
+  materialHashCode: -1424587972
   m_Version: 1.1.0
   m_SourceFontFileGUID: d734bd1102be3fa4fbdda657d824f0be
   m_SourceFontFile_EditorRef: {fileID: 12800000, guid: d734bd1102be3fa4fbdda657d824f0be, type: 3}
@@ -5504,9 +5504,9 @@ Material:
     - _OutlineWidth: 0
     - _PerspectiveFilter: 0.875
     - _Reflectivity: 10
-    - _ScaleRatioA: 1
-    - _ScaleRatioB: 1
-    - _ScaleRatioC: 1
+    - _ScaleRatioA: 0.8333333
+    - _ScaleRatioB: 0.6770833
+    - _ScaleRatioC: 0.6770833
     - _ScaleX: 1
     - _ScaleY: 1
     - _ShaderFlags: 0

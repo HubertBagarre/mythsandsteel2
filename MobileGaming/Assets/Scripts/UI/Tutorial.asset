@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slides:
   - title: Qu'est-ce que Devotion Tactics ?
-    text: "Bienvenue *dans* **Devotion** Tactics ! \n\nSuite \xE0 la d\xE9couverte
-      d'un nouveau monde, les factions des mondes Antiques et Classiques luttent
-      afin d'en prendre le contr\xF4le de ses richesses !  \n\nLe jeu se pr\xE9sente
-      sous la forme de Duels entre 2 joueurs aux commandes d'une Formation d'unit\xE9
+    text: "Bienvenue dans Devotion Tactics ! \n\nSuite \xE0 la d\xE9couverte d'un
+      nouveau monde, les factions des mondes Antiques et Classiques luttent afin
+      d'en prendre le contr\xF4le de ses richesses !  \n\nLe jeu se pr\xE9sente sous
+      la forme de Duels entre 2 joueurs aux commandes d'une Formation d'unit\xE9
       au nom d'une Faction afin de prendre une place Fortifi\xE9e."
     image: {fileID: 0}
     video: {fileID: 0}
@@ -26,11 +26,11 @@ MonoBehaviour:
       ne connaissant le choix de l'autre) une Faction et une Formation. \n\nChaque
       Faction dispose de 2 capacit\xE9s uniques guidant des techniques de jeu avec
       leurs propres forces alors que chaque Formation dispose d'une s\xE9lection
-      d'Unit\xE9s sp\xE9cifiques dans un placement particulier une fois en jeu.\""
+      d'Unit\xE9s sp\xE9cifiques dans un placement particulier une fois en jeu."
     image: {fileID: 0}
     video: {fileID: 32900000, guid: 5d66e425039b3774eaa1b9fb03f54f8e, type: 3}
   - title: Objectifs de Jeu
-    text: "our obtenir la victoire, un g\xE9n\xE9ral averti dispose de plusieurs
+    text: "Pour obtenir la victoire, un g\xE9n\xE9ral averti dispose de plusieurs
       possibilit\xE9s. \n\n\u2022 Vous pouvez tout d'abord exterminer les troupes
       de son adversaire. \n\u2022 En parall\xE8le, vous pouvez aussi chercher \xE0
       prendre le contr\xF4le d'un objectif ; Le Fort. Pour cela, il vous faudra placer
@@ -42,24 +42,25 @@ MonoBehaviour:
   - title: "Art\xE9facts et Foi"
     text: "Pour parvenir \xE0 votre objectif, quel qu'il soit, vous devrez faire
       appel \xE0 la puissance des dieux. C'est pour cette raison que vous devrez
-      r\xE9colter les offrandes disponibles sur le champ de bataille. De la m\xEAme
-      mani\xE8re le Fort conf\xE8re 1 de Foi pour chaque unit\xE9 en plus des Points
-      de Victoire"
+      r\xE9colter les Art\xE9facts diss\xE9min\xE9s sur le champ de bataille qui
+      vont conf\xE9rer 1 ou 2 de Foi.\n\nDe la m\xEAme mani\xE8re le Fort conf\xE8re
+      1 de Foi pour chaque unit\xE9 en plus des Points de Victoire"
     image: {fileID: 0}
     video: {fileID: 0}
   - title: "R\xE9animation"
     text: "Vous pouvez en outre d\xE9penser votre foi pour ramener \xE0 la vie vos
-      unit\xE9s tu\xE9es. Pour ceci, ouvrez le menu de foi et s\xE9lectionnez l'unit\xE9
-      que vous souhaitez replacer avant de la faire glisser sur une de vos cases
-      de d\xE9ploiement."
+      unit\xE9s tu\xE9es. \n\nPour ceci, ouvrez le menu de foi et s\xE9lectionnez
+      l'unit\xE9 que vous souhaitez replacer avant de la faire glisser sur une de
+      vos cases de d\xE9ploiement."
     image: {fileID: 0}
     video: {fileID: 0}
   - title: Factions
-    text: "Voici vos pouvoirs de faction. Ils se divisent en deux cat\xE9gories.
-      Un pouvoir de foi, li\xE9 \xE0 la fa\xE7on de votre faction de s'adresser aux
-      dieux. Ce premier pouvoir vous garantit une fa\xE7on unique de produire de
-      la foi. Le pouvoir culturel influence quant \xE0 lui directement vos unit\xE9s
-      et vous propose une tactique \xE0 appliquer sur le champ de bataille."
+    text: "Voici un exemple de 2 pouvoirs de faction. Ils se divisent en deux cat\xE9gories.
+      \n\u2022 Un pouvoir dit Croyant, li\xE9 \xE0 la fa\xE7on de votre faction de
+      s'adresser aux dieux. Ce premier pouvoir vous garantit une fa\xE7on unique
+      de produire de la foi. \n\u2022 Le pouvoir dit Culturel quant \xE0 lui influence
+      quant \xE0 lui directement vos unit\xE9s et vous propose une tactique \xE0
+      appliquer sur le champ de bataille."
     image: {fileID: 0}
     video: {fileID: 0}
   - title: "Jouer les Unit\xE9s"
@@ -67,12 +68,12 @@ MonoBehaviour:
       3 unit\xE9s sur les 6 dont vous disposez pourront agir par tour. : Elles peuvent
       donc utiliser leur Mouvement et leur Action. \n\nUne unit\xE9 peut tout d'abord
       se d\xE9placer quel que soit votre choix d'action suivante. Elle dispose ensuite
-      d'une action, \xE0 savoir soit l'utilisation d'une capacit\xE9 soit une attaque. 
-      \n\nSon activation est ensuite consid\xE9r\xE9e comme termin\xE9e et l'unit\xE9
-      ne peut plus agir ce tour."
+      d'une action, \xE0 savoir soit l'utilisation d'une capacit\xE9 active soit
+      une attaque.\n\nSon activation est ensuite consid\xE9r\xE9e comme termin\xE9e
+      et l'unit\xE9 ne peut plus agir ce tour."
     image: {fileID: 492409264, guid: 32ffbd143de63a44fb6651905eff2ab0, type: 3}
     video: {fileID: 0}
-  - title: "S\xE9cantement des Actions"
+  - title: "Mouvement et S\xE9cantement"
     text: "En ce qui concerne le d\xE9placement, il peut se produire en plusieurs
       \xE9tapes tant qu'il reste des points de mouvement \xE0 l'unit\xE9. Sachez
       en outre qu'elle ne peut traverser les unit\xE9s adverse et que tout point
@@ -81,8 +82,11 @@ MonoBehaviour:
     video: {fileID: 0}
   - title: "Multiples Attaques et Capacit\xE9s"
     text: "Parmi les situations sp\xE9ciales lors d'une activation, la faction Shaivite
-      peut permettre deux attaques au lieu d'une. Ces deux attaques n'emp\xEAchent
-      pas de se d\xE9placer en plus. Quant au Lilu-Angal, sa capacit\xE9 active compte
-      comme une attaque et mettra fin \xE0 son tour comme tel."
+      peut permettre deux attaques au lieu d'une. Apr\xE8s avoir attaqu\xE9 une premi\xE8re
+      fois, l'unit\xE9 ne peut plus bouger, ayant pris position. \n\nQuant au Lilu-Angal,
+      sa capacit\xE9 active compte comme une Action et mettra donc fin \xE0 son tour
+      comme une attaque. Attention, des capacit\xE9s (comme celles du Karbantos et
+      du Vetrivel) consommant de la Foi dans le jeu sont passives et sont donc automatiquement
+      lanc\xE9es lors de leurs attaques respectives !"
     image: {fileID: 0}
     video: {fileID: 0}

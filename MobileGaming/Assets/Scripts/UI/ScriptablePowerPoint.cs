@@ -11,7 +11,7 @@ public class ScriptablePowerPoint : ScriptableObject
     public class Slide
     {
         public string title;
-        [TextArea(7,7)]public string text;
+        [TextArea(15,15)]public string text;
         public Sprite image;
         public VideoClip video;
         
