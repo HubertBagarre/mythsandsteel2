@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: d51a0a8e73074284985d9cfe2a7ed7e4
+guid: 20c50edc1e63d5d43b2fef1330398562
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -10,10 +10,7 @@ TrueTypeFontImporter:
   includeFontData: 1
   fontNames:
   - Ivy Mode
-  fallbackFontReferences:
-  - {fileID: 12800000, guid: 42d9d32cf5a68f945896f7b46b4a5bb1, type: 3}
-  - {fileID: 12800000, guid: 20c50edc1e63d5d43b2fef1330398562, type: 3}
-  - {fileID: 12800000, guid: 42e772122364ed640a50a7436b603687, type: 3}
+  fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1

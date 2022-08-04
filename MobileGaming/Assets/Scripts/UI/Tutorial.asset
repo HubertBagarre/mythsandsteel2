@@ -14,16 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slides:
   - title: Qu'est-ce que Devotion Tactics ?
-    text: "Bienvenue dans Devotion Tactics ! Suite \xE0 la d\xE9couverte d'un nouveau
-      monde, les factions des mondes Antiques et Classiques luttent afin d'en prendre
-      le contr\xF4le de ses richesses !  Le jeu se pr\xE9sente sous la forme de Duels
-      entre 2 joueurs aux commandes d'une Formation d'unit\xE9 au nom d'une Faction
-      afin de prendre une place Fortifi\xE9e."
+    text: "Bienvenue *dans* **Devotion** Tactics ! \n\nSuite \xE0 la d\xE9couverte
+      d'un nouveau monde, les factions des mondes Antiques et Classiques luttent
+      afin d'en prendre le contr\xF4le de ses richesses !  \n\nLe jeu se pr\xE9sente
+      sous la forme de Duels entre 2 joueurs aux commandes d'une Formation d'unit\xE9
+      au nom d'une Faction afin de prendre une place Fortifi\xE9e."
     image: {fileID: 0}
     video: {fileID: 0}
   - title: Lancer une Partie
     text: "Avant une partie, chaque joueur s\xE9lectionne de son c\xF4t\xE9 (l'opposant
-      ne connaissant le choix de l'autre) une Faction et une Formation.   Chaque
+      ne connaissant le choix de l'autre) une Faction et une Formation. \n\nChaque
       Faction dispose de 2 capacit\xE9s uniques guidant des techniques de jeu avec
       leurs propres forces alors que chaque Formation dispose d'une s\xE9lection
       d'Unit\xE9s sp\xE9cifiques dans un placement particulier une fois en jeu.\""
@@ -31,11 +31,12 @@ MonoBehaviour:
     video: {fileID: 32900000, guid: 5d66e425039b3774eaa1b9fb03f54f8e, type: 3}
   - title: Objectifs de Jeu
     text: "our obtenir la victoire, un g\xE9n\xE9ral averti dispose de plusieurs
-      possibilit\xE9s.   Vous pouvez tout d'abord exterminer les troupes de son adversaire.
-      En parall\xE8le, vous pouvez aussi chercher \xE0 prendre le contr\xF4le d'un
-      objectif ; Le Fort. Pour cela, il vous faudra placer des troupes autour de
-      ce dernier, pour qu'elles puisse y r\xE9cup\xE9rer passivement des Points de
-      Victoire au d\xE9but de chaque tour, apportant la victoire une fois \xE0 10."
+      possibilit\xE9s. \n\n\u2022 Vous pouvez tout d'abord exterminer les troupes
+      de son adversaire. \n\u2022 En parall\xE8le, vous pouvez aussi chercher \xE0
+      prendre le contr\xF4le d'un objectif ; Le Fort. Pour cela, il vous faudra placer
+      des troupes autour de ce dernier, pour qu'elles puissent y r\xE9cup\xE9rer
+      passivement des Points de Victoire au d\xE9but de chaque tour, apportant la
+      victoire une fois \xE0 10."
     image: {fileID: 0}
     video: {fileID: 0}
   - title: "Art\xE9facts et Foi"
@@ -64,10 +65,10 @@ MonoBehaviour:
   - title: "Jouer les Unit\xE9s"
     text: "Vous pouvez activer jusqu'\xE0 3 unit\xE9s par tour. Cela signifie que
       3 unit\xE9s sur les 6 dont vous disposez pourront agir par tour. : Elles peuvent
-      donc utiliser leur Mouvement et leur Action. Une unit\xE9 peut tout d'abord
+      donc utiliser leur Mouvement et leur Action. \n\nUne unit\xE9 peut tout d'abord
       se d\xE9placer quel que soit votre choix d'action suivante. Elle dispose ensuite
       d'une action, \xE0 savoir soit l'utilisation d'une capacit\xE9 soit une attaque. 
-      Son activation est ensuite consid\xE9r\xE9e comme termin\xE9e et l'unit\xE9
+      \n\nSon activation est ensuite consid\xE9r\xE9e comme termin\xE9e et l'unit\xE9
       ne peut plus agir ce tour."
     image: {fileID: 492409264, guid: 32ffbd143de63a44fb6651905eff2ab0, type: 3}
     video: {fileID: 0}
