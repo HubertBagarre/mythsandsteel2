@@ -968,9 +968,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2681007340164610990, guid: 8057c8650c5a19c4a9c433e0045ab043, type: 3}
+      propertyPath: m_fontSize
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 2681007340164610990, guid: 8057c8650c5a19c4a9c433e0045ab043, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 3225712845674473470, guid: 8057c8650c5a19c4a9c433e0045ab043, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3867786890875114223, guid: 8057c8650c5a19c4a9c433e0045ab043, type: 3}
       propertyPath: m_Name
       value: Faction Selection Screen
+      objectReference: {fileID: 0}
+    - target: {fileID: 4175134921551580712, guid: 8057c8650c5a19c4a9c433e0045ab043, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4574314775147267792, guid: 8057c8650c5a19c4a9c433e0045ab043, type: 3}
       propertyPath: m_SizeDelta.x
