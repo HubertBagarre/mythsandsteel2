@@ -85,6 +85,10 @@ public class PlayerUIManager : NetworkBehaviour
         pauseButton.onClick.AddListener(TogglePauseMenu);
         abilityConfirmButton.onClick.AddListener(()=>Debug.Log("CLICKED CONFIRMED"));
         abilityCancelButton.onClick.AddListener(()=>Debug.Log("CLICKED CANCEL"));
+        
+        pauseMenuGameObject.SetActive(false);
+        unitRespawnMenuGameObject.SetActive(false);
+        gameEndMenuGameObject.SetActive(false);
     }
 
     public void ChangeDebugText(string text)

@@ -24,10 +24,5 @@ MonoBehaviour:
   baseRange: 1
   baseMove: 3
   abilityScriptableId: 0
-  modelPrefab: {fileID: 5323404057730096819, guid: 3ddeef9df19f47d4c916a9638b49ae0a, type: 3}
-  idleAnimation: {fileID: 0}
-  movementAnimation: {fileID: 0}
-  attackAnimation: {fileID: 0}
-  abilityAnimation: {fileID: 0}
-  takeDamageAnimation: {fileID: 0}
-  deathAnimation: {fileID: 0}
+  modelPrefab: {fileID: 24530556897675536, guid: 72c550aac65736642a1bdc3b3d51738f, type: 3}
+  walkSpeedMultiplier: 0
