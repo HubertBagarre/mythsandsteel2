@@ -150,6 +150,8 @@ public class PlayerSM : StateMachine
     
     private void TryToSelectUnitOrTile(Vector2 screenPosition,float time)
     {
+        Debug.Log("click");
+        
         if(isInMenu) return;
         
         var ray = cam.ScreenPointToRay(screenPosition);
