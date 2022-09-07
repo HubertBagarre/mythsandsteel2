@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -6,7 +7,6 @@ using UnityEngine.UI;
 public class LayoutSpawner : MonoBehaviour
 {
     [SerializeField] private NetworkCanvasHUDRoomScene hudManager;
-    
     
     [SerializeField] private Transform factionLayoutTransform,unitPlacementLayoutTransform,unitFormationDetailLayoutTransform;
     [SerializeField] private FactionButton factionButtonPrefab;
@@ -24,6 +24,8 @@ public class LayoutSpawner : MonoBehaviour
 
         factionButtons[0].OnClick();
         unitPlacementButtons[0].OnClick();
+
+        StartCoroutine(RefreshLayouts());
     }
 
     private void InstantiateButtons()
@@ -54,8 +56,16 @@ public class LayoutSpawner : MonoBehaviour
         }
         
         unitPlacementLayoutTransform.localPosition = Vector3.zero;
+        
+        Canvas.ForceUpdateCanvases();
     }
 
+    private IEnumerator RefreshLayouts()
+    {
+        yield return new WaitForSeconds(1f);
+        Canvas.ForceUpdateCanvases();
+    }
+    
     private void EnableAllFactionButtons()
     {
         foreach (var factionButton in factionButtons)
@@ -75,11 +85,13 @@ public class LayoutSpawner : MonoBehaviour
     public void SelectFaction(int index)
     {
         hudManager.OnFactionSelected(index);
+        Canvas.ForceUpdateCanvases();
     }
     
     public void SelectUnitPlacement(int index)
     {
         hudManager.OnFormationSelected(index);
+        Canvas.ForceUpdateCanvases();
     }
 
     public void UpdateUnitFormationDetails(int index)
@@ -97,5 +109,7 @@ public class LayoutSpawner : MonoBehaviour
             infoButton.unitCount = unitPlacement.positions.Length;
             infoButton.UpdateButtonState();
         }
+        
+        Canvas.ForceUpdateCanvases();
     }
 }

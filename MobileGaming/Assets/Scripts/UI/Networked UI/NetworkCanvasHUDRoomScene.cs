@@ -12,7 +12,7 @@ public class NetworkCanvasHUDRoomScene : NetworkBehaviour
 
     [Header("Global")]
     [SerializeField] private LayoutSpawner spawner;
-    [SerializeField] private Button leftArrowButton,rightArrowButton;
+    [SerializeField] private Button leftArrowButton,rightArrowButton,returnButton;
     [SerializeField] private GameObject leftArrowGameObject,rightArrowGameObject,canvasGameObject;
     [SerializeField] private RectTransform screenParent;
 
@@ -49,6 +49,7 @@ public class NetworkCanvasHUDRoomScene : NetworkBehaviour
         
         rightArrowButton.onClick.AddListener(GoToNextScreen);
         leftArrowButton.onClick.AddListener(GoToPreviousScreen);
+        returnButton.onClick.AddListener(GoToPreviousScreen);
         
         factionLoreButton.onClick.AddListener(ToggleFactionLore);
         factionLoreBoxButton.onClick.AddListener(ToggleFactionLore);
